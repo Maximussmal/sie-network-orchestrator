@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Users, TrendingUp, TrendingDown, Network, Briefcase, GraduationCap, ChevronDown } from "lucide-react";
+import { Users, TrendingUp, Target, ArrowUpDown } from "lucide-react";
 import { Card } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
@@ -80,63 +80,75 @@ const mockConnections: Connection[] = [
 ];
 
 export const NetworkInterface = () => {
-  const [expandedNetworks, setExpandedNetworks] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<"mutual" | "trust">("mutual");
+  const [filterBy, setFilterBy] = useState<"all" | "1st" | "2nd" | "3rd+">("all");
 
   const sortedConnections = [...mockConnections].sort((a, b) => {
     if (sortBy === "mutual") return b.mutualConnections - a.mutualConnections;
     return b.trustScore - a.trustScore;
   });
 
-  const toggleNetwork = (id: string) => {
-    setExpandedNetworks((prev) =>
-      prev.includes(id) ? prev.filter((n) => n !== id) : [...prev, id]
-    );
-  };
-
-  const getNetworkIcon = (network: string) => {
-    switch (network) {
-      case "linkedin":
-        return <Network className="w-4 h-4" />;
-      case "company":
-        return <Briefcase className="w-4 h-4" />;
-      case "school":
-        return <GraduationCap className="w-4 h-4" />;
-      default:
-        return null;
-    }
-  };
+  const risingCount = mockConnections.filter(c => c.trend === "up").length;
+  const avgTrust = Math.round(mockConnections.reduce((acc, c) => acc + c.trustScore, 0) / mockConnections.length);
 
   return (
     <div className="flex flex-col h-full bg-background">
       {/* KPI Dashboard */}
-      <div className="grid grid-cols-3 gap-2 p-4 bg-card border-b">
-        <Card className="p-3 text-center">
-          <div className="text-2xl font-bold text-foreground">247</div>
-          <div className="text-xs text-muted-foreground">Total</div>
+      <div className="grid grid-cols-3 gap-3 p-4 bg-background">
+        <Card className="p-4 rounded-2xl border-0 bg-card shadow-sm">
+          <div className="flex items-center gap-2 mb-2">
+            <Users className="w-5 h-5 text-primary" />
+            <span className="text-sm text-muted-foreground">Total</span>
+          </div>
+          <div className="text-3xl font-bold text-foreground">{mockConnections.length}</div>
+          <div className="h-1 mt-2 bg-primary rounded-full w-16" />
         </Card>
-        <Card className="p-3 text-center">
-          <div className="text-2xl font-bold text-accent">94%</div>
-          <div className="text-xs text-muted-foreground">Avg Trust</div>
+        <Card className="p-4 rounded-2xl border-0 bg-card shadow-sm">
+          <div className="flex items-center gap-2 mb-2">
+            <Target className="w-5 h-5 text-primary" />
+            <span className="text-sm text-muted-foreground">Trust</span>
+          </div>
+          <div className="text-3xl font-bold text-foreground">{avgTrust}%</div>
+          <div className="h-1 mt-2 bg-primary rounded-full w-16" />
         </Card>
-        <Card className="p-3 text-center">
-          <div className="text-2xl font-bold text-primary">+12</div>
-          <div className="text-xs text-muted-foreground">This Week</div>
+        <Card className="p-4 rounded-2xl border-0 bg-card shadow-sm">
+          <div className="flex items-center gap-2 mb-2">
+            <TrendingUp className="w-5 h-5 text-accent" />
+            <span className="text-sm text-muted-foreground">Rising</span>
+          </div>
+          <div className="text-3xl font-bold text-accent">{risingCount}</div>
+          <div className="h-1 mt-2 bg-accent rounded-full w-16" />
         </Card>
       </div>
 
-      {/* Sort Controls */}
-      <div className="p-4 border-b">
+      {/* Filter and Sort Controls */}
+      <div className="flex items-center justify-between gap-3 px-4 py-3">
+        <div className="flex gap-2">
+          {(["all", "1st", "2nd", "3rd+"] as const).map((filter) => (
+            <button
+              key={filter}
+              onClick={() => setFilterBy(filter)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                filterBy === filter
+                  ? "bg-card text-foreground shadow-sm"
+                  : "bg-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {filter === "all" ? "All" : filter}
+            </button>
+          ))}
+        </div>
+        
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-muted text-foreground hover:bg-primary/20 transition-colors">
-              <span>Sort: {sortBy === "mutual" ? "Mutual First" : "Trust Score"}</span>
-              <ChevronDown className="w-4 h-4" />
+            <button className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium bg-card text-foreground shadow-sm hover:bg-card/80 transition-colors">
+              <ArrowUpDown className="w-4 h-4" />
+              <span>Mutual Connections</span>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-48">
+          <DropdownMenuContent align="end" className="w-48 bg-popover">
             <DropdownMenuItem onClick={() => setSortBy("mutual")}>
-              Mutual First
+              Mutual Connections
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setSortBy("trust")}>
               Trust Score
@@ -145,88 +157,55 @@ export const NetworkInterface = () => {
         </DropdownMenu>
       </div>
 
+      {/* Connections Count */}
+      <div className="px-4 pb-2">
+        <p className="text-sm text-muted-foreground">
+          <span className="font-semibold text-foreground">{sortedConnections.length}</span> connections
+        </p>
+      </div>
+
       {/* Connections List */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-3">
         {sortedConnections.map((connection) => (
-          <Card key={connection.id} className="p-3">
-            <div className="flex gap-3">
-              <Avatar className="w-12 h-12 flex-shrink-0">
-                <AvatarImage src={connection.avatar} />
-                <AvatarFallback className="bg-secondary/20 text-secondary-foreground">
+          <Card key={connection.id} className="p-4 rounded-2xl border-0 shadow-sm bg-card">
+            <div className="flex gap-3 items-start">
+              <Avatar className="w-14 h-14 flex-shrink-0">
+                <AvatarFallback className="bg-muted text-foreground text-lg font-semibold">
                   {connection.name.split(" ").map(n => n[0]).join("")}
                 </AvatarFallback>
               </Avatar>
 
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-sm text-foreground truncate">
-                      {connection.name}
-                    </h3>
-                    <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
-                      {connection.title}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{connection.location}</p>
-                  </div>
-
-                  {/* Network Icons */}
-                  <div className="flex gap-1 flex-shrink-0">
-                    {connection.networks.map((network) => (
-                      <button
-                        key={network}
-                        onClick={() => toggleNetwork(`${connection.id}-${network}`)}
-                        className="w-6 h-6 rounded-full bg-muted hover:bg-primary/20 flex items-center justify-center transition-all"
-                      >
-                        {getNetworkIcon(network)}
-                      </button>
-                    ))}
-                  </div>
+                <div className="flex items-start justify-between gap-2 mb-1">
+                  <h3 className="font-semibold text-base text-foreground">
+                    {connection.name}
+                  </h3>
+                  <Badge className="bg-primary/10 text-primary border-0 px-3 py-1 text-sm font-semibold">
+                    1st
+                  </Badge>
                 </div>
+                
+                <p className="text-sm text-muted-foreground line-clamp-1 mb-3">
+                  {connection.title}
+                </p>
 
                 {/* Stats Row */}
-                <div className="flex items-center gap-3 mt-2 text-xs">
-                  <div className="flex items-center gap-1">
-                    <Users className="w-3 h-3 text-muted-foreground" />
-                    <span className="font-medium">{connection.mutualConnections}</span>
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-1.5">
+                    <Users className="w-4 h-4 text-primary" />
+                    <span className="font-semibold text-foreground">{connection.mutualConnections}</span>
                     <span className="text-muted-foreground">mutual</span>
+                    <span className="text-accent">(0%)</span>
                   </div>
-                  <div className="text-muted-foreground">
-                    {connection.followers} followers
+                  
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground">Trust:</span>
+                    <span className="font-semibold text-primary">{connection.trustScore}%</span>
+                    <span className="flex items-center gap-0.5 text-accent">
+                      <TrendingUp className="w-3.5 h-3.5" />
+                      {connection.trendValue}%
+                    </span>
                   </div>
-                </div>
-
-                {/* Trust Score */}
-                <div className="flex items-center gap-2 mt-2">
-                  <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
-                    <div
-                      className={`h-full ${
-                        connection.trustScore >= 90
-                          ? "bg-accent"
-                          : connection.trustScore >= 70
-                          ? "bg-secondary"
-                          : "bg-destructive"
-                      }`}
-                      style={{ width: `${connection.trustScore}%` }}
-                    />
-                  </div>
-                  <Badge
-                    variant="outline"
-                    className={`text-xs px-1.5 py-0 h-5 ${
-                      connection.trend === "up"
-                        ? "text-accent border-accent"
-                        : "text-secondary border-secondary"
-                    }`}
-                  >
-                    {connection.trend === "up" ? (
-                      <TrendingUp className="w-3 h-3 mr-0.5" />
-                    ) : (
-                      <TrendingDown className="w-3 h-3 mr-0.5" />
-                    )}
-                    {connection.trendValue}%
-                  </Badge>
-                  <span className="text-xs font-semibold min-w-[3ch] text-right">
-                    {connection.trustScore}%
-                  </span>
                 </div>
               </div>
             </div>
