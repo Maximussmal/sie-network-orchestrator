@@ -21,6 +21,7 @@ interface Message {
   time: string;
   unread: number;
   online: boolean;
+  platform: "linkedin" | "whatsapp" | "sumbios";
 }
 
 const mockEmails: Email[] = [
@@ -67,6 +68,7 @@ const mockMessages: Message[] = [
     time: "5m ago",
     unread: 2,
     online: true,
+    platform: "linkedin",
   },
   {
     id: "2",
@@ -76,6 +78,7 @@ const mockMessages: Message[] = [
     time: "1h ago",
     unread: 1,
     online: true,
+    platform: "whatsapp",
   },
   {
     id: "3",
@@ -85,6 +88,7 @@ const mockMessages: Message[] = [
     time: "3h ago",
     unread: 0,
     online: false,
+    platform: "sumbios",
   },
   {
     id: "4",
@@ -94,8 +98,20 @@ const mockMessages: Message[] = [
     time: "Yesterday",
     unread: 0,
     online: false,
+    platform: "linkedin",
   },
 ];
+
+const getPlatformBadge = (platform: "linkedin" | "whatsapp" | "sumbios") => {
+  switch (platform) {
+    case "linkedin":
+      return { label: "LI", color: "bg-blue-600 text-white" };
+    case "whatsapp":
+      return { label: "WA", color: "bg-green-600 text-white" };
+    case "sumbios":
+      return { label: "SIE", color: "bg-yellow-600 text-white" };
+  }
+};
 
 export const CommunicationHub = () => {
   const [activeSection, setActiveSection] = useState<"email" | "messages">("email");
@@ -262,7 +278,12 @@ export const CommunicationHub = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2 mb-1">
-                      <h3 className="font-semibold text-sm text-foreground">{message.from}</h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold text-sm text-foreground">{message.from}</h3>
+                        <Badge className={`${getPlatformBadge(message.platform).color} text-[10px] px-1.5 py-0 h-5 font-bold`}>
+                          {getPlatformBadge(message.platform).label}
+                        </Badge>
+                      </div>
                       <span className="text-xs text-muted-foreground flex-shrink-0">{message.time}</span>
                     </div>
                     <p className="text-sm text-muted-foreground line-clamp-1">{message.lastMessage}</p>
