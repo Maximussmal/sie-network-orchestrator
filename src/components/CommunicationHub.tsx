@@ -318,13 +318,13 @@ export const CommunicationHub = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2 mb-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold text-sm text-foreground">{message.from}</h3>
+                      <h3 className="font-semibold text-sm text-foreground">{message.from}</h3>
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         <Badge className={`${getPlatformBadge(message.platform).color} text-[10px] px-1.5 py-0 h-5 font-bold`}>
                           {getPlatformBadge(message.platform).label}
                         </Badge>
+                        <span className="text-xs text-muted-foreground">{message.time}</span>
                       </div>
-                      <span className="text-xs text-muted-foreground flex-shrink-0">{message.time}</span>
                     </div>
                     <p className="text-sm text-muted-foreground line-clamp-1">{message.lastMessage}</p>
                   </div>

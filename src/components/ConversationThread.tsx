@@ -133,47 +133,38 @@ export const ConversationThread = ({ contact, platform, onClose }: ConversationT
         ))}
       </div>
 
-      {/* AI Suggestions Section */}
-      <div className="border-t bg-card/50 p-4">
-        <div className="max-w-3xl mx-auto space-y-3">
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <h3 className="text-sm font-semibold text-foreground">AI Suggested Responses</h3>
-            <span className="text-xs text-muted-foreground">
-              to move towards your desired outcome
-            </span>
-          </div>
-          
-          <div className="space-y-2">
+      {/* Input Area with Suggestions Above */}
+      <div className="border-t bg-card">
+        <div className="max-w-3xl mx-auto">
+          {/* AI Suggestions - Transparent hints above input */}
+          <div className="px-4 pt-4 pb-2 space-y-1.5">
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="w-3 h-3 text-primary/60" />
+              <span className="text-xs text-muted-foreground/80">Quick suggestions:</span>
+            </div>
             {aiSuggestions.map((suggestion, index) => (
-              <Card
+              <div
                 key={index}
-                className="p-3 cursor-pointer hover:bg-accent/50 transition-colors"
+                className="text-xs text-muted-foreground/60 cursor-pointer hover:text-foreground/80 transition-colors truncate"
                 onClick={() => handleSuggestionClick(suggestion)}
               >
-                <div className="flex items-start gap-2">
-                  <span className="text-primary font-semibold text-sm">•</span>
-                  <p className="text-sm text-foreground flex-1">{suggestion}</p>
-                </div>
-              </Card>
+                • {suggestion}
+              </div>
             ))}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs h-7 mt-2"
+              onClick={() => setShowGoalDialog(true)}
+            >
+              <Target className="w-3 h-3 mr-1" />
+              Clarify goal with AI
+            </Button>
           </div>
 
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={() => setShowGoalDialog(true)}
-          >
-            <Target className="w-4 h-4 mr-2" />
-            Speak with AI to clarify goal & desired outcome
-          </Button>
-        </div>
-      </div>
-
-      {/* Input Area */}
-      <div className="border-t bg-card p-4">
-        <div className="max-w-3xl mx-auto">
-          <div className="flex items-end gap-2">
+          {/* Message Input */}
+          <div className="px-4 pb-4">
+            <div className="flex items-end gap-2">
             <Button
               variant="outline"
               size="icon"
@@ -202,6 +193,7 @@ export const ConversationThread = ({ contact, platform, onClose }: ConversationT
             >
               <Send className="w-4 h-4" />
             </Button>
+            </div>
           </div>
         </div>
       </div>
