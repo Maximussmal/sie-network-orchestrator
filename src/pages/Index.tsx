@@ -20,7 +20,7 @@ const Index = () => {
       {/* Header */}
       <header className="flex items-center justify-between p-4 border-b border-border bg-card">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[hsl(var(--ai-blue)/0.6)] to-[hsl(var(--ai-purple)/0.4)] sphere-pulse" />
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[hsl(190,100%,17%,0.8)] to-[hsl(46,93%,45%,0.6)] sphere-pulse" />
           <div>
             <h1 className="text-lg font-bold text-foreground">SIE</h1>
             <p className="text-xs text-muted-foreground">Orchestrate Everything</p>
@@ -34,7 +34,7 @@ const Index = () => {
           onClick={() => setActiveTab("network")}
           className={`flex-1 flex items-center justify-center gap-2 py-3 font-medium transition-colors ${
             activeTab === "network"
-              ? "text-[hsl(var(--ai-blue))] border-b-2 border-[hsl(var(--ai-blue))]"
+              ? "text-primary border-b-2 border-primary"
               : "text-muted-foreground"
           }`}
         >
@@ -45,7 +45,7 @@ const Index = () => {
           onClick={() => setActiveTab("communication")}
           className={`flex-1 flex items-center justify-center gap-2 py-3 font-medium transition-colors ${
             activeTab === "communication"
-              ? "text-[hsl(var(--ai-blue))] border-b-2 border-[hsl(var(--ai-blue))]"
+              ? "text-primary border-b-2 border-primary"
               : "text-muted-foreground"
           }`}
         >

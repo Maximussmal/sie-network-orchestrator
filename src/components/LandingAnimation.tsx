@@ -39,7 +39,7 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
             exit={{ opacity: 0, y: -20 }}
             className="text-center"
           >
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-[hsl(var(--ai-blue))] to-[hsl(var(--ai-purple))] bg-clip-text text-transparent">
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-[hsl(190,100%,17%)] to-[hsl(46,93%,45%)] bg-clip-text text-transparent">
               Sumbios
             </h1>
           </motion.div>
@@ -56,7 +56,7 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
               transition={{ duration: 0.6 }}
               className="relative"
             >
-              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[hsl(var(--ai-blue)/0.6)] to-[hsl(var(--ai-purple)/0.4)] sphere-pulse ai-glow" />
+              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[hsl(190,100%,17%,0.6)] to-[hsl(46,93%,45%,0.4)] sphere-pulse ai-glow" />
               
               {stage === "network" && (
                 <svg className="absolute inset-0 w-96 h-96 -translate-x-1/3 -translate-y-1/3" viewBox="0 0 400 400">
@@ -71,7 +71,7 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
                           y1="200"
                           x2={x}
                           y2={y}
-                          stroke="hsl(var(--ai-blue))"
+                          stroke="hsl(190, 100%, 17%)"
                           strokeWidth="2"
                           initial={{ pathLength: 0 }}
                           animate={{ pathLength: 1 }}
@@ -81,7 +81,7 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
                           cx={x}
                           cy={y}
                           r="8"
-                          fill="hsl(var(--ai-purple))"
+                          fill="hsl(46, 93%, 45%)"
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
                           transition={{ duration: 0.3, delay: 0.5 + i * 0.1 }}

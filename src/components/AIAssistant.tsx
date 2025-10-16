@@ -56,7 +56,7 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[hsl(var(--ai-blue)/0.6)] to-[hsl(var(--ai-purple)/0.4)] ai-glow flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[hsl(190,100%,17%,0.8)] to-[hsl(46,93%,45%,0.6)] ai-glow flex items-center justify-center">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
           <h2 className="font-semibold text-foreground">SIE Assistant</h2>
@@ -81,7 +81,7 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
                   <Button
                     size="sm"
                     onClick={() => handleAccept(action.id)}
-                    className="flex-1 h-8 bg-[hsl(var(--trust-green))] hover:bg-[hsl(var(--trust-green)/0.9)] text-white"
+                    className="flex-1 h-8 bg-accent hover:bg-accent/90 text-accent-foreground"
                   >
                     <Check className="w-3 h-3 mr-1" />
                     Accept
@@ -98,7 +98,7 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
                     size="sm"
                     variant="outline"
                     onClick={() => handleDelete(action.id)}
-                    className="flex-1 h-8 border-[hsl(var(--trust-red)/0.5)] text-[hsl(var(--trust-red))] hover:bg-[hsl(var(--trust-red)/0.1)]"
+                    className="flex-1 h-8 border-destructive/50 text-destructive hover:bg-destructive/10"
                   >
                     <Trash2 className="w-3 h-3 mr-1" />
                     Delete
@@ -112,7 +112,7 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
 
       {/* Chat Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        <Card className="p-3 bg-[hsl(var(--ai-purple)/0.1)] border-[hsl(var(--ai-purple)/0.3)]">
+        <Card className="p-3 bg-secondary/10 border-secondary/30">
           <p className="text-sm text-foreground">
             Hello! I'm your SIE assistant. I can help you manage your network, prioritize communications, and automate tasks. How can I help you today?
           </p>
@@ -135,7 +135,7 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
           />
           <Button
             size="icon"
-            className="bg-gradient-to-br from-[hsl(var(--ai-blue))] to-[hsl(var(--ai-purple))] hover:opacity-90"
+            className="bg-primary hover:bg-primary/90"
             disabled={!message.trim()}
           >
             <Send className="w-4 h-4" />

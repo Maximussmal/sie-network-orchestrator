@@ -56,21 +56,21 @@ export const CommunicationHub = () => {
       {/* KPI Dashboard */}
       <div className="grid grid-cols-3 gap-2 p-4 bg-card border-b">
         <Card className="p-3 text-center">
-          <div className="text-2xl font-bold text-[hsl(var(--trust-red))]">{outstandingReplies}</div>
+          <div className="text-2xl font-bold text-destructive">{outstandingReplies}</div>
           <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
             <Clock className="w-3 h-3" />
             Outstanding
           </div>
         </Card>
         <Card className="p-3 text-center">
-          <div className="text-2xl font-bold text-[hsl(var(--email-new))]">{newEmails.length}</div>
+          <div className="text-2xl font-bold text-primary">{newEmails.length}</div>
           <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
             <Mail className="w-3 h-3" />
             New Today
           </div>
         </Card>
         <Card className="p-3 text-center">
-          <div className="text-2xl font-bold text-[hsl(var(--trust-green))]">94%</div>
+          <div className="text-2xl font-bold text-accent">94%</div>
           <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
             <CheckCheck className="w-3 h-3" />
             Response
@@ -82,16 +82,16 @@ export const CommunicationHub = () => {
         {/* New Emails Section */}
         <div className="p-4">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-full bg-[hsl(var(--email-new)/0.2)] flex items-center justify-center">
-              <Mail className="w-4 h-4 text-[hsl(var(--email-new))]" />
+            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+              <Mail className="w-4 h-4 text-primary" />
             </div>
             <h2 className="font-semibold text-foreground">New Emails</h2>
-            <Badge className="ml-auto bg-[hsl(var(--email-new))] text-white">{newEmails.length}</Badge>
+            <Badge className="ml-auto bg-primary text-primary-foreground">{newEmails.length}</Badge>
           </div>
 
           <div className="space-y-2">
             {newEmails.map((email) => (
-              <Card key={email.id} className="p-3 hover:bg-accent/50 transition-colors cursor-pointer border-l-4 border-l-[hsl(var(--email-new))]">
+              <Card key={email.id} className="p-3 hover:bg-accent/50 transition-colors cursor-pointer border-l-4 border-l-primary">
                 <div className="flex items-start justify-between gap-2 mb-1">
                   <h3 className="font-semibold text-sm text-foreground">{email.from}</h3>
                   <span className="text-xs text-muted-foreground flex-shrink-0">{email.time}</span>
@@ -106,15 +106,15 @@ export const CommunicationHub = () => {
         {/* Existing Emails Section */}
         <div className="p-4 pt-0">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-full bg-[hsl(var(--email-existing)/0.2)] flex items-center justify-center">
-              <MailOpen className="w-4 h-4 text-[hsl(var(--email-existing))]" />
+            <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
+              <MailOpen className="w-4 h-4 text-accent" />
             </div>
             <h2 className="font-semibold text-foreground">Recent</h2>
           </div>
 
           <div className="space-y-2">
             {existingEmails.map((email) => (
-              <Card key={email.id} className="p-3 hover:bg-accent/50 transition-colors cursor-pointer border-l-4 border-l-[hsl(var(--email-existing))]">
+              <Card key={email.id} className="p-3 hover:bg-accent/50 transition-colors cursor-pointer border-l-4 border-l-accent">
                 <div className="flex items-start justify-between gap-2 mb-1">
                   <h3 className="font-medium text-sm text-foreground">{email.from}</h3>
                   <span className="text-xs text-muted-foreground flex-shrink-0">{email.time}</span>

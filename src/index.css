@@ -8,105 +8,100 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* SIE Brand Colors */
+    --background: 60 100% 99%;
+    --foreground: 190 100% 17%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 180 3% 18%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 60 100% 99%;
+    --popover-foreground: 180 3% 18%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 190 100% 17%;
+    --primary-foreground: 60 100% 99%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 46 93% 45%;
+    --secondary-foreground: 180 3% 18%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 190 15% 92%;
+    --muted-foreground: 180 3% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 127 47% 63%;
+    --accent-foreground: 190 100% 17%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 60 100% 99%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 190 20% 85%;
+    --input: 190 20% 85%;
+    --ring: 190 100% 17%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 60 100% 99%;
+    --sidebar-foreground: 190 100% 17%;
+    --sidebar-primary: 190 100% 17%;
+    --sidebar-primary-foreground: 60 100% 99%;
+    --sidebar-accent: 190 15% 92%;
+    --sidebar-accent-foreground: 190 100% 17%;
+    --sidebar-border: 190 20% 85%;
+    --sidebar-ring: 190 100% 17%;
     
     /* SIE App Custom Tokens */
-    --ai-blue: 240 80% 60%;
-    --ai-purple: 270 80% 60%;
-    --trust-green: 142 76% 36%;
-    --trust-yellow: 45 93% 47%;
+    --ai-blue: 190 100% 17%;
+    --ai-purple: 46 93% 45%;
+    --trust-green: 127 47% 63%;
+    --trust-yellow: 46 93% 45%;
     --trust-red: 0 84% 60%;
-    --email-new: 217 91% 60%;
-    --email-existing: 142 71% 45%;
+    --email-new: 190 100% 17%;
+    --email-existing: 127 47% 63%;
     
     /* Gradients */
-    --gradient-ai: linear-gradient(135deg, hsl(var(--ai-blue)), hsl(var(--ai-purple)));
-    --gradient-sphere: radial-gradient(circle, hsl(var(--ai-blue) / 0.6), hsl(var(--ai-purple) / 0.4));
+    --gradient-ai: linear-gradient(135deg, hsl(190 100% 17%), hsl(46 93% 45%));
+    --gradient-sphere: radial-gradient(circle, hsl(190 100% 17% / 0.6), hsl(46 93% 45% / 0.4));
     
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    /* SIE Dark Mode - Inverted for contrast */
+    --background: 180 3% 18%;
+    --foreground: 60 100% 99%;
+
+    --card: 190 20% 15%;
+    --card-foreground: 60 100% 99%;
+
+    --popover: 180 3% 18%;
+    --popover-foreground: 60 100% 99%;
+
+    --primary: 46 93% 45%;
+    --primary-foreground: 180 3% 18%;
+
+    --secondary: 190 100% 17%;
+    --secondary-foreground: 60 100% 99%;
+
+    --muted: 180 3% 25%;
+    --muted-foreground: 190 15% 70%;
+
+    --accent: 127 47% 63%;
+    --accent-foreground: 180 3% 18%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 60 100% 99%;
+
+    --border: 190 20% 25%;
+    --input: 190 20% 25%;
+    --ring: 46 93% 45%;
+    --sidebar-background: 190 100% 10%;
+    --sidebar-foreground: 60 100% 99%;
+    --sidebar-primary: 46 93% 45%;
+    --sidebar-primary-foreground: 180 3% 18%;
+    --sidebar-accent: 190 20% 20%;
+    --sidebar-accent-foreground: 60 100% 99%;
+    --sidebar-border: 190 20% 25%;
+    --sidebar-ring: 46 93% 45%;
   }
 }
 
@@ -123,11 +118,11 @@ All colors MUST be HSL.
 
 @layer utilities {
   .ai-glow {
-    box-shadow: 0 0 20px hsl(var(--ai-blue) / 0.5), 0 0 40px hsl(var(--ai-purple) / 0.3);
+    box-shadow: 0 0 20px hsl(190 100% 17% / 0.5), 0 0 40px hsl(46 93% 45% / 0.3);
   }
   
   .ai-glow-strong {
-    box-shadow: 0 0 30px hsl(var(--ai-blue) / 0.8), 0 0 60px hsl(var(--ai-purple) / 0.6);
+    box-shadow: 0 0 30px hsl(190 100% 17% / 0.8), 0 0 60px hsl(46 93% 45% / 0.6);
   }
   
   .sphere-pulse {

@@ -110,11 +110,11 @@ export const NetworkInterface = () => {
           <div className="text-xs text-muted-foreground">Total</div>
         </Card>
         <Card className="p-3 text-center">
-          <div className="text-2xl font-bold text-[hsl(var(--trust-green))]">94%</div>
+          <div className="text-2xl font-bold text-accent">94%</div>
           <div className="text-xs text-muted-foreground">Avg Trust</div>
         </Card>
         <Card className="p-3 text-center">
-          <div className="text-2xl font-bold text-[hsl(var(--ai-blue))]">+12</div>
+          <div className="text-2xl font-bold text-primary">+12</div>
           <div className="text-xs text-muted-foreground">This Week</div>
         </Card>
       </div>
@@ -125,7 +125,7 @@ export const NetworkInterface = () => {
           onClick={() => setSortBy("mutual")}
           className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
             sortBy === "mutual"
-              ? "bg-[hsl(var(--ai-blue))] text-white"
+              ? "bg-primary text-primary-foreground"
               : "bg-muted text-muted-foreground"
           }`}
         >
@@ -135,7 +135,7 @@ export const NetworkInterface = () => {
           onClick={() => setSortBy("trust")}
           className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
             sortBy === "trust"
-              ? "bg-[hsl(var(--ai-blue))] text-white"
+              ? "bg-primary text-primary-foreground"
               : "bg-muted text-muted-foreground"
           }`}
         >
@@ -150,7 +150,7 @@ export const NetworkInterface = () => {
             <div className="flex gap-3">
               <Avatar className="w-12 h-12 flex-shrink-0">
                 <AvatarImage src="" />
-                <AvatarFallback className="bg-[hsl(var(--ai-purple)/0.2)] text-[hsl(var(--ai-purple))]">
+                <AvatarFallback className="bg-secondary/20 text-secondary-foreground">
                   {connection.avatar}
                 </AvatarFallback>
               </Avatar>
@@ -173,7 +173,7 @@ export const NetworkInterface = () => {
                       <button
                         key={network}
                         onClick={() => toggleNetwork(`${connection.id}-${network}`)}
-                        className="w-6 h-6 rounded-full bg-muted hover:bg-[hsl(var(--ai-blue)/0.2)] flex items-center justify-center transition-all"
+                        className="w-6 h-6 rounded-full bg-muted hover:bg-primary/20 flex items-center justify-center transition-all"
                       >
                         {getNetworkIcon(network)}
                       </button>
@@ -199,10 +199,10 @@ export const NetworkInterface = () => {
                     <div
                       className={`h-full ${
                         connection.trustScore >= 90
-                          ? "bg-[hsl(var(--trust-green))]"
+                          ? "bg-accent"
                           : connection.trustScore >= 70
-                          ? "bg-[hsl(var(--trust-yellow))]"
-                          : "bg-[hsl(var(--trust-red))]"
+                          ? "bg-secondary"
+                          : "bg-destructive"
                       }`}
                       style={{ width: `${connection.trustScore}%` }}
                     />
@@ -211,8 +211,8 @@ export const NetworkInterface = () => {
                     variant="outline"
                     className={`text-xs px-1.5 py-0 h-5 ${
                       connection.trend === "up"
-                        ? "text-[hsl(var(--trust-green))] border-[hsl(var(--trust-green))]"
-                        : "text-[hsl(var(--trust-yellow))] border-[hsl(var(--trust-yellow))]"
+                        ? "text-accent border-accent"
+                        : "text-secondary border-secondary"
                     }`}
                   >
                     {connection.trend === "up" ? (
