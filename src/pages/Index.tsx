@@ -1,12 +1,67 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Network, MessageSquare } from "lucide-react";
+import { LandingAnimation } from "@/components/LandingAnimation";
+import { NetworkInterface } from "@/components/NetworkInterface";
+import { CommunicationHub } from "@/components/CommunicationHub";
+import { AIAssistant } from "@/components/AIAssistant";
+import { AIHandle } from "@/components/AIHandle";
 
 const Index = () => {
+  const [showLanding, setShowLanding] = useState(true);
+  const [activeTab, setActiveTab] = useState<"network" | "communication">("network");
+  const [isAIOpen, setIsAIOpen] = useState(false);
+
+  if (showLanding) {
+    return <LandingAnimation onComplete={() => setShowLanding(false)} />;
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="h-screen flex flex-col bg-background overflow-hidden">
+      {/* Header */}
+      <header className="flex items-center justify-between p-4 border-b border-border bg-card">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[hsl(var(--ai-blue)/0.6)] to-[hsl(var(--ai-purple)/0.4)] sphere-pulse" />
+          <div>
+            <h1 className="text-lg font-bold text-foreground">SIE</h1>
+            <p className="text-xs text-muted-foreground">Orchestrate Everything</p>
+          </div>
+        </div>
+      </header>
+
+      {/* Tab Navigation */}
+      <div className="flex border-b border-border bg-card">
+        <button
+          onClick={() => setActiveTab("network")}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 font-medium transition-colors ${
+            activeTab === "network"
+              ? "text-[hsl(var(--ai-blue))] border-b-2 border-[hsl(var(--ai-blue))]"
+              : "text-muted-foreground"
+          }`}
+        >
+          <Network className="w-4 h-4" />
+          Network
+        </button>
+        <button
+          onClick={() => setActiveTab("communication")}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 font-medium transition-colors ${
+            activeTab === "communication"
+              ? "text-[hsl(var(--ai-blue))] border-b-2 border-[hsl(var(--ai-blue))]"
+              : "text-muted-foreground"
+          }`}
+        >
+          <MessageSquare className="w-4 h-4" />
+          Communication
+        </button>
       </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-hidden">
+        {activeTab === "network" ? <NetworkInterface /> : <CommunicationHub />}
+      </div>
+
+      {/* AI Components */}
+      <AIHandle onOpen={() => setIsAIOpen(true)} />
+      <AIAssistant isOpen={isAIOpen} onClose={() => setIsAIOpen(false)} />
     </div>
   );
 };

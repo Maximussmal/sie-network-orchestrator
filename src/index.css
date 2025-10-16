@@ -91,6 +91,22 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* SIE App Custom Tokens */
+    --ai-blue: 240 80% 60%;
+    --ai-purple: 270 80% 60%;
+    --trust-green: 142 76% 36%;
+    --trust-yellow: 45 93% 47%;
+    --trust-red: 0 84% 60%;
+    --email-new: 217 91% 60%;
+    --email-existing: 142 71% 45%;
+    
+    /* Gradients */
+    --gradient-ai: linear-gradient(135deg, hsl(var(--ai-blue)), hsl(var(--ai-purple)));
+    --gradient-sphere: radial-gradient(circle, hsl(var(--ai-blue) / 0.6), hsl(var(--ai-purple) / 0.4));
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
@@ -101,5 +117,35 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    overscroll-behavior: none;
+  }
+}
+
+@layer utilities {
+  .ai-glow {
+    box-shadow: 0 0 20px hsl(var(--ai-blue) / 0.5), 0 0 40px hsl(var(--ai-purple) / 0.3);
+  }
+  
+  .ai-glow-strong {
+    box-shadow: 0 0 30px hsl(var(--ai-blue) / 0.8), 0 0 60px hsl(var(--ai-purple) / 0.6);
+  }
+  
+  .sphere-pulse {
+    animation: spherePulse 3s ease-in-out infinite;
+  }
+  
+  @keyframes spherePulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.05); opacity: 1; }
+  }
+  
+  @keyframes lineExtend {
+    0% { stroke-dashoffset: 1000; }
+    100% { stroke-dashoffset: 0; }
+  }
+  
+  @keyframes nodeAppear {
+    0% { opacity: 0; transform: scale(0); }
+    100% { opacity: 1; transform: scale(1); }
   }
 }
