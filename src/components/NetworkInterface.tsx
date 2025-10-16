@@ -160,7 +160,7 @@ const mockSuggestedConnections: SuggestedConnection[] = [
 export const NetworkInterface = () => {
   const [sortBy, setSortBy] = useState<"mutual" | "trust">("mutual");
   const [filterBy, setFilterBy] = useState<"all" | "1st" | "2nd" | "3rd+">("all");
-  const [activeSection, setActiveSection] = useState<"nurture" | "expand">("nurture");
+  const [activeSection, setActiveSection] = useState<"nurture" | "expand" | "signals">("nurture");
   const [selectedPath, setSelectedPath] = useState<SuggestedConnection | null>(null);
 
   const sortedConnections = [...mockConnections].sort((a, b) => {
@@ -197,9 +197,112 @@ export const NetworkInterface = () => {
           <Network className="w-4 h-4" />
           Expand
         </button>
+        <button
+          onClick={() => setActiveSection("signals")}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+            activeSection === "signals"
+              ? "bg-primary text-primary-foreground"
+              : "bg-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <TrendingUp className="w-4 h-4" />
+          Signals
+        </button>
       </div>
 
-      {activeSection === "nurture" ? (
+      {activeSection === "signals" ? (
+        <>
+          {/* Signals Section */}
+          <div className="p-4">
+            <div className="flex items-center gap-2 mb-4">
+              <TrendingUp className="w-5 h-5 text-primary" />
+              <h2 className="text-lg font-semibold text-foreground">LinkedIn Signals</h2>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Recent activity and engagement opportunities from your network
+            </p>
+          </div>
+
+          {/* Signals List */}
+          <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-3">
+            {[
+              {
+                id: "sig1",
+                person: "Peter Lange",
+                avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop",
+                action: "Posted about",
+                content: "Excited to announce our new partnership with leading energy storage providers across Europe...",
+                time: "2 hours ago",
+                engagement: "45 likes, 12 comments"
+              },
+              {
+                id: "sig2",
+                person: "Stefanie Hauer",
+                avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop",
+                action: "Shared an article",
+                content: "The Future of Corporate Sustainability: 5 Key Trends for 2025",
+                time: "5 hours ago",
+                engagement: "89 likes, 23 comments"
+              },
+              {
+                id: "sig3",
+                person: "Clemens Feigl",
+                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop",
+                action: "Changed role to",
+                content: "CEO @everwave - Thrilled to lead our mission to clean our oceans!",
+                time: "1 day ago",
+                engagement: "156 likes"
+              },
+              {
+                id: "sig4",
+                person: "Simon Tautz",
+                avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop",
+                action: "Commented on",
+                content: "Great insights on the intersection of AI and autonomous laboratory systems...",
+                time: "2 days ago",
+                engagement: "12 likes"
+              }
+            ].map((signal) => (
+              <Card key={signal.id} className="p-4 rounded-2xl border-0 shadow-sm bg-card">
+                <div className="flex gap-3 items-start">
+                  <Avatar className="w-12 h-12 flex-shrink-0">
+                    <AvatarImage src={signal.avatar} alt={signal.person} />
+                    <AvatarFallback className="bg-muted text-foreground text-sm font-semibold">
+                      {signal.person.split(" ").map(n => n[0]).join("")}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="mb-2">
+                      <p className="text-sm">
+                        <span className="font-semibold text-foreground">{signal.person}</span>
+                        <span className="text-muted-foreground"> {signal.action}</span>
+                      </p>
+                      <p className="text-xs text-muted-foreground">{signal.time}</p>
+                    </div>
+
+                    <div className="bg-muted/50 rounded-lg p-3 mb-2">
+                      <p className="text-sm text-foreground">{signal.content}</p>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs text-muted-foreground">{signal.engagement}</p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          {/* AI Act Button */}
+          <div className="p-4 border-t bg-card">
+            <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 flex items-center justify-center gap-2">
+              <Sparkles className="w-4 h-4" />
+              Act
+            </Button>
+          </div>
+        </>
+      ) : activeSection === "nurture" ? (
         <>
           {/* KPI Dashboard */}
           <div className="grid grid-cols-3 gap-3 p-4 bg-background">
