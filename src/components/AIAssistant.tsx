@@ -57,35 +57,35 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 animate-fade-in"
+        className="fixed inset-0 bg-background/60 backdrop-blur-sm z-40 animate-fade-in"
         onClick={onClose}
       />
       
       {/* Drawer from bottom */}
-      <div className="fixed inset-x-0 bottom-0 h-[85vh] bg-card border-t border-border shadow-2xl z-50 flex flex-col animate-slide-in-bottom rounded-t-3xl">
+      <div className="fixed inset-x-0 bottom-0 h-[85vh] bg-card border-t-2 border-border shadow-2xl z-50 flex flex-col animate-slide-in-bottom rounded-t-3xl">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border">
+        <div className="flex items-center justify-between p-4 border-b border-border bg-muted/30">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[hsl(190,100%,17%,0.8)] to-[hsl(46,93%,45%,0.6)] ai-glow sphere-pulse flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center shadow-lg">
+              <Sparkles className="w-5 h-5 text-accent-foreground" />
             </div>
             <div>
-              <h2 className="font-bold text-foreground">SIE</h2>
+              <h2 className="font-bold text-foreground text-lg">SIE</h2>
               <p className="text-xs text-muted-foreground">Orchestrate Everything</p>
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose}>
+          <Button variant="ghost" size="icon" onClick={onClose} className="hover:bg-muted">
             <X className="w-5 h-5" />
           </Button>
         </div>
 
       {/* Upcoming Actions Section */}
       {actions.length > 0 && (
-        <div className="p-4 border-b border-border">
+        <div className="p-4 border-b border-border bg-muted/20">
           <h3 className="text-sm font-semibold text-foreground mb-3">Upcoming Actions</h3>
           <div className="space-y-2">
             {actions.map((action) => (
-              <Card key={action.id} className="p-3 bg-accent/50">
+              <Card key={action.id} className="p-3 bg-card border-border">
                 <div className="mb-2">
                   <div className="text-sm font-medium text-foreground mb-1">{action.title}</div>
                   <div className="text-xs text-muted-foreground">{action.description}</div>
@@ -102,7 +102,7 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="flex-1 h-8 border-muted-foreground/30"
+                    className="flex-1 h-8"
                   >
                     <Edit className="w-3 h-3 mr-1" />
                     Edit
@@ -111,7 +111,7 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
                     size="sm"
                     variant="outline"
                     onClick={() => handleDelete(action.id)}
-                    className="flex-1 h-8 border-destructive/50 text-destructive hover:bg-destructive/10"
+                    className="flex-1 h-8 border-destructive text-destructive hover:bg-destructive/10"
                   >
                     <Trash2 className="w-3 h-3 mr-1" />
                     Delete
@@ -125,7 +125,7 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
 
       {/* Chat Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        <Card className="p-3 bg-secondary/10 border-secondary/30">
+        <Card className="p-3 bg-muted/50 border-border">
           <p className="text-sm text-foreground">
             Hello! I'm your SIE assistant. I can help you manage your network, prioritize communications, and automate tasks. How can I help you today?
           </p>
@@ -133,12 +133,12 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
       </div>
 
       {/* Input Area */}
-      <div className="p-4 border-t border-border bg-card">
+      <div className="p-4 border-t-2 border-border bg-muted/20">
         <div className="flex gap-2">
           <Button
             size="icon"
             variant="outline"
-            className={`${isRecording ? 'bg-destructive text-destructive-foreground' : ''}`}
+            className={`${isRecording ? 'bg-destructive text-destructive-foreground border-destructive' : 'border-border'}`}
             onClick={() => setIsRecording(!isRecording)}
           >
             <Mic className="w-4 h-4" />
@@ -146,7 +146,7 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
           <Button
             size="icon"
             variant="outline"
-            className={`${isSpeaking ? 'bg-primary text-primary-foreground' : ''}`}
+            className={`${isSpeaking ? 'bg-accent text-accent-foreground border-accent' : 'border-border'}`}
             onClick={() => setIsSpeaking(!isSpeaking)}
           >
             <Volume2 className="w-4 h-4" />
@@ -155,7 +155,7 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Ask me anything..."
-            className="flex-1"
+            className="flex-1 border-border"
             onKeyDown={(e) => {
               if (e.key === "Enter" && message.trim()) {
                 setMessage("");
@@ -164,7 +164,7 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
           />
           <Button
             size="icon"
-            className="bg-primary hover:bg-primary/90"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
             disabled={!message.trim()}
           >
             <Send className="w-4 h-4" />

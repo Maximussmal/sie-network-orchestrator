@@ -8,14 +8,19 @@ export const AIHandle = ({ onOpen }: AIHandleProps) => {
   return (
     <button
       onClick={onOpen}
-      className="fixed bottom-4 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full bg-gradient-to-r from-[hsl(190,100%,17%)] to-[hsl(46,93%,45%)] ai-glow-strong cursor-pointer flex items-center gap-3 transition-all hover:scale-105 active:scale-95 z-30 shadow-lg"
+      className="fixed bottom-0 left-0 right-0 h-16 bg-primary border-t-2 border-primary-foreground/10 cursor-pointer flex items-center justify-between px-6 transition-all hover:h-18 z-30 shadow-[0_-4px_12px_rgba(0,0,0,0.1)]"
     >
-      <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center sphere-pulse">
-        <Sparkles className="w-4 h-4 text-white" />
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center shadow-lg">
+          <Sparkles className="w-5 h-5 text-accent-foreground" />
+        </div>
+        <div className="text-left">
+          <p className="text-base font-bold text-primary-foreground">SIE</p>
+          <p className="text-xs text-primary-foreground/70">Orchestrate Everything</p>
+        </div>
       </div>
-      <div className="text-left">
-        <p className="text-sm font-bold text-white">SIE</p>
-        <p className="text-xs text-white/80">Orchestrate Everything</p>
+      <div className="text-sm text-primary-foreground/70 font-medium">
+        Tap to open
       </div>
     </button>
   );

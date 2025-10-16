@@ -57,7 +57,7 @@ const Index = () => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden pb-16">
         {activeTab === "network" ? (
           <NetworkInterface />
         ) : activeTab === "communication" ? (
