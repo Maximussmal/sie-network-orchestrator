@@ -1,14 +1,21 @@
 import { useState } from "react";
-import { Users, TrendingUp, Target, ArrowUpDown } from "lucide-react";
+import { Users, TrendingUp, Target, ArrowUpDown, Network, Sparkles, ChevronRight } from "lucide-react";
 import { Card } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface Connection {
   id: string;
@@ -22,6 +29,21 @@ interface Connection {
   trendValue: number;
   avatar: string;
   networks: ("linkedin" | "company" | "school")[];
+}
+
+interface SuggestedConnection {
+  id: string;
+  name: string;
+  title: string;
+  location: string;
+  avatar: string;
+  relevance: string;
+  degree: "2nd" | "3rd";
+  path: Array<{
+    name: string;
+    avatar: string;
+    relationship: string;
+  }>;
 }
 
 const mockConnections: Connection[] = [
@@ -79,9 +101,67 @@ const mockConnections: Connection[] = [
   },
 ];
 
+const mockSuggestedConnections: SuggestedConnection[] = [
+  {
+    id: "s1",
+    name: "Dr. Anna Weber",
+    title: "Director of Sustainability @Siemens Energy",
+    location: "Munich, Germany",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop",
+    relevance: "Leading sustainable energy initiatives - aligns with your network's focus on industrial energy storage",
+    degree: "2nd",
+    path: [
+      {
+        name: "Stefanie Hauer",
+        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop",
+        relationship: "Former colleague at sustainability conference"
+      }
+    ]
+  },
+  {
+    id: "s2",
+    name: "Marcus Schmidt",
+    title: "Venture Partner @Munich Venture Partners",
+    location: "Munich, Germany",
+    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop",
+    relevance: "Invests in climate tech startups - could connect with your energy storage network",
+    degree: "2nd",
+    path: [
+      {
+        name: "Peter Lange",
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop",
+        relationship: "Co-investor in energy storage ventures"
+      }
+    ]
+  },
+  {
+    id: "s3",
+    name: "Prof. Lisa Chen",
+    title: "Chair of AI & Robotics @TUM",
+    location: "Munich, Germany",
+    avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop",
+    relevance: "Research focus on autonomous systems - connects to Simon's work on autonomous labs",
+    degree: "3rd",
+    path: [
+      {
+        name: "Simon Tautz",
+        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop",
+        relationship: "Student at TUM"
+      },
+      {
+        name: "Dr. Michael Berg",
+        avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop",
+        relationship: "Research collaborator"
+      }
+    ]
+  }
+];
+
 export const NetworkInterface = () => {
   const [sortBy, setSortBy] = useState<"mutual" | "trust">("mutual");
   const [filterBy, setFilterBy] = useState<"all" | "1st" | "2nd" | "3rd+">("all");
+  const [activeSection, setActiveSection] = useState<"nurture" | "expand">("nurture");
+  const [selectedPath, setSelectedPath] = useState<SuggestedConnection | null>(null);
 
   const sortedConnections = [...mockConnections].sort((a, b) => {
     if (sortBy === "mutual") return b.mutualConnections - a.mutualConnections;
@@ -93,8 +173,36 @@ export const NetworkInterface = () => {
 
   return (
     <div className="flex flex-col h-full bg-background">
-      {/* KPI Dashboard */}
-      <div className="grid grid-cols-3 gap-3 p-4 bg-background">
+      {/* Section Toggle */}
+      <div className="flex gap-2 p-4 border-b bg-card">
+        <button
+          onClick={() => setActiveSection("nurture")}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+            activeSection === "nurture"
+              ? "bg-primary text-primary-foreground"
+              : "bg-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Users className="w-4 h-4" />
+          Nurture Relationships
+        </button>
+        <button
+          onClick={() => setActiveSection("expand")}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+            activeSection === "expand"
+              ? "bg-primary text-primary-foreground"
+              : "bg-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Network className="w-4 h-4" />
+          Expand Network
+        </button>
+      </div>
+
+      {activeSection === "nurture" ? (
+        <>
+          {/* KPI Dashboard */}
+          <div className="grid grid-cols-3 gap-3 p-4 bg-background">
         <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
           <div className="flex items-center gap-2 mb-1">
             <Users className="w-4 h-4 text-primary" />
@@ -154,17 +262,17 @@ export const NetworkInterface = () => {
         </DropdownMenu>
       </div>
 
-      {/* Connections Count */}
-      <div className="px-4 pb-2">
-        <p className="text-sm text-muted-foreground">
-          <span className="font-semibold text-foreground">{sortedConnections.length}</span> connections
-        </p>
-      </div>
+          {/* Connections Count */}
+          <div className="px-4 pb-2">
+            <p className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">{sortedConnections.length}</span> connections
+            </p>
+          </div>
 
-      {/* Connections List */}
-      <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-3">
-        {sortedConnections.map((connection) => (
-          <Card key={connection.id} className="p-4 rounded-2xl border-0 shadow-sm bg-card">
+          {/* Connections List */}
+          <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-3">
+            {sortedConnections.map((connection) => (
+              <Card key={connection.id} className="p-4 rounded-2xl border-0 shadow-sm bg-card">
             <div className="flex gap-3 items-start">
               <Avatar className="w-14 h-14 flex-shrink-0">
                 <AvatarImage src={connection.avatar} alt={connection.name} />
@@ -206,10 +314,138 @@ export const NetworkInterface = () => {
                   </div>
                 </div>
               </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </>
+    ) : (
+      <>
+        {/* Expand Network Section */}
+        <div className="p-4">
+          <div className="flex items-center gap-2 mb-4">
+            <Sparkles className="w-5 h-5 text-primary" />
+            <h2 className="text-lg font-semibold text-foreground">Suggested Connections</h2>
+          </div>
+          <p className="text-sm text-muted-foreground mb-4">
+            Expand your network strategically with these 2nd and 3rd degree connections
+          </p>
+        </div>
+
+        {/* Suggested Connections List */}
+        <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-3">
+          {mockSuggestedConnections.map((suggestion) => (
+            <Card key={suggestion.id} className="p-4 rounded-2xl border-0 shadow-sm bg-card">
+              <div className="flex gap-3 items-start">
+                <Avatar className="w-14 h-14 flex-shrink-0">
+                  <AvatarImage src={suggestion.avatar} alt={suggestion.name} />
+                  <AvatarFallback className="bg-muted text-foreground text-lg font-semibold">
+                    {suggestion.name.split(" ").map(n => n[0]).join("")}
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <h3 className="font-semibold text-base text-foreground">
+                      {suggestion.name}
+                    </h3>
+                    <Badge className="bg-accent/10 text-accent border-0 px-3 py-1 text-sm font-semibold">
+                      {suggestion.degree}
+                    </Badge>
+                  </div>
+                  
+                  <p className="text-sm text-muted-foreground line-clamp-1 mb-2">
+                    {suggestion.title}
+                  </p>
+
+                  {/* Relevance */}
+                  <div className="bg-primary/5 rounded-lg p-3 mb-3">
+                    <div className="flex items-start gap-2">
+                      <Target className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                      <p className="text-xs text-foreground">
+                        {suggestion.relevance}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Path Button */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSelectedPath(suggestion)}
+                    className="w-full"
+                  >
+                    <Network className="w-4 h-4 mr-2" />
+                    View Connection Path
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </>
+    )}
+
+      {/* Path Dialog */}
+      <Dialog open={!!selectedPath} onOpenChange={() => setSelectedPath(null)}>
+        <DialogContent className="sm:max-w-md bg-card">
+          <DialogHeader>
+            <DialogTitle>Connection Path to {selectedPath?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            {/* You */}
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                <span className="text-lg font-semibold text-primary">You</span>
+              </div>
+              <div>
+                <p className="font-medium text-foreground">Your Network</p>
+                <p className="text-xs text-muted-foreground">Starting point</p>
+              </div>
             </div>
-          </Card>
-        ))}
-      </div>
+
+            {/* Path connections */}
+            {selectedPath?.path.map((step, index) => (
+              <div key={index}>
+                <div className="flex items-center justify-center py-2">
+                  <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <div className="flex items-center gap-3">
+                  <Avatar className="w-12 h-12">
+                    <AvatarImage src={step.avatar} alt={step.name} />
+                    <AvatarFallback>
+                      {step.name.split(" ").map(n => n[0]).join("")}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium text-foreground">{step.name}</p>
+                    <p className="text-xs text-muted-foreground">{step.relationship}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Target */}
+            <div>
+              <div className="flex items-center justify-center py-2">
+                <ChevronRight className="w-5 h-5 text-muted-foreground" />
+              </div>
+              <div className="flex items-center gap-3">
+                <Avatar className="w-12 h-12">
+                  <AvatarImage src={selectedPath?.avatar} alt={selectedPath?.name} />
+                  <AvatarFallback>
+                    {selectedPath?.name.split(" ").map(n => n[0]).join("")}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-medium text-foreground">{selectedPath?.name}</p>
+                  <p className="text-xs text-muted-foreground">{selectedPath?.title}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
