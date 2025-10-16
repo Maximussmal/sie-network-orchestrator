@@ -18,16 +18,6 @@ const Index = () => {
 
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
-      {/* Header */}
-      <header className="flex items-center justify-between p-4 border-b border-border bg-card">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[hsl(190,100%,17%,0.8)] to-[hsl(46,93%,45%,0.6)] sphere-pulse" />
-          <div>
-            <h1 className="text-lg font-bold text-foreground">SIE</h1>
-            <p className="text-xs text-muted-foreground">Orchestrate Everything</p>
-          </div>
-        </div>
-      </header>
 
       {/* Tab Navigation */}
       <div className="flex border-b border-border bg-card">

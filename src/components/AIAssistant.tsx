@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Send, Check, Edit, Trash2, Sparkles } from "lucide-react";
+import { X, Send, Check, Edit, Trash2, Sparkles, Mic, Volume2 } from "lucide-react";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -40,6 +40,8 @@ interface AIAssistantProps {
 export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
   const [message, setMessage] = useState("");
   const [actions, setActions] = useState(mockActions);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   const handleAccept = (id: string) => {
     setActions(actions.filter((a) => a.id !== id));
@@ -52,19 +54,30 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 w-[85vw] bg-card/95 backdrop-blur-md border-l border-border shadow-2xl z-50 flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[hsl(190,100%,17%,0.8)] to-[hsl(46,93%,45%,0.6)] ai-glow flex items-center justify-center">
-            <Sparkles className="w-4 h-4 text-white" />
+    <>
+      {/* Backdrop */}
+      <div 
+        className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 animate-fade-in"
+        onClick={onClose}
+      />
+      
+      {/* Drawer from bottom */}
+      <div className="fixed inset-x-0 bottom-0 h-[85vh] bg-card border-t border-border shadow-2xl z-50 flex flex-col animate-slide-in-bottom rounded-t-3xl">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-border">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[hsl(190,100%,17%,0.8)] to-[hsl(46,93%,45%,0.6)] ai-glow sphere-pulse flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h2 className="font-bold text-foreground">SIE</h2>
+              <p className="text-xs text-muted-foreground">Orchestrate Everything</p>
+            </div>
           </div>
-          <h2 className="font-semibold text-foreground">SIE Assistant</h2>
+          <Button variant="ghost" size="icon" onClick={onClose}>
+            <X className="w-5 h-5" />
+          </Button>
         </div>
-        <Button variant="ghost" size="icon" onClick={onClose}>
-          <X className="w-5 h-5" />
-        </Button>
-      </div>
 
       {/* Upcoming Actions Section */}
       {actions.length > 0 && (
@@ -120,8 +133,24 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
       </div>
 
       {/* Input Area */}
-      <div className="p-4 border-t border-border">
+      <div className="p-4 border-t border-border bg-card">
         <div className="flex gap-2">
+          <Button
+            size="icon"
+            variant="outline"
+            className={`${isRecording ? 'bg-destructive text-destructive-foreground' : ''}`}
+            onClick={() => setIsRecording(!isRecording)}
+          >
+            <Mic className="w-4 h-4" />
+          </Button>
+          <Button
+            size="icon"
+            variant="outline"
+            className={`${isSpeaking ? 'bg-primary text-primary-foreground' : ''}`}
+            onClick={() => setIsSpeaking(!isSpeaking)}
+          >
+            <Volume2 className="w-4 h-4" />
+          </Button>
           <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
@@ -142,6 +171,7 @@ export const AIAssistant = ({ isOpen, onClose }: AIAssistantProps) => {
           </Button>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
