@@ -3,6 +3,7 @@ import { Mail, MailOpen, Clock, CheckCheck, Sparkles, MessageCircle } from "luci
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { ConversationThread } from "./ConversationThread";
 
 interface Email {
   id: string;
@@ -115,10 +116,26 @@ const getPlatformBadge = (platform: "linkedin" | "whatsapp" | "sumbios") => {
 
 export const CommunicationHub = () => {
   const [activeSection, setActiveSection] = useState<"email" | "messages">("email");
+  const [selectedContact, setSelectedContact] = useState<{
+    name: string;
+    avatar: string;
+    title?: string;
+    platform?: "linkedin" | "whatsapp" | "sumbios" | "email";
+  } | null>(null);
   const newEmails = mockEmails.filter((e) => e.isNew);
   const existingEmails = mockEmails.filter((e) => !e.isNew);
   const outstandingReplies = 7;
   const unreadMessages = mockMessages.reduce((acc, msg) => acc + msg.unread, 0);
+
+  if (selectedContact) {
+    return (
+      <ConversationThread
+        contact={selectedContact}
+        platform={selectedContact.platform}
+        onClose={() => setSelectedContact(null)}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col h-full bg-background">
@@ -188,7 +205,16 @@ export const CommunicationHub = () => {
 
           <div className="space-y-2">
             {newEmails.map((email) => (
-              <Card key={email.id} className="p-3 hover:bg-accent/50 transition-colors cursor-pointer border-l-4 border-l-primary">
+              <Card 
+                key={email.id} 
+                className="p-3 hover:bg-accent/50 transition-colors cursor-pointer border-l-4 border-l-primary"
+                onClick={() => setSelectedContact({
+                  name: email.from,
+                  avatar: `https://images.unsplash.com/photo-${email.id === "1" ? "1494790108377-be9c29b29330" : email.id === "2" ? "1507003211169-0a1dd7228f2d" : "1438761681033-6461ffad8d80"}?w=150&h=150&fit=crop`,
+                  title: email.subject,
+                  platform: "email"
+                })}
+              >
                 <div className="flex items-start justify-between gap-2 mb-1">
                   <h3 className="font-semibold text-sm text-foreground">{email.from}</h3>
                   <span className="text-xs text-muted-foreground flex-shrink-0">{email.time}</span>
@@ -215,7 +241,16 @@ export const CommunicationHub = () => {
 
           <div className="space-y-2">
             {existingEmails.map((email) => (
-              <Card key={email.id} className="p-3 hover:bg-accent/50 transition-colors cursor-pointer border-l-4 border-l-accent">
+              <Card 
+                key={email.id} 
+                className="p-3 hover:bg-accent/50 transition-colors cursor-pointer border-l-4 border-l-accent"
+                onClick={() => setSelectedContact({
+                  name: email.from,
+                  avatar: `https://images.unsplash.com/photo-${email.id === "3" ? "1438761681033-6461ffad8d80" : "1472099645785-5658abf4ff4e"}?w=150&h=150&fit=crop`,
+                  title: email.subject,
+                  platform: "email"
+                })}
+              >
                 <div className="flex items-start justify-between gap-2 mb-1">
                   <h3 className="font-medium text-sm text-foreground">{email.from}</h3>
                   <span className="text-xs text-muted-foreground flex-shrink-0">{email.time}</span>
@@ -263,6 +298,11 @@ export const CommunicationHub = () => {
               <Card
                 key={message.id}
                 className="p-3 hover:bg-accent/50 transition-colors cursor-pointer"
+                onClick={() => setSelectedContact({
+                  name: message.from,
+                  avatar: message.avatar,
+                  platform: message.platform
+                })}
               >
                 <div className="flex items-start gap-3">
                   <div className="relative">
