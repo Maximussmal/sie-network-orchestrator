@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, MailOpen, Clock, CheckCheck, Sparkles, MessageCircle } from "lucide-react";
+import { Mail, MailOpen, Clock, CheckCheck, Sparkles, MessageCircle, Calendar as CalendarIcon, Video, MapPin } from "lucide-react";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -115,7 +115,7 @@ const getPlatformBadge = (platform: "linkedin" | "whatsapp" | "sumbios") => {
 };
 
 export const CommunicationHub = () => {
-  const [activeSection, setActiveSection] = useState<"email" | "messages">("email");
+  const [activeSection, setActiveSection] = useState<"email" | "messages" | "calendar">("email");
   const [selectedContact, setSelectedContact] = useState<{
     name: string;
     avatar: string;
@@ -163,9 +163,157 @@ export const CommunicationHub = () => {
           <MessageCircle className="w-4 h-4" />
           Messages
         </button>
+        <button
+          onClick={() => setActiveSection("calendar")}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+            activeSection === "calendar"
+              ? "bg-primary text-primary-foreground"
+              : "bg-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <CalendarIcon className="w-4 h-4" />
+          Calendar
+        </button>
       </div>
 
-      {activeSection === "email" ? (
+      {activeSection === "calendar" ? (
+        <>
+          {/* Calendar Section */}
+          <div className="p-4">
+            <div className="flex items-center gap-2 mb-4">
+              <CalendarIcon className="w-5 h-5 text-primary" />
+              <h2 className="text-lg font-semibold text-foreground">Upcoming Events</h2>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Your schedule for the next 7 days
+            </p>
+          </div>
+
+          {/* Calendar Events List */}
+          <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-4">
+            {/* Today */}
+            <div>
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">Today</h3>
+              <div className="space-y-2">
+                <Card className="p-4 rounded-2xl border-0 shadow-sm bg-card border-l-4 border-l-primary">
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Video className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <h4 className="font-semibold text-sm text-foreground">Strategy Review Call</h4>
+                        <span className="text-xs text-muted-foreground flex-shrink-0">2:00 PM</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mb-2">with Peter Lange, Clemens Feigl</p>
+                      <div className="flex items-center gap-1.5 text-xs text-primary">
+                        <Video className="w-3 h-3" />
+                        <span>Zoom Meeting</span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+                
+                <Card className="p-4 rounded-2xl border-0 shadow-sm bg-card border-l-4 border-l-accent">
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                      <CalendarIcon className="w-5 h-5 text-accent" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <h4 className="font-semibold text-sm text-foreground">Team Stand-up</h4>
+                        <span className="text-xs text-muted-foreground flex-shrink-0">4:30 PM</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mb-2">Daily sync with development team</p>
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        <span>30 minutes</span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            </div>
+
+            {/* Tomorrow */}
+            <div>
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">Tomorrow</h3>
+              <div className="space-y-2">
+                <Card className="p-4 rounded-2xl border-0 shadow-sm bg-card">
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <h4 className="font-semibold text-sm text-foreground">Client Meeting - Siemens Energy</h4>
+                        <span className="text-xs text-muted-foreground flex-shrink-0">10:00 AM</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mb-2">Munich Office, Building A</p>
+                      <div className="flex items-center gap-1.5 text-xs text-primary">
+                        <MapPin className="w-3 h-3" />
+                        <span>In-person</span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            </div>
+
+            {/* This Week */}
+            <div>
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">This Week</h3>
+              <div className="space-y-2">
+                <Card className="p-4 rounded-2xl border-0 shadow-sm bg-card">
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                      <CalendarIcon className="w-5 h-5 text-accent" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <h4 className="font-semibold text-sm text-foreground">Board Presentation</h4>
+                        <span className="text-xs text-muted-foreground flex-shrink-0">Thu 3:00 PM</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mb-2">Q4 Results & Strategy for 2025</p>
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        <span>2 hours</span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+
+                <Card className="p-4 rounded-2xl border-0 shadow-sm bg-card">
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Video className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <h4 className="font-semibold text-sm text-foreground">Investor Call - Munich VC</h4>
+                        <span className="text-xs text-muted-foreground flex-shrink-0">Fri 11:00 AM</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mb-2">Series A discussion with Marcus Schmidt</p>
+                      <div className="flex items-center gap-1.5 text-xs text-primary">
+                        <Video className="w-3 h-3" />
+                        <span>Google Meet</span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            </div>
+          </div>
+
+          {/* AI Coordinate Button */}
+          <div className="p-4 border-t bg-card">
+            <button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors">
+              <Sparkles className="w-4 h-4" />
+              Coordinate
+            </button>
+          </div>
+        </>
+      ) : activeSection === "email" ? (
         <>
           {/* Email KPI Dashboard */}
           <div className="grid grid-cols-3 gap-2 p-4 bg-card border-b">
