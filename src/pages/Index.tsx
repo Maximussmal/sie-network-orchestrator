@@ -13,15 +13,19 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState<"network" | "communication" | "agents">("network");
   const [isAIOpen, setIsAIOpen] = useState(false);
 
+  if (showLanding) {
+    return <LandingAnimation onComplete={() => setShowLanding(false)} />;
+  }
+
   return (
     <>
       {showLanding && <LandingAnimation onComplete={() => setShowLanding(false)} />}
       
       <motion.div 
         className="h-screen flex flex-col bg-background overflow-hidden"
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-        animate={{ opacity: showLanding ? 0 : 1, scale: showLanding ? 0.9 : 1, y: showLanding ? 20 : 0 }}
-        transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: showLanding ? 0 : 1, scale: showLanding ? 0.95 : 1 }}
+        transition={{ duration: 1, delay: 0.2 }}
       >
         {/* Header */}
         <header className="flex items-center justify-between p-4 border-b border-border bg-card">
