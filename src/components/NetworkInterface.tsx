@@ -184,7 +184,7 @@ export const NetworkInterface = () => {
           }`}
         >
           <Users className="w-4 h-4" />
-          Nurture Relationships
+          Nurture
         </button>
         <button
           onClick={() => setActiveSection("expand")}
