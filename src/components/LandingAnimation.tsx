@@ -54,17 +54,7 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
         {/* Network visualization */}
         <div className="absolute" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
           {/* Sphere - appears first and expands */}
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ 
-              scale: stage === "opening" ? 3 : 1, 
-              opacity: stage === "opening" ? 0 : (stage === "structure" ? 0.8 : 1)
-            }}
-            transition={{ duration: 1, ease: "easeInOut" }}
-            className="relative"
-          >
-            <div className="w-24 h-24 rounded-full bg-primary sphere-pulse ai-glow" />
-            
+          <div className="relative">
             {/* Inner network lines */}
             {(stage === "network" || stage === "structure" || stage === "opening") && (
               <motion.svg 
@@ -74,10 +64,25 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
                 animate={stage === "opening" ? { scale: 10, opacity: 0 } : { scale: 1, opacity: 1 }}
                 transition={{ duration: 2, ease: "easeInOut" }}
               >
+                {/* Central sphere - drawn as SVG circle */}
+                <motion.circle
+                  cx="500"
+                  cy="500"
+                  r="48"
+                  fill="hsl(var(--primary))"
+                  className="ai-glow"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ 
+                    scale: stage === "opening" ? 3 : 1, 
+                    opacity: stage === "opening" ? 0 : (stage === "structure" ? 0.8 : 1)
+                  }}
+                  transition={{ duration: 1, ease: "easeInOut" }}
+                />
+                
                 {[...Array(12)].map((_, i) => {
                   const angle = (i * Math.PI * 2) / 12 + (i % 2 === 0 ? 0.2 : -0.15);
                   const distance = stage === "structure" || stage === "opening" ? 280 : 180;
-                  const sphereRadius = 30; // Adjusted for SVG coordinate system
+                  const sphereRadius = 48; // Matches SVG circle radius
                   const x1 = 500 + Math.cos(angle) * sphereRadius;
                   const y1 = 500 + Math.sin(angle) * sphereRadius;
                   const x2 = 500 + Math.cos(angle) * distance;
@@ -138,8 +143,7 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
                 })}
               </motion.svg>
             )}
-
-          </motion.div>
+          </div>
         </div>
 
         {/* Sumbios text - fades out */}
