@@ -95,29 +95,26 @@ export const NetworkInterface = () => {
     <div className="flex flex-col h-full bg-background">
       {/* KPI Dashboard */}
       <div className="grid grid-cols-3 gap-3 p-4 bg-background">
-        <Card className="p-4 rounded-2xl border-0 bg-card shadow-sm">
-          <div className="flex items-center gap-2 mb-2">
-            <Users className="w-5 h-5 text-primary" />
-            <span className="text-sm text-muted-foreground">Total</span>
+        <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
+          <div className="flex items-center gap-2 mb-1">
+            <Users className="w-4 h-4 text-primary" />
+            <span className="text-xs text-muted-foreground">Total</span>
           </div>
-          <div className="text-3xl font-bold text-foreground">{mockConnections.length}</div>
-          <div className="h-1 mt-2 bg-primary rounded-full w-16" />
+          <div className="text-xl font-semibold text-foreground">{mockConnections.length}</div>
         </Card>
-        <Card className="p-4 rounded-2xl border-0 bg-card shadow-sm">
-          <div className="flex items-center gap-2 mb-2">
-            <Target className="w-5 h-5 text-primary" />
-            <span className="text-sm text-muted-foreground">Trust</span>
+        <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
+          <div className="flex items-center gap-2 mb-1">
+            <Target className="w-4 h-4 text-primary" />
+            <span className="text-xs text-muted-foreground">Trust</span>
           </div>
-          <div className="text-3xl font-bold text-foreground">{avgTrust}%</div>
-          <div className="h-1 mt-2 bg-primary rounded-full w-16" />
+          <div className="text-xl font-semibold text-foreground">{avgTrust}%</div>
         </Card>
-        <Card className="p-4 rounded-2xl border-0 bg-card shadow-sm">
-          <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-5 h-5 text-accent" />
-            <span className="text-sm text-muted-foreground">Rising</span>
+        <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
+          <div className="flex items-center gap-2 mb-1">
+            <TrendingUp className="w-4 h-4 text-accent" />
+            <span className="text-xs text-muted-foreground">Rising</span>
           </div>
-          <div className="text-3xl font-bold text-accent">{risingCount}</div>
-          <div className="h-1 mt-2 bg-accent rounded-full w-16" />
+          <div className="text-xl font-semibold text-accent">{risingCount}</div>
         </Card>
       </div>
 
@@ -128,7 +125,7 @@ export const NetworkInterface = () => {
             <button
               key={filter}
               onClick={() => setFilterBy(filter)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                 filterBy === filter
                   ? "bg-card text-foreground shadow-sm"
                   : "bg-transparent text-muted-foreground hover:text-foreground"
@@ -141,8 +138,8 @@ export const NetworkInterface = () => {
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium bg-card text-foreground shadow-sm hover:bg-card/80 transition-colors">
-              <ArrowUpDown className="w-4 h-4" />
+            <button className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-card text-foreground shadow-sm hover:bg-card/80 transition-colors">
+              <ArrowUpDown className="w-3 h-3" />
               <span>Mutual Connections</span>
             </button>
           </DropdownMenuTrigger>
@@ -170,6 +167,7 @@ export const NetworkInterface = () => {
           <Card key={connection.id} className="p-4 rounded-2xl border-0 shadow-sm bg-card">
             <div className="flex gap-3 items-start">
               <Avatar className="w-14 h-14 flex-shrink-0">
+                <AvatarImage src={connection.avatar} alt={connection.name} />
                 <AvatarFallback className="bg-muted text-foreground text-lg font-semibold">
                   {connection.name.split(" ").map(n => n[0]).join("")}
                 </AvatarFallback>

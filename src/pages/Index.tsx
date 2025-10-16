@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Network, MessageSquare, Bot } from "lucide-react";
+import { Users, MessageCircle, Bot } from "lucide-react";
 import { LandingAnimation } from "@/components/LandingAnimation";
 import { NetworkInterface } from "@/components/NetworkInterface";
 import { CommunicationHub } from "@/components/CommunicationHub";
@@ -39,7 +39,7 @@ const Index = () => {
               : "text-muted-foreground"
           }`}
         >
-          <Network className="w-4 h-4" />
+          <Users className="w-4 h-4" />
           Network
         </button>
         <button
@@ -50,7 +50,7 @@ const Index = () => {
               : "text-muted-foreground"
           }`}
         >
-          <MessageSquare className="w-4 h-4" />
+          <MessageCircle className="w-4 h-4" />
           Communication
         </button>
         <button

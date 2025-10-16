@@ -1,4 +1,4 @@
-import { Mail, MailOpen, Clock, CheckCheck } from "lucide-react";
+import { Mail, MailOpen, Clock, CheckCheck, Sparkles } from "lucide-react";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
 
@@ -97,7 +97,11 @@ export const CommunicationHub = () => {
                   <span className="text-xs text-muted-foreground flex-shrink-0">{email.time}</span>
                 </div>
                 <p className="text-sm font-medium text-foreground/90 mb-1">{email.subject}</p>
-                <p className="text-xs text-muted-foreground line-clamp-2">{email.preview}</p>
+                <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{email.preview}</p>
+                <div className="flex items-center gap-1 text-xs text-primary">
+                  <Sparkles className="w-3 h-3" />
+                  <span className="font-medium">AI draft ready</span>
+                </div>
               </Card>
             ))}
           </div>
