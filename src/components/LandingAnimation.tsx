@@ -154,8 +154,8 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
             y: stage === "structure" ? 50 : 0
           }}
           transition={{ duration: 0.8 }}
-          className="text-center absolute"
-          style={{ top: '60%' }}
+          className="text-center absolute left-1/2 -translate-x-1/2"
+          style={{ top: '68%' }}
         >
           <h1 className="text-5xl font-bold text-secondary mb-2">
             Sumbios
