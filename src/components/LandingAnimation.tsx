@@ -37,11 +37,30 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="text-center"
+            className="text-center max-w-screen-lg mx-auto px-8"
           >
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-[hsl(190,100%,17%)] to-[hsl(46,93%,45%)] bg-clip-text text-transparent">
+            <div className="flex items-center justify-center gap-8 mb-6">
+              <div className="logo logo-spin">
+                <svg width="96" height="96" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="50" cy="50" r="45" stroke="url(#gradient1)" strokeWidth="3" fill="none" />
+                  <circle cx="50" cy="50" r="30" fill="url(#gradient2)" />
+                  <defs>
+                    <linearGradient id="gradient1" x1="0" y1="0" x2="100" y2="100">
+                      <stop offset="0%" stopColor="hsl(190, 100%, 17%)" />
+                      <stop offset="100%" stopColor="hsl(46, 93%, 45%)" />
+                    </linearGradient>
+                    <radialGradient id="gradient2" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stopColor="hsl(190, 100%, 17%)" stopOpacity="0.6" />
+                      <stop offset="100%" stopColor="hsl(46, 93%, 45%)" stopOpacity="0.4" />
+                    </radialGradient>
+                  </defs>
+                </svg>
+              </div>
+            </div>
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-[hsl(190,100%,17%)] to-[hsl(46,93%,45%)] bg-clip-text text-transparent mb-2">
               Sumbios
             </h1>
+            <p className="text-muted-foreground">Intelligence Engine</p>
           </motion.div>
         )}
 

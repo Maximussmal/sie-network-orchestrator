@@ -129,6 +129,36 @@ All colors MUST be HSL.
     animation: spherePulse 3s ease-in-out infinite;
   }
   
+  .logo {
+    height: 6em;
+    padding: 1.5em;
+    will-change: filter;
+    transition: filter 300ms;
+  }
+  
+  .logo:hover {
+    filter: drop-shadow(0 0 2em hsl(190 100% 17% / 0.7));
+  }
+  
+  .logo.sie:hover {
+    filter: drop-shadow(0 0 2em hsl(46 93% 45% / 0.7));
+  }
+  
+  @keyframes logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @media (prefers-reduced-motion: no-preference) {
+    .logo-spin {
+      animation: logo-spin infinite 20s linear;
+    }
+  }
+  
   @keyframes spherePulse {
     0%, 100% { transform: scale(1); opacity: 0.8; }
     50% { transform: scale(1.05); opacity: 1; }
