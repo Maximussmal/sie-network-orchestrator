@@ -77,7 +77,7 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
                 {[...Array(12)].map((_, i) => {
                   const angle = (i * Math.PI * 2) / 12 + (i % 2 === 0 ? 0.2 : -0.15);
                   const distance = stage === "structure" || stage === "opening" ? 280 : 180;
-                  const sphereRadius = 48; // Edge of the sphere (96px / 2)
+                  const sphereRadius = 30; // Adjusted for SVG coordinate system
                   const x1 = 500 + Math.cos(angle) * sphereRadius;
                   const y1 = 500 + Math.sin(angle) * sphereRadius;
                   const x2 = 500 + Math.cos(angle) * distance;
