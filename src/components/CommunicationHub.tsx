@@ -1,6 +1,8 @@
-import { Mail, MailOpen, Clock, CheckCheck, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { Mail, MailOpen, Clock, CheckCheck, Sparkles, MessageCircle } from "lucide-react";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 interface Email {
   id: string;
@@ -9,6 +11,16 @@ interface Email {
   preview: string;
   time: string;
   isNew: boolean;
+}
+
+interface Message {
+  id: string;
+  from: string;
+  avatar: string;
+  lastMessage: string;
+  time: string;
+  unread: number;
+  online: boolean;
 }
 
 const mockEmails: Email[] = [
@@ -46,15 +58,84 @@ const mockEmails: Email[] = [
   },
 ];
 
+const mockMessages: Message[] = [
+  {
+    id: "1",
+    from: "Peter Lange",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop",
+    lastMessage: "Let's schedule that call for next week",
+    time: "5m ago",
+    unread: 2,
+    online: true,
+  },
+  {
+    id: "2",
+    from: "Clemens Feigl",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop",
+    lastMessage: "Thanks for the intro! Really excited about this",
+    time: "1h ago",
+    unread: 1,
+    online: true,
+  },
+  {
+    id: "3",
+    from: "Stefanie Hauer",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop",
+    lastMessage: "The board meeting went great, I'll send you the notes",
+    time: "3h ago",
+    unread: 0,
+    online: false,
+  },
+  {
+    id: "4",
+    from: "Simon Tautz",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop",
+    lastMessage: "Can you review the latest prototype?",
+    time: "Yesterday",
+    unread: 0,
+    online: false,
+  },
+];
+
 export const CommunicationHub = () => {
+  const [activeSection, setActiveSection] = useState<"email" | "messages">("email");
   const newEmails = mockEmails.filter((e) => e.isNew);
   const existingEmails = mockEmails.filter((e) => !e.isNew);
   const outstandingReplies = 7;
+  const unreadMessages = mockMessages.reduce((acc, msg) => acc + msg.unread, 0);
 
   return (
     <div className="flex flex-col h-full bg-background">
-      {/* KPI Dashboard */}
-      <div className="grid grid-cols-3 gap-2 p-4 bg-card border-b">
+      {/* Section Toggle */}
+      <div className="flex gap-2 p-4 border-b bg-card">
+        <button
+          onClick={() => setActiveSection("email")}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+            activeSection === "email"
+              ? "bg-primary text-primary-foreground"
+              : "bg-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Mail className="w-4 h-4" />
+          Email
+        </button>
+        <button
+          onClick={() => setActiveSection("messages")}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+            activeSection === "messages"
+              ? "bg-primary text-primary-foreground"
+              : "bg-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <MessageCircle className="w-4 h-4" />
+          Messages
+        </button>
+      </div>
+
+      {activeSection === "email" ? (
+        <>
+          {/* Email KPI Dashboard */}
+          <div className="grid grid-cols-3 gap-2 p-4 bg-card border-b">
         <Card className="p-3 text-center">
           <div className="text-2xl font-bold text-destructive">{outstandingReplies}</div>
           <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
@@ -76,9 +157,9 @@ export const CommunicationHub = () => {
             Response
           </div>
         </Card>
-      </div>
+          </div>
 
-      <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto">
         {/* New Emails Section */}
         <div className="p-4">
           <div className="flex items-center gap-2 mb-3">
@@ -128,8 +209,75 @@ export const CommunicationHub = () => {
               </Card>
             ))}
           </div>
-        </div>
-      </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Messages KPI Dashboard */}
+          <div className="grid grid-cols-3 gap-2 p-4 bg-card border-b">
+            <Card className="p-3 text-center">
+              <div className="text-2xl font-bold text-primary">{unreadMessages}</div>
+              <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                <MessageCircle className="w-3 h-3" />
+                Unread
+              </div>
+            </Card>
+            <Card className="p-3 text-center">
+              <div className="text-2xl font-bold text-foreground">{mockMessages.length}</div>
+              <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                <MessageCircle className="w-3 h-3" />
+                Conversations
+              </div>
+            </Card>
+            <Card className="p-3 text-center">
+              <div className="text-2xl font-bold text-accent">
+                {mockMessages.filter(m => m.online).length}
+              </div>
+              <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                <CheckCheck className="w-3 h-3" />
+                Online
+              </div>
+            </Card>
+          </div>
+
+          {/* Messages List */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-2">
+            {mockMessages.map((message) => (
+              <Card
+                key={message.id}
+                className="p-3 hover:bg-accent/50 transition-colors cursor-pointer"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="relative">
+                    <Avatar className="w-12 h-12">
+                      <AvatarImage src={message.avatar} alt={message.from} />
+                      <AvatarFallback>
+                        {message.from.split(" ").map(n => n[0]).join("")}
+                      </AvatarFallback>
+                    </Avatar>
+                    {message.online && (
+                      <div className="absolute bottom-0 right-0 w-3 h-3 bg-accent rounded-full border-2 border-card" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <h3 className="font-semibold text-sm text-foreground">{message.from}</h3>
+                      <span className="text-xs text-muted-foreground flex-shrink-0">{message.time}</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-1">{message.lastMessage}</p>
+                  </div>
+                  {message.unread > 0 && (
+                    <Badge className="bg-primary text-primary-foreground text-xs px-2">
+                      {message.unread}
+                    </Badge>
+                  )}
+                </div>
+              </Card>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };
