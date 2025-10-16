@@ -1,19 +1,16 @@
-import { Calendar, Lightbulb } from "lucide-react";
+import { Calendar, Lightbulb, Plus } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export const AgentsHub = () => {
   return (
     <div className="h-full overflow-y-auto p-4 bg-[hsl(var(--sie-near-white))]">
-      {/* KPI Dashboard */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        <Card className="p-4 bg-card border-border">
-          <div className="text-2xl font-bold text-foreground">12</div>
-          <div className="text-xs text-muted-foreground">Active Agents</div>
-        </Card>
-        <Card className="p-4 bg-card border-border">
-          <div className="text-2xl font-bold text-[hsl(var(--sie-green))]">47</div>
-          <div className="text-xs text-muted-foreground">Tasks Completed</div>
-        </Card>
+      {/* Create Agent Button */}
+      <div className="flex justify-center mb-6">
+        <Button className="flex items-center gap-2">
+          <Plus className="w-4 h-4" />
+          Create Agent
+        </Button>
       </div>
 
       {/* Agents Section */}
