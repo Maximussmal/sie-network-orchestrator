@@ -16,7 +16,7 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
     const timer5 = setTimeout(() => {
       setStage("complete");
       onComplete();
-    }, 6000);
+    }, 7000);
 
     return () => {
       clearTimeout(timer1);
@@ -71,22 +71,25 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" 
                 style={{ width: '100vw', height: '100vh' }} 
                 viewBox="0 0 1000 1000"
-                animate={stage === "opening" ? { scale: 2.5, opacity: 0 } : { scale: 1, opacity: 1 }}
-                transition={{ duration: 1.5, ease: "easeInOut" }}
+                animate={stage === "opening" ? { scale: 10, opacity: 0 } : { scale: 1, opacity: 1 }}
+                transition={{ duration: 2, ease: "easeInOut" }}
               >
                 {[...Array(12)].map((_, i) => {
                   const angle = (i * Math.PI * 2) / 12 + (i % 2 === 0 ? 0.2 : -0.15);
                   const distance = stage === "structure" || stage === "opening" ? 280 : 180;
-                  const x = 500 + Math.cos(angle) * distance;
-                  const y = 500 + Math.sin(angle) * distance;
+                  const sphereRadius = 48; // Edge of the sphere (96px / 2)
+                  const x1 = 500 + Math.cos(angle) * sphereRadius;
+                  const y1 = 500 + Math.sin(angle) * sphereRadius;
+                  const x2 = 500 + Math.cos(angle) * distance;
+                  const y2 = 500 + Math.sin(angle) * distance;
                   
                   return (
                     <g key={`inner-${i}`}>
                       <motion.line
-                        x1="500"
-                        y1="500"
-                        x2={x}
-                        y2={y}
+                        x1={x1}
+                        y1={y1}
+                        x2={x2}
+                        y2={y2}
                         stroke="hsl(190 100% 17%)"
                         strokeWidth="2"
                         initial={{ pathLength: 0, opacity: 0 }}
@@ -94,8 +97,8 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
                         transition={{ duration: 0.5, delay: i * 0.08 }}
                       />
                       <motion.circle
-                        cx={x}
-                        cy={y}
+                        cx={x2}
+                        cy={y2}
                         r="6"
                         fill="hsl(46 93% 45%)"
                         initial={{ scale: 0 }}
