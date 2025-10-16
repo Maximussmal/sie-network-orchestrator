@@ -63,7 +63,7 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
             transition={{ duration: 1, ease: "easeInOut" }}
             className="relative"
           >
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[hsl(190,100%,17%,0.6)] to-[hsl(46,93%,45%,0.4)] sphere-pulse ai-glow" />
+            <div className="w-24 h-24 rounded-full bg-primary sphere-pulse ai-glow" />
             
             {/* Inner network lines */}
             {(stage === "network" || stage === "structure" || stage === "opening") && (
@@ -87,7 +87,7 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
                         y1="500"
                         x2={x}
                         y2={y}
-                        stroke="hsl(190, 100%, 17%)"
+                        stroke="hsl(190 100% 17%)"
                         strokeWidth="2"
                         initial={{ pathLength: 0, opacity: 0 }}
                         animate={{ pathLength: 1, opacity: 1 }}
@@ -97,7 +97,7 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
                         cx={x}
                         cy={y}
                         r="6"
-                        fill="hsl(46, 93%, 45%)"
+                        fill="hsl(46 93% 45%)"
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ duration: 0.3, delay: 0.4 + i * 0.08 }}
@@ -124,9 +124,9 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
                       y1={y1}
                       x2={x2}
                       y2={y2}
-                      stroke="hsl(46, 93%, 45%)"
+                      stroke="hsl(46 93% 45%)"
                       strokeWidth="1.5"
-                      strokeOpacity="0.4"
+                      strokeOpacity="0.5"
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
                       transition={{ duration: 0.4, delay: 0.6 + idx * 0.05 }}
@@ -150,7 +150,7 @@ export const LandingAnimation = ({ onComplete }: LandingAnimationProps) => {
           className="text-center absolute"
           style={{ top: '60%' }}
         >
-          <h1 className="text-5xl font-bold text-[hsl(46,93%,45%)] mb-2">
+          <h1 className="text-5xl font-bold text-secondary mb-2">
             Sumbios
           </h1>
           <p className="text-muted-foreground">Intelligence Engine</p>
