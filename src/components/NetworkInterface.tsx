@@ -184,7 +184,7 @@ export const NetworkInterface = () => {
           }`}
         >
           <Users className="w-4 h-4" />
-          Nurture
+          Contacts
         </button>
         <button
           onClick={() => setActiveSection("expand")}
@@ -195,7 +195,7 @@ export const NetworkInterface = () => {
           }`}
         >
           <Network className="w-4 h-4" />
-          Expand Network
+          Expand
         </button>
       </div>
 
@@ -228,21 +228,14 @@ export const NetworkInterface = () => {
 
       {/* Filter and Sort Controls */}
       <div className="flex items-center justify-between gap-3 px-4 py-3">
-        <div className="flex gap-2">
-          {(["all", "1st", "2nd", "3rd+"] as const).map((filter) => (
-            <button
-              key={filter}
-              onClick={() => setFilterBy(filter)}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                filterBy === filter
-                  ? "bg-card text-foreground shadow-sm"
-                  : "bg-transparent text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {filter === "all" ? "All" : filter}
-            </button>
-          ))}
-        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2"
+        >
+          <Sparkles className="w-4 h-4" />
+          Nurture
+        </Button>
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
