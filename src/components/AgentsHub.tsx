@@ -1,8 +1,15 @@
+import { useState } from "react";
 import { Calendar, Lightbulb, Plus } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { AgentInterface } from "./AgentInterface";
 
 export const AgentsHub = () => {
+  const [activeAgent, setActiveAgent] = useState<"scheduling" | "insight" | null>(null);
+
+  if (activeAgent) {
+    return <AgentInterface agentType={activeAgent} onClose={() => setActiveAgent(null)} />;
+  }
   return (
     <div className="h-full overflow-y-auto p-4 bg-[hsl(var(--sie-near-white))]">
       {/* Create Agent Button */}
@@ -16,7 +23,10 @@ export const AgentsHub = () => {
       {/* Agents Section */}
       <div className="space-y-4">
         {/* Scheduling Agent */}
-        <Card className="p-5 bg-card border-border hover:shadow-lg transition-shadow">
+        <Card 
+          className="p-5 bg-card border-border hover:shadow-lg transition-shadow cursor-pointer"
+          onClick={() => setActiveAgent("scheduling")}
+        >
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[hsl(var(--sie-teal))] to-[hsl(var(--sie-yellow))] flex items-center justify-center shrink-0">
               <Calendar className="w-6 h-6 text-[hsl(var(--sie-near-white))]" />
@@ -37,7 +47,10 @@ export const AgentsHub = () => {
         </Card>
 
         {/* Insight Agent */}
-        <Card className="p-5 bg-card border-border hover:shadow-lg transition-shadow">
+        <Card 
+          className="p-5 bg-card border-border hover:shadow-lg transition-shadow cursor-pointer"
+          onClick={() => setActiveAgent("insight")}
+        >
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[hsl(var(--sie-yellow))] to-[hsl(var(--sie-green))] flex items-center justify-center shrink-0">
               <Lightbulb className="w-6 h-6 text-[hsl(var(--sie-near-white))]" />
