@@ -1,8 +1,14 @@
 import { useState } from "react";
-import { Users, TrendingUp, TrendingDown, Network, Briefcase, GraduationCap } from "lucide-react";
+import { Users, TrendingUp, TrendingDown, Network, Briefcase, GraduationCap, ChevronDown } from "lucide-react";
 import { Card } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Connection {
   id: string;
@@ -29,7 +35,7 @@ const mockConnections: Connection[] = [
     trustScore: 94,
     trend: "up",
     trendValue: 5,
-    avatar: "PL",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop",
     networks: ["linkedin", "school"],
   },
   {
@@ -42,7 +48,7 @@ const mockConnections: Connection[] = [
     trustScore: 88,
     trend: "up",
     trendValue: 3,
-    avatar: "CF",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop",
     networks: ["linkedin", "company"],
   },
   {
@@ -55,7 +61,7 @@ const mockConnections: Connection[] = [
     trustScore: 76,
     trend: "down",
     trendValue: 2,
-    avatar: "ST",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop",
     networks: ["linkedin", "school"],
   },
   {
@@ -68,7 +74,7 @@ const mockConnections: Connection[] = [
     trustScore: 96,
     trend: "up",
     trendValue: 8,
-    avatar: "SH",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop",
     networks: ["linkedin", "company", "school"],
   },
 ];
@@ -120,27 +126,23 @@ export const NetworkInterface = () => {
       </div>
 
       {/* Sort Controls */}
-      <div className="flex gap-2 p-4 border-b">
-        <button
-          onClick={() => setSortBy("mutual")}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-            sortBy === "mutual"
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted text-muted-foreground"
-          }`}
-        >
-          Mutual First
-        </button>
-        <button
-          onClick={() => setSortBy("trust")}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-            sortBy === "trust"
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted text-muted-foreground"
-          }`}
-        >
-          Trust Score
-        </button>
+      <div className="p-4 border-b">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-muted text-foreground hover:bg-primary/20 transition-colors">
+              <span>Sort: {sortBy === "mutual" ? "Mutual First" : "Trust Score"}</span>
+              <ChevronDown className="w-4 h-4" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-48">
+            <DropdownMenuItem onClick={() => setSortBy("mutual")}>
+              Mutual First
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setSortBy("trust")}>
+              Trust Score
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Connections List */}
@@ -149,9 +151,9 @@ export const NetworkInterface = () => {
           <Card key={connection.id} className="p-3">
             <div className="flex gap-3">
               <Avatar className="w-12 h-12 flex-shrink-0">
-                <AvatarImage src="" />
+                <AvatarImage src={connection.avatar} />
                 <AvatarFallback className="bg-secondary/20 text-secondary-foreground">
-                  {connection.avatar}
+                  {connection.name.split(" ").map(n => n[0]).join("")}
                 </AvatarFallback>
               </Avatar>
 

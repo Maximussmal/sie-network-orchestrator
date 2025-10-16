@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { Network, MessageSquare } from "lucide-react";
+import { Network, MessageSquare, Bot } from "lucide-react";
 import { LandingAnimation } from "@/components/LandingAnimation";
 import { NetworkInterface } from "@/components/NetworkInterface";
 import { CommunicationHub } from "@/components/CommunicationHub";
+import { AgentsHub } from "@/components/AgentsHub";
 import { AIAssistant } from "@/components/AIAssistant";
 import { AIHandle } from "@/components/AIHandle";
 
 const Index = () => {
   const [showLanding, setShowLanding] = useState(true);
-  const [activeTab, setActiveTab] = useState<"network" | "communication">("network");
+  const [activeTab, setActiveTab] = useState<"network" | "communication" | "agents">("network");
   const [isAIOpen, setIsAIOpen] = useState(false);
 
   if (showLanding) {
@@ -52,11 +53,28 @@ const Index = () => {
           <MessageSquare className="w-4 h-4" />
           Communication
         </button>
+        <button
+          onClick={() => setActiveTab("agents")}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 font-medium transition-colors ${
+            activeTab === "agents"
+              ? "text-primary border-b-2 border-primary"
+              : "text-muted-foreground"
+          }`}
+        >
+          <Bot className="w-4 h-4" />
+          Agents
+        </button>
       </div>
 
       {/* Content */}
       <div className="flex-1 overflow-hidden">
-        {activeTab === "network" ? <NetworkInterface /> : <CommunicationHub />}
+        {activeTab === "network" ? (
+          <NetworkInterface />
+        ) : activeTab === "communication" ? (
+          <CommunicationHub />
+        ) : (
+          <AgentsHub />
+        )}
       </div>
 
       {/* AI Components */}
