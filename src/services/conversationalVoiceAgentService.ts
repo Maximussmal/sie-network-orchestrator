@@ -55,7 +55,7 @@ const useConversationalVoiceAgentStore = create<ConversationalVoiceAgentState>((
         try {
           const { text } = await AzureOpenAIService.transcribeAudio(audioBlob);
           console.log("DEBUG: Transcribed text:", text);
-          const newHistory = [...get().conversationHistory, { role: 'user' as const, content: text }];
+          const newHistory = [...get().conversationHistory, { role: 'user', content: text }];
           set({ conversationHistory: newHistory });
           console.log("DEBUG: Sending to getAgentResponse:", newHistory);
           const agentResponse = await AzureOpenAIService.getAgentResponse(newHistory);
@@ -68,7 +68,7 @@ const useConversationalVoiceAgentStore = create<ConversationalVoiceAgentState>((
           } catch (e) {
             console.log("DEBUG: Agent response is not JSON, treating as conversational text.");
             const stream = await textToSpeech(agentResponse);
-            const finalHistory = [...newHistory, { role: 'assistant' as const, content: agentResponse }];
+            const finalHistory = [...newHistory, { role: 'assistant', content: agentResponse }];
             set({ status: 'SPEAKING', audioStream: stream, conversationHistory: finalHistory });
           }
         } catch (error) {
