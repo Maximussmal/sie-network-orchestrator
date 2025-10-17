@@ -9,8 +9,6 @@ const AZURE_API_VERSION = import.meta.env.VITE_AZURE_OPENAI_API_VERSION;
 const WHISPER_DEPLOYMENT = import.meta.env.VITE_AZURE_WHISPER_DEPLOYMENT || 'whisper';
 const GPT_DEPLOYMENT = import.meta.env.VITE_AZURE_GPT_DEPLOYMENT || 'gpt-4o';
 
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
-
 export interface TranscriptionResult {
   text: string;
   duration?: number;
@@ -27,11 +25,6 @@ export interface ExtractionResult {
   phone?: string;
 }
 
-export interface ConversationMessage {
-  role: "user" | "assistant";
-  content: string;
-}
-
 export class AzureOpenAIService {
 
   /**
@@ -40,7 +33,6 @@ export class AzureOpenAIService {
    * @returns Transcribed text
    */
   static async transcribeAudio(audioBlob: Blob): Promise<TranscriptionResult> {
-    await delay(5000);
     try {
       if (!AZURE_ENDPOINT || !AZURE_API_KEY) {
         throw new Error('Azure OpenAI credentials not configured. Please check your .env.local file.');
@@ -231,82 +223,6 @@ Example: {"name": "John Doe", "email": "john@example.com", "company": "ABC Corp"
         throw new Error('Unknown error occurred during information extraction');
       }
     }
-  }
-
-  static async getAgentResponse(conversationHistory: ConversationMessage[]): Promise<string> {
-    await delay(5000);
-    if (!AZURE_ENDPOINT || !AZURE_API_KEY) {
-      throw new Error('Azure OpenAI credentials not configured. Please check your .env.local file.');
-    }
-
-    const contactsContext = getContactsContext();
-    const systemPrompt = `You are a conversational AI assistant for scheduling meetings. Your goal is to gather all necessary information by asking clarifying questions.
-
-    You must collect:
-    - Attendee Name
-    - Attendee Email
-    - Meeting Time
-    - Meeting Purpose
-    
-    You can also ask for:
-    - Company Name
-    - Phone Number
-    - Duration in minutes
-    
-    KNOWN CONTACTS DATABASE:
-    ${contactsContext}
-    
-    - If a user mentions a name or company in the database, use the information from the database.
-    - Keep your responses concise and friendly.
-    - Ask one question at a time.
-    - When you have all the required information (name, email, time, purpose) AND have confirmed it with the user, you MUST respond ONLY with the JSON structure of the meeting details. Do not say anything else.
-    - Start the conversation by saying "Hey I am sumbios how can i help you today?".
-    
-    Example Conversation:
-    User: "I need to schedule a meeting."
-    Assistant: "Of course. Who is the meeting with?"
-    User: "Phil"
-    Assistant: "Thanks. And what is Phil's email address?"
-    User: "I don't have it, but he works at ABC VC."
-    Assistant: "Got it. I've found Phil Anderson from ABC VC Fund in our contacts. Is that correct?"
-    User: "Yes"
-    Assistant: "Great. What is the purpose of the meeting?"
-    User: "To discuss the new project."
-    Assistant: "Okay. When would you like to schedule the meeting?"
-    User: "Tomorrow at 2pm."
-    Assistant: "Perfect. Just to confirm, this is a meeting with Phil Anderson (phil.anderson@abcvc.com) tomorrow at 2pm to discuss the new project. Is that correct?"
-    User: "Yes, that's correct."
-    Assistant: '{"name": "Phil Anderson", "email": "phil.anderson@abcvc.com", "company": "ABC VC Fund", "meetingTime": "tomorrow at 2pm", "meetingPurpose": "To discuss the new project."}'
-    `;
-
-    const messages = [
-      { role: 'system', content: systemPrompt },
-      ...conversationHistory,
-    ];
-
-    const url = `${AZURE_ENDPOINT.replace(/\/$/, '')}/openai/deployments/${GPT_DEPLOYMENT}/chat/completions?api-version=${AZURE_API_VERSION}`;
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': AZURE_API_KEY,
-      },
-      body: JSON.stringify({
-        messages,
-        temperature: 0.7,
-        max_tokens: 500,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      const errorMessage = errorData.error?.message || response.statusText;
-      throw new Error(`Agent response failed: ${errorMessage}`);
-    }
-
-    const result = await response.json();
-    return result.choices[0]?.message?.content;
   }
 
   /**

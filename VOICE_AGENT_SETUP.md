@@ -43,15 +43,7 @@ You need an Azure OpenAI resource with:
 - **Whisper deployment** for speech-to-text
 - **GPT-4o deployment** for information extraction
 
-### 2. ElevenLabs Setup
-
-You need an ElevenLabs account to get an API key for text-to-speech conversion.
-
-1. Go to [elevenlabs.io](https://elevenlabs.io/) and sign up or log in.
-2. Click on your profile icon in the top right corner and select "Profile + API Key".
-3. Copy your API key.
-
-### 3. Environment Variables
+### 2. Environment Variables
 
 Create a `.env.local` file with:
 
@@ -64,9 +56,6 @@ VITE_AZURE_OPENAI_API_VERSION=2024-12-01-preview
 # Deployment Names (optional, defaults shown)
 VITE_AZURE_WHISPER_DEPLOYMENT=whisper
 VITE_AZURE_GPT_DEPLOYMENT=gpt-4o
-
-# ElevenLabs Configuration
-VITE_ELEVENLABS_API_KEY=your-elevenlabs-api-key-here
 ```
 
 **Important Notes:**
@@ -74,7 +63,7 @@ VITE_ELEVENLABS_API_KEY=your-elevenlabs-api-key-here
 - Never commit `.env.local` to version control
 - Add `.env.local` to `.gitignore`
 
-### 4. Azure OpenAI Deployments
+### 3. Azure OpenAI Deployments
 
 #### Whisper Deployment
 1. Go to Azure OpenAI Studio
