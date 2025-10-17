@@ -125,6 +125,8 @@ export const CommunicationHub = () => {
   } | null>(null);
   
   const { meetings, contacts, getUpcomingMeetings } = useMeetingStore();
+  console.log("DEBUG: CommunicationHub - Meetings:", meetings);
+  console.log("DEBUG: CommunicationHub - Contacts:", contacts);
   const upcomingMeetings = getUpcomingMeetings();
   const voiceAgentMeetings = meetings.filter(m => m.source === 'voice-agent');
   
