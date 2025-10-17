@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Users, TrendingUp, Target, ArrowUpDown, Network, Sparkles, ChevronRight, Search, Bell } from "lucide-react";
+import { Users, TrendingUp, Target, ArrowUpDown, Network, Sparkles, ChevronRight, Search, Handshake } from "lucide-react";
 import { Card } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
@@ -253,6 +253,12 @@ export const NetworkInterface = () => {
   const [showIntroRequests, setShowIntroRequests] = useState(false);
   const [showConnectRequests, setShowConnectRequests] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showAIChat, setShowAIChat] = useState(false);
+  const [aiChatMessages, setAIChatMessages] = useState<Array<{role: 'user' | 'assistant', content: string}>>([]);
+  const [showRequestIntro, setShowRequestIntro] = useState(false);
+  const [requestIntroTarget, setRequestIntroTarget] = useState<SuggestedConnection | null>(null);
+  const [showMeetingOrchestration, setShowMeetingOrchestration] = useState(false);
+  const [acceptedRequest, setAcceptedRequest] = useState<IntroductionRequest | null>(null);
 
   const sortedConnections = [...mockConnections].sort((a, b) => {
     if (sortBy === "mutual") return b.mutualConnections - a.mutualConnections;
@@ -516,10 +522,10 @@ export const NetworkInterface = () => {
               <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
               <input
                 type="text"
-                placeholder="Search for connections in natural language..."
+                placeholder="Find your people"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setShowAISearch(true)}
+                onFocus={() => setShowAIChat(true)}
                 className="w-full pl-10 pr-12 py-3 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
               <div className="absolute right-3 flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10">
@@ -551,7 +557,7 @@ export const NetworkInterface = () => {
               onClick={() => setShowConnectRequests(true)}
               className="flex-1 relative"
             >
-              <Bell className="w-4 h-4 mr-2" />
+              <Handshake className="w-4 h-4 mr-2" />
               Connect
               {mockConnectionRequests.length > 0 && (
                 <Badge className="absolute -top-2 -right-2 bg-accent text-accent-foreground border-0 h-5 min-w-5 px-1.5">
@@ -630,119 +636,120 @@ export const NetworkInterface = () => {
 
       {/* Path Dialog */}
       <Dialog open={!!selectedPath} onOpenChange={() => setSelectedPath(null)}>
-        <DialogContent className="sm:max-w-md bg-card">
+        <DialogContent className="sm:max-w-md bg-card rounded-2xl">
           <DialogHeader>
             <DialogTitle>Connection Path to {selectedPath?.name}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="space-y-2 py-4">
             {/* You */}
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
                 <span className="text-lg font-semibold text-primary">You</span>
               </div>
-              <div>
-                <p className="font-medium text-foreground">Your Network</p>
-                <p className="text-xs text-muted-foreground">Starting point</p>
-              </div>
+              <p className="text-xs text-muted-foreground mt-1">Starting point</p>
+            </div>
+
+            {/* Connecting Line */}
+            <div className="flex justify-center">
+              <div className="w-0.5 h-12 bg-primary/30"></div>
             </div>
 
             {/* Path connections */}
             {selectedPath?.path.map((step, index) => (
-              <div key={index}>
-                <div className="flex items-center justify-center py-2">
-                  <ChevronRight className="w-5 h-5 text-muted-foreground" />
-                </div>
-                <div className="flex items-center gap-3">
-                  <Avatar className="w-12 h-12">
-                    <AvatarImage src={step.avatar} alt={step.name} />
-                    <AvatarFallback>
-                      {step.name.split(" ").map(n => n[0]).join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-medium text-foreground">{step.name}</p>
-                    <p className="text-xs text-muted-foreground">{step.relationship}</p>
-                  </div>
-                </div>
+              <div key={index} className="flex flex-col items-center">
+                <Avatar className="w-16 h-16 ring-2 ring-primary/20">
+                  <AvatarImage src={step.avatar} alt={step.name} />
+                  <AvatarFallback>
+                    {step.name.split(" ").map(n => n[0]).join("")}
+                  </AvatarFallback>
+                </Avatar>
+                <p className="font-medium text-foreground text-sm mt-1">{step.name}</p>
+                <p className="text-xs text-muted-foreground">{step.relationship}</p>
+                
+                {/* Line to next person */}
+                <div className="w-0.5 h-12 bg-primary/30 mt-2"></div>
               </div>
             ))}
 
             {/* Target */}
-            <div>
-              <div className="flex items-center justify-center py-2">
-                <ChevronRight className="w-5 h-5 text-muted-foreground" />
-              </div>
-              <div className="flex items-center gap-3">
-                <Avatar className="w-12 h-12">
-                  <AvatarImage src={selectedPath?.avatar} alt={selectedPath?.name} />
-                  <AvatarFallback>
-                    {selectedPath?.name.split(" ").map(n => n[0]).join("")}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-medium text-foreground">{selectedPath?.name}</p>
-                  <p className="text-xs text-muted-foreground">{selectedPath?.title}</p>
-                </div>
-              </div>
+            <div className="flex flex-col items-center">
+              <Avatar className="w-16 h-16 ring-2 ring-accent/40">
+                <AvatarImage src={selectedPath?.avatar} alt={selectedPath?.name} />
+                <AvatarFallback>
+                  {selectedPath?.name.split(" ").map(n => n[0]).join("")}
+                </AvatarFallback>
+              </Avatar>
+              <p className="font-medium text-foreground text-sm mt-1">{selectedPath?.name}</p>
+              <p className="text-xs text-muted-foreground">{selectedPath?.title}</p>
+            </div>
+
+            {/* Request Introduction Button */}
+            <div className="pt-4">
+              <Button 
+                className="w-full" 
+                onClick={() => {
+                  setRequestIntroTarget(selectedPath);
+                  setShowRequestIntro(true);
+                  setSelectedPath(null);
+                }}
+              >
+                Request Introduction
+              </Button>
             </div>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* AI Search Dialog */}
-      <Dialog open={showAISearch} onOpenChange={setShowAISearch}>
-        <DialogContent className="sm:max-w-2xl bg-card max-h-[80vh] overflow-y-auto">
+      {/* AI Chat Interface for Search */}
+      <Dialog open={showAIChat} onOpenChange={setShowAIChat}>
+        <DialogContent className="sm:max-w-2xl bg-card max-h-[80vh] flex flex-col rounded-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-primary" />
-              AI Connection Search
+              Find Your People with SIE
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
-            <p className="text-sm text-muted-foreground">
-              Search results for: <span className="font-medium text-foreground">"{searchQuery || "climate tech investors in Munich"}"</span>
-            </p>
-            
-            {/* Mock AI Search Results */}
-            <div className="space-y-3">
-              {mockSuggestedConnections.map((result) => (
-                <Card key={result.id} className="p-4">
-                  <div className="flex gap-3">
-                    <Avatar className="w-12 h-12 flex-shrink-0">
-                      <AvatarImage src={result.avatar} alt={result.name} />
-                      <AvatarFallback>
-                        {result.name.split(" ").map(n => n[0]).join("")}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2 mb-1">
-                        <h3 className="font-semibold text-sm text-foreground">{result.name}</h3>
-                        <div className="flex items-center gap-2">
-                          <Badge className="bg-primary text-primary-foreground border-0 text-xs">
-                            {result.matchPercentage}%
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            {result.degree}
-                          </Badge>
-                        </div>
-                      </div>
-                      <p className="text-xs text-muted-foreground mb-2">{result.title}</p>
-                      <p className="text-xs text-foreground mb-3">{result.relevance}</p>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => {
-                          setSelectedPath(result);
-                          setShowAISearch(false);
-                        }}
-                      >
-                        <Network className="w-3 h-3 mr-1" />
-                        Path Finder
-                      </Button>
-                    </div>
+          <div className="flex-1 overflow-y-auto py-4 space-y-4">
+            {aiChatMessages.length === 0 ? (
+              <div className="space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  I'll help you find the right connections. Tell me:
+                </p>
+                <ul className="text-sm text-muted-foreground space-y-2 list-disc list-inside">
+                  <li>What kind of person are you looking for?</li>
+                  <li>What industry or expertise?</li>
+                  <li>Any specific location or context?</li>
+                  <li>Connect this to any active missions?</li>
+                </ul>
+              </div>
+            ) : (
+              aiChatMessages.map((msg, idx) => (
+                <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[80%] rounded-xl p-3 ${
+                    msg.role === 'user' 
+                      ? 'bg-primary text-primary-foreground' 
+                      : 'bg-muted text-foreground'
+                  }`}>
+                    <p className="text-sm">{msg.content}</p>
                   </div>
-                </Card>
-              ))}
+                </div>
+              ))
+            )}
+          </div>
+          <div className="pt-4 border-t">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Type your search criteria..."
+                className="flex-1 px-3 py-2 rounded-lg bg-muted border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && e.currentTarget.value) {
+                    setAIChatMessages([...aiChatMessages, { role: 'user', content: e.currentTarget.value }]);
+                    e.currentTarget.value = '';
+                  }
+                }}
+              />
+              <Button>Send</Button>
             </div>
           </div>
         </DialogContent>
@@ -750,7 +757,7 @@ export const NetworkInterface = () => {
 
       {/* Introduction Requests Dialog */}
       <Dialog open={showIntroRequests} onOpenChange={setShowIntroRequests}>
-        <DialogContent className="sm:max-w-2xl bg-card max-h-[80vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-2xl bg-card max-h-[80vh] overflow-y-auto rounded-2xl">
           <DialogHeader>
             <DialogTitle>Introduction Requests</DialogTitle>
           </DialogHeader>
@@ -801,7 +808,17 @@ export const NetworkInterface = () => {
                   </div>
                   
                   <div className="flex gap-2">
-                    <Button size="sm" className="flex-1">Accept</Button>
+                    <Button 
+                      size="sm" 
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                      onClick={() => {
+                        setAcceptedRequest(request);
+                        setShowMeetingOrchestration(true);
+                        setShowIntroRequests(false);
+                      }}
+                    >
+                      Accept
+                    </Button>
                     <Button size="sm" variant="outline" className="flex-1">Decline</Button>
                   </div>
                 </div>
@@ -813,7 +830,7 @@ export const NetworkInterface = () => {
 
       {/* Connection Requests Dialog */}
       <Dialog open={showConnectRequests} onOpenChange={setShowConnectRequests}>
-        <DialogContent className="sm:max-w-2xl bg-card max-h-[80vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-2xl bg-card max-h-[80vh] overflow-y-auto rounded-2xl">
           <DialogHeader>
             <DialogTitle>Connection Requests</DialogTitle>
           </DialogHeader>
@@ -850,18 +867,127 @@ export const NetworkInterface = () => {
                     </div>
                     
                     <div>
-                      <p className="text-xs font-medium text-foreground mb-1">Why this is relevant for them:</p>
+                      <p className="text-xs font-medium text-foreground mb-1">Relevance for {request.targetConnection}:</p>
                       <p className="text-xs text-muted-foreground">{request.relevanceForTarget}</p>
                     </div>
                   </div>
                   
                   <div className="flex gap-2">
-                    <Button size="sm" className="flex-1">Make Introduction</Button>
+                    <Button 
+                      size="sm" 
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      Accept
+                    </Button>
                     <Button size="sm" variant="outline" className="flex-1">Decline</Button>
                   </div>
                 </div>
               </Card>
             ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Request Introduction Dialog */}
+      <Dialog open={showRequestIntro} onOpenChange={setShowRequestIntro}>
+        <DialogContent className="sm:max-w-2xl bg-card rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-primary" />
+              Request Introduction to {requestIntroTarget?.name}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="bg-primary/5 rounded-lg p-4 space-y-3">
+              <div>
+                <p className="text-sm font-medium text-foreground mb-2">Why this could be relevant to you:</p>
+                <p className="text-sm text-muted-foreground">{requestIntroTarget?.relevance}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-foreground mb-2">What could be relevant to {requestIntroTarget?.name}:</p>
+                <p className="text-sm text-muted-foreground">
+                  Your expertise in sustainable technology and strong network in the energy sector. 
+                  Potential collaboration opportunities on industrial energy projects.
+                </p>
+              </div>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                Why do you want to be connected?
+              </label>
+              <textarea
+                className="w-full px-3 py-2 rounded-lg bg-muted border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary min-h-[120px]"
+                placeholder="Share your reason for connecting..."
+              />
+            </div>
+            
+            <div className="flex gap-2">
+              <Button className="flex-1">Send Request</Button>
+              <Button variant="outline" className="flex-1" onClick={() => setShowRequestIntro(false)}>Cancel</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Meeting Orchestration Dialog */}
+      <Dialog open={showMeetingOrchestration} onOpenChange={setShowMeetingOrchestration}>
+        <DialogContent className="sm:max-w-2xl bg-card rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-primary" />
+              SIE is orchestrating your meeting
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="bg-primary/5 rounded-lg p-4">
+              <p className="text-sm text-muted-foreground mb-4">
+                I'm finding the best time for both you and {acceptedRequest?.requester.name} to meet...
+              </p>
+              
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-green-600 flex items-center justify-center flex-shrink-0">
+                    <div className="w-2 h-2 rounded-full bg-white"></div>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Analyzed calendars</p>
+                    <p className="text-xs text-muted-foreground">Found 3 available time slots</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0 animate-pulse">
+                    <div className="w-2 h-2 rounded-full bg-white"></div>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Drafting agenda</p>
+                    <p className="text-xs text-muted-foreground">Based on mutual interests and goals</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-muted/50 rounded-lg p-4">
+              <p className="text-sm font-medium text-foreground mb-2">Proposed Meeting Times:</p>
+              <div className="space-y-2">
+                <div className="text-sm text-foreground">• Tuesday, Oct 22 at 2:00 PM (60 min)</div>
+                <div className="text-sm text-foreground">• Wednesday, Oct 23 at 10:00 AM (60 min)</div>
+                <div className="text-sm text-foreground">• Thursday, Oct 24 at 3:30 PM (60 min)</div>
+              </div>
+            </div>
+            
+            <div className="bg-muted/50 rounded-lg p-4">
+              <p className="text-sm font-medium text-foreground mb-2">Draft Agenda:</p>
+              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                <li>Introductions and background (10 min)</li>
+                <li>Discussion on {acceptedRequest?.request.toLowerCase()} (30 min)</li>
+                <li>Potential collaboration opportunities (15 min)</li>
+                <li>Next steps and follow-up (5 min)</li>
+              </ul>
+            </div>
+            
+            <Button className="w-full">Confirm & Send Invitation</Button>
           </div>
         </DialogContent>
       </Dialog>
