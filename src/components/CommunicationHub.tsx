@@ -146,12 +146,12 @@ export const CommunicationHub = () => {
   return (
     <div className="flex flex-col h-full bg-background">
       {/* Section Toggle */}
-      <div className="flex gap-2 p-4 border-b bg-card">
+      <div className="flex gap-1 p-2 border-b bg-card/50 backdrop-blur-sm">
         <button
           onClick={() => setActiveSection("email")}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-all ${
             activeSection === "email"
-              ? "bg-primary text-primary-foreground"
+              ? "bg-accent/20 text-accent border-b-2 border-accent"
               : "bg-transparent text-muted-foreground hover:text-foreground"
           }`}
         >
@@ -160,9 +160,9 @@ export const CommunicationHub = () => {
         </button>
         <button
           onClick={() => setActiveSection("messages")}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-all ${
             activeSection === "messages"
-              ? "bg-primary text-primary-foreground"
+              ? "bg-accent/20 text-accent border-b-2 border-accent"
               : "bg-transparent text-muted-foreground hover:text-foreground"
           }`}
         >
@@ -171,9 +171,9 @@ export const CommunicationHub = () => {
         </button>
         <button
           onClick={() => setActiveSection("calendar")}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-all ${
             activeSection === "calendar"
-              ? "bg-primary text-primary-foreground"
+              ? "bg-accent/20 text-accent border-b-2 border-accent"
               : "bg-transparent text-muted-foreground hover:text-foreground"
           }`}
         >
@@ -448,7 +448,7 @@ export const CommunicationHub = () => {
             {newEmails.map((email) => (
               <Card 
                 key={email.id} 
-                className="p-3 hover:bg-accent/50 transition-colors cursor-pointer border-l-4 border-l-primary"
+                className="p-3 hover:bg-accent/50 transition-colors cursor-pointer"
                 onClick={() => setSelectedContact({
                   name: email.from,
                   avatar: `https://images.unsplash.com/photo-${email.id === "1" ? "1494790108377-be9c29b29330" : email.id === "2" ? "1507003211169-0a1dd7228f2d" : "1438761681033-6461ffad8d80"}?w=150&h=150&fit=crop`,
@@ -456,15 +456,24 @@ export const CommunicationHub = () => {
                   platform: "email"
                 })}
               >
-                <div className="flex items-start justify-between gap-2 mb-1">
-                  <h3 className="font-semibold text-sm text-foreground">{email.from}</h3>
-                  <span className="text-xs text-muted-foreground flex-shrink-0">{email.time}</span>
-                </div>
-                <p className="text-sm font-medium text-foreground/90 mb-1">{email.subject}</p>
-                <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{email.preview}</p>
-                <div className="flex items-center gap-1 text-xs text-primary">
-                  <Sparkles className="w-3 h-3" />
-                  <span className="font-medium">AI draft ready</span>
+                <div className="flex items-start gap-3">
+                  {/* Sender Avatar on the Left */}
+                  <Avatar className="w-12 h-12 flex-shrink-0">
+                    <AvatarImage src={`https://images.unsplash.com/photo-${email.id === "1" ? "1494790108377-be9c29b29330" : email.id === "2" ? "1507003211169-0a1dd7228f2d" : "1438761681033-6461ffad8d80"}?w=150&h=150&fit=crop`} />
+                    <AvatarFallback>{email.from.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                  </Avatar>
+                  
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <h3 className="font-semibold text-sm text-foreground">{email.from}</h3>
+                      <div className="flex items-center gap-1.5 flex-shrink-0">
+                        <Sparkles className="w-3.5 h-3.5 text-accent" />
+                        <span className="text-xs text-muted-foreground">{email.time}</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{email.preview}</p>
+                  </div>
                 </div>
               </Card>
             ))}
@@ -484,7 +493,7 @@ export const CommunicationHub = () => {
             {existingEmails.map((email) => (
               <Card 
                 key={email.id} 
-                className="p-3 hover:bg-accent/50 transition-colors cursor-pointer border-l-4 border-l-accent"
+                className="p-3 hover:bg-accent/50 transition-colors cursor-pointer"
                 onClick={() => setSelectedContact({
                   name: email.from,
                   avatar: `https://images.unsplash.com/photo-${email.id === "3" ? "1438761681033-6461ffad8d80" : "1472099645785-5658abf4ff4e"}?w=150&h=150&fit=crop`,
@@ -492,12 +501,22 @@ export const CommunicationHub = () => {
                   platform: "email"
                 })}
               >
-                <div className="flex items-start justify-between gap-2 mb-1">
-                  <h3 className="font-medium text-sm text-foreground">{email.from}</h3>
-                  <span className="text-xs text-muted-foreground flex-shrink-0">{email.time}</span>
+                <div className="flex items-start gap-3">
+                  {/* Sender Avatar on the Left */}
+                  <Avatar className="w-12 h-12 flex-shrink-0">
+                    <AvatarImage src={`https://images.unsplash.com/photo-${email.id === "3" ? "1438761681033-6461ffad8d80" : "1472099645785-5658abf4ff4e"}?w=150&h=150&fit=crop`} />
+                    <AvatarFallback>{email.from.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                  </Avatar>
+                  
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <h3 className="font-semibold text-sm text-foreground">{email.from}</h3>
+                      <span className="text-xs text-muted-foreground">{email.time}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{email.preview}</p>
+                  </div>
                 </div>
-                <p className="text-sm text-foreground/80 mb-1">{email.subject}</p>
-                <p className="text-xs text-muted-foreground line-clamp-2">{email.preview}</p>
               </Card>
             ))}
           </div>

@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Users, MessageCircle, Bot } from "lucide-react";
+import { Users, MessageCircle, Bot, Sparkles } from "lucide-react";
 import { LandingAnimation } from "@/components/LandingAnimation";
 import { NetworkInterface } from "@/components/NetworkInterface";
 import { CommunicationHub } from "@/components/CommunicationHub";
 import { AgentsHub } from "@/components/AgentsHub";
 import { AIAssistant } from "@/components/AIAssistant";
-import { AIHandle } from "@/components/AIHandle";
 
 const Index = () => {
   const [showLanding, setShowLanding] = useState(true);
@@ -17,47 +16,25 @@ const Index = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-background overflow-hidden">
-
-      {/* Tab Navigation */}
-      <div className="flex border-b border-border bg-card">
-        <button
-          onClick={() => setActiveTab("network")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 font-medium transition-colors ${
-            activeTab === "network"
-              ? "text-primary border-b-2 border-primary"
-              : "text-muted-foreground"
-          }`}
-        >
-          <Users className="w-4 h-4" />
-          Network
-        </button>
-        <button
-          onClick={() => setActiveTab("communication")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 font-medium transition-colors ${
-            activeTab === "communication"
-              ? "text-primary border-b-2 border-primary"
-              : "text-muted-foreground"
-          }`}
-        >
-          <MessageCircle className="w-4 h-4" />
-          Communication
-        </button>
-        <button
-          onClick={() => setActiveTab("agents")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 font-medium transition-colors ${
-            activeTab === "agents"
-              ? "text-primary border-b-2 border-primary"
-              : "text-muted-foreground"
-          }`}
-        >
-          <Bot className="w-4 h-4" />
-          Agents
-        </button>
+    <div className="h-screen flex flex-col bg-gradient-to-br from-background via-background to-muted/20 overflow-hidden">
+      
+      {/* Top Header */}
+      <div className="flex items-center justify-between px-6 py-4 bg-card/50 backdrop-blur-sm border-b border-border/50">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Welcome Gil</h1>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-accent shadow-[0_0_20px_rgba(127,194,161,0.6)] flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-accent-foreground" />
+          </div>
+          <div className="text-right">
+            <p className="text-sm font-bold text-foreground">SIE</p>
+          </div>
+        </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-hidden pb-16">
+      <div className="flex-1 overflow-hidden pb-32">
         {activeTab === "network" ? (
           <NetworkInterface />
         ) : activeTab === "communication" ? (
@@ -67,8 +44,49 @@ const Index = () => {
         )}
       </div>
 
-      {/* AI Components */}
-      <AIHandle onOpen={() => setIsAIOpen(true)} />
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-white/10 z-40">
+        <div className="flex items-center justify-around py-4">
+          <button
+            onClick={() => setActiveTab("network")}
+            className={`flex flex-col items-center gap-1 transition-all ${
+              activeTab === "network"
+                ? "text-white"
+                : "text-white/60"
+            }`}
+          >
+            <Users className={`w-6 h-6 ${activeTab === "network" ? "scale-110" : ""}`} />
+          </button>
+          <button
+            onClick={() => setActiveTab("communication")}
+            className={`flex flex-col items-center gap-1 transition-all ${
+              activeTab === "communication"
+                ? "text-white"
+                : "text-white/60"
+            }`}
+          >
+            <MessageCircle className={`w-6 h-6 ${activeTab === "communication" ? "scale-110" : ""}`} />
+          </button>
+          <button
+            onClick={() => setActiveTab("agents")}
+            className={`flex flex-col items-center gap-1 transition-all ${
+              activeTab === "agents"
+                ? "text-white"
+                : "text-white/60"
+            }`}
+          >
+            <Bot className={`w-6 h-6 ${activeTab === "agents" ? "scale-110" : ""}`} />
+          </button>
+          <button
+            onClick={() => setIsAIOpen(true)}
+            className="flex flex-col items-center gap-1 transition-all text-accent"
+          >
+            <Sparkles className="w-6 h-6" />
+          </button>
+        </div>
+      </div>
+
+      {/* AI Assistant */}
       <AIAssistant isOpen={isAIOpen} onClose={() => setIsAIOpen(false)} />
     </div>
   );
