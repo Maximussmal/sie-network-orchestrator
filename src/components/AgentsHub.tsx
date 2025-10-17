@@ -22,9 +22,9 @@ export const AgentsHub = () => {
 
       {/* Agents Section */}
       <div className="space-y-4">
-        {/* Scheduling Agent */}
+        {/* Scheduling Agent - Enhanced with Voice */}
         <Card 
-          className="p-5 bg-card border-border hover:shadow-lg transition-shadow cursor-pointer"
+          className="p-5 bg-card border-border hover:shadow-lg transition-shadow cursor-pointer border-2 border-blue-200"
           onClick={() => setActiveAgent("scheduling")}
         >
           <div className="flex items-start gap-4">
@@ -32,15 +32,20 @@ export const AgentsHub = () => {
               <Calendar className="w-6 h-6 text-[hsl(var(--sie-near-white))]" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-foreground mb-1">Scheduling Agent</h3>
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="font-semibold text-foreground">Scheduling Agent</h3>
+                <span className="px-2 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
+                  VOICE ENABLED
+                </span>
+              </div>
               <p className="text-sm text-muted-foreground mb-3">
-                Automatically book meetings with people in your network based on priorities and availability
+                Voice-powered meeting scheduler with CRM integration. Process voice input, extract meeting details, and automatically schedule meetings.
               </p>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <span className="px-2 py-1 rounded-full bg-[hsl(var(--sie-green))]/20 text-[hsl(var(--sie-green))]">
                   Active
                 </span>
-                <span>• 8 meetings scheduled this week</span>
+                <span>• 8 meetings scheduled • Voice processing • CRM integration</span>
               </div>
             </div>
           </div>

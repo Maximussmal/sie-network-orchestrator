@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Mail, MailOpen, Clock, CheckCheck, Sparkles, MessageCircle, Calendar as CalendarIcon, Video, MapPin } from "lucide-react";
+import { Mail, MailOpen, Clock, CheckCheck, Sparkles, MessageCircle, Calendar as CalendarIcon, Video, MapPin, Mic } from "lucide-react";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { ConversationThread } from "./ConversationThread";
+import { useMeetingStore } from "@/services/meetingStore";
 
 interface Email {
   id: string;
@@ -122,6 +123,11 @@ export const CommunicationHub = () => {
     title?: string;
     platform?: "linkedin" | "whatsapp" | "sumbios" | "email";
   } | null>(null);
+  
+  const { meetings, contacts, getUpcomingMeetings } = useMeetingStore();
+  const upcomingMeetings = getUpcomingMeetings();
+  const voiceAgentMeetings = meetings.filter(m => m.source === 'voice-agent');
+  
   const newEmails = mockEmails.filter((e) => e.isNew);
   const existingEmails = mockEmails.filter((e) => !e.isNew);
   const outstandingReplies = 7;
@@ -188,6 +194,47 @@ export const CommunicationHub = () => {
               Your schedule for the next 7 days
             </p>
           </div>
+
+          {/* Voice Agent Meetings Section */}
+          {voiceAgentMeetings.length > 0 && (
+            <div className="px-4 mb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Mic className="w-4 h-4 text-blue-500" />
+                <h3 className="text-sm font-semibold text-foreground">Voice Agent Scheduled</h3>
+                <Badge className="bg-blue-100 text-blue-800 text-xs">{voiceAgentMeetings.length}</Badge>
+              </div>
+              <div className="space-y-2">
+                {voiceAgentMeetings.slice(0, 3).map((meeting) => {
+                  const contact = contacts.find(c => c.id === meeting.contactId);
+                  return (
+                    <Card key={meeting.id} className="p-3 rounded-xl border-0 shadow-sm bg-blue-50 border-l-4 border-l-blue-500">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                          <Mic className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <h4 className="font-semibold text-sm text-foreground">{meeting.title}</h4>
+                            <span className="text-xs text-muted-foreground flex-shrink-0">
+                              {new Date(meeting.scheduledTime).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground mb-1">
+                            with {contact?.name} ({contact?.email})
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-blue-600 font-medium">Voice Scheduled</span>
+                            <span className="text-xs text-muted-foreground">•</span>
+                            <span className="text-xs text-muted-foreground">{meeting.duration} min</span>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Calendar Events List */}
           <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-4">
@@ -325,7 +372,7 @@ export const CommunicationHub = () => {
           </div>
         </Card>
         <Card className="p-3 text-center">
-          <div className="text-2xl font-bold text-primary">{newEmails.length}</div>
+          <div className="text-2xl font-bold text-primary">{newEmails.length + voiceAgentMeetings.length}</div>
           <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
             <Mail className="w-3 h-3" />
             New Today
@@ -341,6 +388,52 @@ export const CommunicationHub = () => {
           </div>
 
           <div className="flex-1 overflow-y-auto">
+        {/* Voice Agent Confirmation Emails */}
+        {voiceAgentMeetings.length > 0 && (
+          <div className="p-4 border-b">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                <Mic className="w-4 h-4 text-blue-600" />
+              </div>
+              <h2 className="font-semibold text-foreground">Voice Agent Confirmations</h2>
+              <Badge className="ml-auto bg-blue-100 text-blue-800">{voiceAgentMeetings.length}</Badge>
+            </div>
+
+            <div className="space-y-2">
+              {voiceAgentMeetings.map((meeting) => {
+                const contact = contacts.find(c => c.id === meeting.contactId);
+                return (
+                  <Card 
+                    key={meeting.id} 
+                    className="p-3 hover:bg-accent/50 transition-colors cursor-pointer border-l-4 border-l-blue-500 bg-blue-50/50"
+                    onClick={() => setSelectedContact({
+                      name: contact?.name || 'Unknown',
+                      avatar: `https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop`,
+                      title: `Meeting: ${meeting.title}`,
+                      platform: "email"
+                    })}
+                  >
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <h3 className="font-semibold text-sm text-foreground">{contact?.name}</h3>
+                      <span className="text-xs text-muted-foreground flex-shrink-0">
+                        {new Date(meeting.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <p className="text-sm font-medium text-foreground/90 mb-1">Meeting Confirmation: {meeting.title}</p>
+                    <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
+                      Meeting scheduled for {new Date(meeting.scheduledTime).toLocaleString()} ({meeting.duration} minutes)
+                    </p>
+                    <div className="flex items-center gap-1 text-xs text-blue-600">
+                      <Mic className="w-3 h-3" />
+                      <span className="font-medium">Voice Agent Scheduled</span>
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* New Emails Section */}
         <div className="p-4">
           <div className="flex items-center gap-2 mb-3">
