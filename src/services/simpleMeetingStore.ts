@@ -127,7 +127,9 @@ export function useSimpleMeetingStore() {
     const unsubscribe = simpleMeetingStore.subscribe(() => {
       forceUpdate({});
     });
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   return {

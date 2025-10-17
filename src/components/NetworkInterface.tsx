@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Users, TrendingUp, Target, ArrowUpDown, Network, Sparkles, ChevronRight } from "lucide-react";
+import { Users, TrendingUp, Target, ArrowUpDown, Network, Sparkles, ChevronRight, Search, Bell } from "lucide-react";
 import { Card } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
@@ -38,12 +38,40 @@ interface SuggestedConnection {
   location: string;
   avatar: string;
   relevance: string;
+  matchPercentage: number;
   degree: "2nd" | "3rd";
   path: Array<{
     name: string;
     avatar: string;
     relationship: string;
   }>;
+}
+
+interface IntroductionRequest {
+  id: string;
+  requester: {
+    name: string;
+    avatar: string;
+    title: string;
+  };
+  through: {
+    name: string;
+    avatar: string;
+  };
+  request: string;
+  relevance: string;
+}
+
+interface ConnectionRequest {
+  id: string;
+  requester: {
+    name: string;
+    avatar: string;
+    title: string;
+  };
+  context: string;
+  targetConnection: string;
+  relevanceForTarget: string;
 }
 
 const mockConnections: Connection[] = [
@@ -108,7 +136,8 @@ const mockSuggestedConnections: SuggestedConnection[] = [
     title: "Director of Sustainability @Siemens Energy",
     location: "Munich, Germany",
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop",
-    relevance: "Leading sustainable energy initiatives - aligns with your network's focus on industrial energy storage",
+    relevance: "Leading sustainable energy initiatives in Germany with focus on industrial applications. Her network overlaps with your energy storage contacts and she's actively seeking partnerships.",
+    matchPercentage: 94,
     degree: "2nd",
     path: [
       {
@@ -124,7 +153,8 @@ const mockSuggestedConnections: SuggestedConnection[] = [
     title: "Venture Partner @Munich Venture Partners",
     location: "Munich, Germany",
     avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop",
-    relevance: "Invests in climate tech startups - could connect with your energy storage network",
+    relevance: "Active climate tech investor with portfolio companies in energy storage. Strong synergies with Peter Lange's network and looking to expand in industrial energy sector.",
+    matchPercentage: 87,
     degree: "2nd",
     path: [
       {
@@ -140,7 +170,8 @@ const mockSuggestedConnections: SuggestedConnection[] = [
     title: "Chair of AI & Robotics @TUM",
     location: "Munich, Germany",
     avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop",
-    relevance: "Research focus on autonomous systems - connects to Simon's work on autonomous labs",
+    relevance: "Leading autonomous systems research at TUM with applications in laboratory automation. Direct connection to Simon's work and seeking industry partnerships.",
+    matchPercentage: 82,
     degree: "3rd",
     path: [
       {
@@ -157,11 +188,71 @@ const mockSuggestedConnections: SuggestedConnection[] = [
   }
 ];
 
+const mockIntroductionRequests: IntroductionRequest[] = [
+  {
+    id: "intro1",
+    requester: {
+      name: "Thomas Mueller",
+      avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop",
+      title: "CEO @CleanTech Solutions"
+    },
+    through: {
+      name: "Peter Lange",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop"
+    },
+    request: "Introduction to discuss potential partnership on industrial energy storage projects",
+    relevance: "Your expertise in sustainable energy infrastructure and network in the sector could provide valuable insights for their expansion strategy"
+  },
+  {
+    id: "intro2",
+    requester: {
+      name: "Elena Popov",
+      avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop",
+      title: "Partner @GreenFund Capital"
+    },
+    through: {
+      name: "Stefanie Hauer",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop"
+    },
+    request: "Seeking advice on sustainability board positions and governance in climate tech",
+    relevance: "Your board experience and corporate sustainability background aligns with their focus on responsible climate investments"
+  }
+];
+
+const mockConnectionRequests: ConnectionRequest[] = [
+  {
+    id: "conn1",
+    requester: {
+      name: "Dr. Sarah Williams",
+      avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop",
+      title: "Research Director @Innovation Labs"
+    },
+    context: "Met at TUM Innovation Summit 2024, discussed autonomous laboratory systems",
+    targetConnection: "Prof. Lisa Chen",
+    relevanceForTarget: "Her research on AI-driven lab automation could benefit from collaboration. Dr. Williams is leading a €5M EU-funded project in this space and actively seeking academic partners"
+  },
+  {
+    id: "conn2",
+    requester: {
+      name: "Martin Schneider",
+      avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=150&h=150&fit=crop",
+      title: "VP Strategy @Energy Grid Systems"
+    },
+    context: "Former colleague at sustainability conference, shared interest in grid-scale storage",
+    targetConnection: "Dr. Anna Weber",
+    relevanceForTarget: "Direct alignment on industrial energy storage solutions. His company is planning major investments in Germany and seeking technical partnerships with Siemens Energy"
+  }
+];
+
 export const NetworkInterface = () => {
   const [sortBy, setSortBy] = useState<"mutual" | "trust">("mutual");
   const [filterBy, setFilterBy] = useState<"all" | "1st" | "2nd" | "3rd+">("all");
   const [activeSection, setActiveSection] = useState<"nurture" | "expand" | "signals">("nurture");
   const [selectedPath, setSelectedPath] = useState<SuggestedConnection | null>(null);
+  const [showAISearch, setShowAISearch] = useState(false);
+  const [showIntroRequests, setShowIntroRequests] = useState(false);
+  const [showConnectRequests, setShowConnectRequests] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const sortedConnections = [...mockConnections].sort((a, b) => {
     if (sortBy === "mutual") return b.mutualConnections - a.mutualConnections;
@@ -418,14 +509,63 @@ export const NetworkInterface = () => {
     ) : (
       <>
         {/* Expand Network Section */}
-        <div className="p-4">
-          <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="w-5 h-5 text-primary" />
-            <h2 className="text-lg font-semibold text-foreground">Suggested Connections</h2>
+        <div className="p-4 space-y-4">
+          {/* AI Search Bar */}
+          <div className="relative">
+            <div className="relative flex items-center">
+              <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Search for connections in natural language..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setShowAISearch(true)}
+                className="w-full pl-10 pr-12 py-3 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <div className="absolute right-3 flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10">
+                <Sparkles className="w-3 h-3 text-primary" />
+                <span className="text-xs font-medium text-primary">AI</span>
+              </div>
+            </div>
           </div>
-          <p className="text-sm text-muted-foreground mb-4">
-            Expand your network strategically with these 2nd and 3rd degree connections
-          </p>
+
+          {/* Action Buttons */}
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowIntroRequests(true)}
+              className="flex-1 relative"
+            >
+              <Users className="w-4 h-4 mr-2" />
+              Introduction
+              {mockIntroductionRequests.length > 0 && (
+                <Badge className="absolute -top-2 -right-2 bg-accent text-accent-foreground border-0 h-5 min-w-5 px-1.5">
+                  {mockIntroductionRequests.length}
+                </Badge>
+              )}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowConnectRequests(true)}
+              className="flex-1 relative"
+            >
+              <Bell className="w-4 h-4 mr-2" />
+              Connect
+              {mockConnectionRequests.length > 0 && (
+                <Badge className="absolute -top-2 -right-2 bg-accent text-accent-foreground border-0 h-5 min-w-5 px-1.5">
+                  {mockConnectionRequests.length}
+                </Badge>
+              )}
+            </Button>
+          </div>
+
+          {/* SIE Suggestions Header */}
+          <div className="flex items-center gap-2 pt-2">
+            <Sparkles className="w-4 h-4 text-primary" />
+            <span className="text-sm font-medium text-muted-foreground">Suggestions from SIE</span>
+          </div>
         </div>
 
         {/* Suggested Connections List */}
@@ -454,14 +594,20 @@ export const NetworkInterface = () => {
                     {suggestion.title}
                   </p>
 
-                  {/* Relevance */}
+                  {/* Relevance with Match Score */}
                   <div className="bg-primary/5 rounded-lg p-3 mb-3">
-                    <div className="flex items-start gap-2">
-                      <Target className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                      <p className="text-xs text-foreground">
-                        {suggestion.relevance}
-                      </p>
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <div className="flex items-center gap-1.5">
+                        <Target className="w-4 h-4 text-primary flex-shrink-0" />
+                        <span className="text-xs font-semibold text-primary">Match Score</span>
+                      </div>
+                      <Badge className="bg-primary text-primary-foreground border-0 text-xs px-2">
+                        {suggestion.matchPercentage}%
+                      </Badge>
                     </div>
+                    <p className="text-xs text-foreground">
+                      {suggestion.relevance}
+                    </p>
                   </div>
 
                   {/* Path Button */}
@@ -472,7 +618,7 @@ export const NetworkInterface = () => {
                     className="w-full"
                   >
                     <Network className="w-4 h-4 mr-2" />
-                    View Connection Path
+                    Path Finder
                   </Button>
                 </div>
               </div>
@@ -539,6 +685,183 @@ export const NetworkInterface = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* AI Search Dialog */}
+      <Dialog open={showAISearch} onOpenChange={setShowAISearch}>
+        <DialogContent className="sm:max-w-2xl bg-card max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-primary" />
+              AI Connection Search
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <p className="text-sm text-muted-foreground">
+              Search results for: <span className="font-medium text-foreground">"{searchQuery || "climate tech investors in Munich"}"</span>
+            </p>
+            
+            {/* Mock AI Search Results */}
+            <div className="space-y-3">
+              {mockSuggestedConnections.map((result) => (
+                <Card key={result.id} className="p-4">
+                  <div className="flex gap-3">
+                    <Avatar className="w-12 h-12 flex-shrink-0">
+                      <AvatarImage src={result.avatar} alt={result.name} />
+                      <AvatarFallback>
+                        {result.name.split(" ").map(n => n[0]).join("")}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <h3 className="font-semibold text-sm text-foreground">{result.name}</h3>
+                        <div className="flex items-center gap-2">
+                          <Badge className="bg-primary text-primary-foreground border-0 text-xs">
+                            {result.matchPercentage}%
+                          </Badge>
+                          <Badge variant="outline" className="text-xs">
+                            {result.degree}
+                          </Badge>
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground mb-2">{result.title}</p>
+                      <p className="text-xs text-foreground mb-3">{result.relevance}</p>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedPath(result);
+                          setShowAISearch(false);
+                        }}
+                      >
+                        <Network className="w-3 h-3 mr-1" />
+                        Path Finder
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Introduction Requests Dialog */}
+      <Dialog open={showIntroRequests} onOpenChange={setShowIntroRequests}>
+        <DialogContent className="sm:max-w-2xl bg-card max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Introduction Requests</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <p className="text-sm text-muted-foreground">
+              People who want to be introduced to you
+            </p>
+            
+            {mockIntroductionRequests.map((request) => (
+              <Card key={request.id} className="p-4">
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <Avatar className="w-12 h-12 flex-shrink-0">
+                      <AvatarImage src={request.requester.avatar} alt={request.requester.name} />
+                      <AvatarFallback>
+                        {request.requester.name.split(" ").map(n => n[0]).join("")}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-sm text-foreground">{request.requester.name}</h3>
+                      <p className="text-xs text-muted-foreground">{request.requester.title}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-muted/50 rounded-lg p-3 space-y-2">
+                    <div>
+                      <p className="text-xs font-medium text-foreground mb-1">Through:</p>
+                      <div className="flex items-center gap-2">
+                        <Avatar className="w-6 h-6">
+                          <AvatarImage src={request.through.avatar} alt={request.through.name} />
+                          <AvatarFallback className="text-xs">
+                            {request.through.name.split(" ").map(n => n[0]).join("")}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-xs text-muted-foreground">{request.through.name}</span>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <p className="text-xs font-medium text-foreground mb-1">Request:</p>
+                      <p className="text-xs text-muted-foreground">{request.request}</p>
+                    </div>
+                    
+                    <div>
+                      <p className="text-xs font-medium text-foreground mb-1">Why this is relevant:</p>
+                      <p className="text-xs text-muted-foreground">{request.relevance}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button size="sm" className="flex-1">Accept</Button>
+                    <Button size="sm" variant="outline" className="flex-1">Decline</Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Connection Requests Dialog */}
+      <Dialog open={showConnectRequests} onOpenChange={setShowConnectRequests}>
+        <DialogContent className="sm:max-w-2xl bg-card max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Connection Requests</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <p className="text-sm text-muted-foreground">
+              People requesting introductions through you
+            </p>
+            
+            {mockConnectionRequests.map((request) => (
+              <Card key={request.id} className="p-4">
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <Avatar className="w-12 h-12 flex-shrink-0">
+                      <AvatarImage src={request.requester.avatar} alt={request.requester.name} />
+                      <AvatarFallback>
+                        {request.requester.name.split(" ").map(n => n[0]).join("")}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-sm text-foreground">{request.requester.name}</h3>
+                      <p className="text-xs text-muted-foreground">{request.requester.title}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-muted/50 rounded-lg p-3 space-y-2">
+                    <div>
+                      <p className="text-xs font-medium text-foreground mb-1">Context:</p>
+                      <p className="text-xs text-muted-foreground">{request.context}</p>
+                    </div>
+                    
+                    <div>
+                      <p className="text-xs font-medium text-foreground mb-1">Wants to connect with:</p>
+                      <p className="text-xs text-foreground font-medium">{request.targetConnection}</p>
+                    </div>
+                    
+                    <div>
+                      <p className="text-xs font-medium text-foreground mb-1">Why this is relevant for them:</p>
+                      <p className="text-xs text-muted-foreground">{request.relevanceForTarget}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button size="sm" className="flex-1">Make Introduction</Button>
+                    <Button size="sm" variant="outline" className="flex-1">Decline</Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
           </div>
         </DialogContent>
       </Dialog>
