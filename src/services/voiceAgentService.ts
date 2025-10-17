@@ -1,5 +1,8 @@
-// Mock service for Voice Agent backend functionality
+// Voice Agent Service with Azure OpenAI integration
 import { useMeetingStore, type Contact, type Meeting } from './meetingStore';
+import { AzureOpenAIService, type ExtractionResult } from './azureOpenAI';
+import { AudioRecorderService } from './audioRecorder';
+import { findContact, findContactByName, findContactByCompany, type KnownContact } from '@/data/knownContacts';
 
 export interface ExtractedInfo {
   name?: string;
@@ -17,100 +20,145 @@ const getInitialContacts = () => {
   return [];
 };
 
+// Simple in-memory contacts used by service helpers
+const mockContacts: Contact[] = [];
+
 // Voice Processing Service
 export class VoiceAgentService {
   
-  // 1. Process voice and transcribe
+  // 1. Process voice and transcribe using Azure OpenAI Whisper
   static async processVoice(audioBlob: Blob): Promise<string> {
-    // Mock transcription - in real implementation, this would use Web Speech API or external service
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Return mock transcript
-    const mockTranscripts = [
-      "Hi, my name is Alex Chen, email alex.chen@example.com, I'd like to schedule a meeting for tomorrow at 2pm to discuss our partnership proposal",
-      "Hello, this is Maria Rodriguez, maria@techstart.com, can we set up a call next Tuesday at 3pm for 30 minutes to talk about the collaboration",
-      "Hey there, I'm David Kim, david.kim@innovation.com, I want to book a meeting for Friday morning at 10am to discuss the project timeline"
-    ];
-    
-    return mockTranscripts[Math.floor(Math.random() * mockTranscripts.length)];
+    try {
+      console.log('Transcribing audio with Azure OpenAI Whisper...');
+      const result = await AzureOpenAIService.transcribeAudio(audioBlob);
+      console.log('Transcription complete:', result.text);
+      return result.text;
+    } catch (error) {
+      console.error('Azure Whisper transcription failed:', error);
+      throw new Error('Failed to transcribe audio. Please check your Azure OpenAI configuration.');
+    }
   }
 
-  // 2. Extract information from conversation
+  // 2. Extract information from conversation using Azure OpenAI GPT
   static async extractMeetingInformation(transcript: string): Promise<ExtractedInfo> {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
+    try {
+      console.log('Extracting meeting information with Azure OpenAI GPT...');
+      const result = await AzureOpenAIService.extractMeetingInfo(transcript);
+      console.log('Extraction complete:', result);
+
+      // Convert ExtractionResult to ExtractedInfo format
+      const info: ExtractedInfo = {
+        name: result.name,
+        email: result.email,
+        company: result.company,
+        meetingTime: result.meetingTime,
+        meetingPurpose: result.meetingPurpose,
+        duration: result.duration,
+        phone: result.phone,
+      };
+
+      return info;
+    } catch (error) {
+      console.error('Azure GPT extraction failed:', error);
+
+      // Local fallback extraction when Azure is unavailable or fails
+      try {
+        const fallback = this.localExtractMeetingInformation(transcript);
+        if (Object.keys(fallback).length > 0) {
+          console.log('Using local fallback extraction:', fallback);
+          return fallback;
+        }
+      } catch (fallbackError) {
+        console.warn('Local fallback extraction failed:', fallbackError);
+      }
+
+      throw new Error('Failed to extract meeting information. Please try again.');
+    }
+  }
+
+  // Local heuristic extractor using known contacts and simple patterns
+  private static localExtractMeetingInformation(transcript: string): ExtractedInfo {
+    const text = (transcript || '').trim();
+    if (text.length === 0) return {};
+
+    const lower = text.toLowerCase();
     const info: ExtractedInfo = {};
-    
-    // Extract name - prioritize context about who to meet with
-    const namePatterns = [
-      /(?:meeting with|met with|talked to|spoke with|met)\s+([A-Za-z\s]+?)\s+(?:from|at|who)/i,
-      /(?:book.*?with|schedule.*?with|call.*?with)\s+([A-Za-z\s]+?)(?:\s|,|\.|$)/i,
-      /(?:my name is|i'm|i am|this is)\s+([A-Za-z\s]+?)(?:\s|,|\.|$)/i,
-      /(?:name's|name is)\s+([A-Za-z\s]+?)(?:\s|,|\.|$)/i
-    ];
 
-    for (const pattern of namePatterns) {
-      const match = transcript.match(pattern);
-      if (match && match[1].trim().length > 2) {
-        info.name = match[1].trim();
-        break;
+    // 1) Try to infer meeting time
+    const timePatterns: Array<{ regex: RegExp; repr: (m: RegExpMatchArray) => string }> = [
+      { regex: /tomorrow\s+at\s+(\d{1,2}(?::\d{2})?\s?(?:am|pm)?)/i, repr: m => `tomorrow at ${m[1]}` },
+      { regex: /tomorrow\b/i, repr: () => 'tomorrow' },
+      { regex: /next\s+week\b/i, repr: () => 'next week' },
+      { regex: /next\s+(monday|tuesday|wednesday|thursday|friday|saturday|sunday)(?:\s+at\s+(\d{1,2}(?::\d{2})?\s?(?:am|pm)?))?/i, repr: m => `next ${m[1]}${m[2] ? ` at ${m[2]}` : ''}` },
+      { regex: /\b(\d{1,2}(?::\d{2})?\s?(?:am|pm))\b/i, repr: m => m[1] }
+    ];
+    for (const p of timePatterns) {
+      const m = text.match(p.regex);
+      if (m) { info.meetingTime = p.repr(m as RegExpMatchArray); break; }
+    }
+
+    // 2) Try to infer purpose
+    // Capture phrase after 'about' up to sentence end or conjunction
+    const aboutMatch = text.match(/about\s+([^\.;\n]+?)(?:\.|\n|$|\sand\s|\sbut\s)/i);
+    if (aboutMatch && aboutMatch[1]) {
+      info.meetingPurpose = aboutMatch[1].trim();
+    } else {
+      // fallback generic purpose if user said 'schedule a meeting'
+      if (/schedule\s+(a\s+)?meeting/i.test(text)) {
+        info.meetingPurpose = 'meeting';
       }
     }
 
-    // Extract email
-    const emailMatch = transcript.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
-    if (emailMatch) {
-      info.email = emailMatch[1];
+    // 3) Try to resolve contact by name/company from known contacts
+    // Heuristic: find any known contact whose first/last name appears in the transcript
+    let matched: KnownContact | null = null;
+
+    // Attempt name-based matching via helper
+    // Extract capitalized tokens as candidate names (very simple heuristic)
+    const candidateName = (() => {
+      const nameAfterWith = text.match(/with\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)/);
+      if (nameAfterWith) return nameAfterWith[1];
+      const firstProper = text.match(/\b([A-Z][a-z]{2,})(?:\s+[A-Z][a-z]{2,})?/);
+      return firstProper ? firstProper[0] : '';
+    })();
+
+    if (candidateName) {
+      matched = findContactByName(candidateName);
     }
 
-    // Extract phone
-    const phoneMatch = transcript.match(/(\+?1?[-.\s]?)?(\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4})/);
-    if (phoneMatch) {
-      info.phone = phoneMatch[0];
-    }
-
-    // Extract meeting time
-    const timePatterns = [
-      /(?:meeting|call|appointment|schedule).*?(?:at|on|for)\s+([^,\.]+)/i,
-      /(?:tomorrow|today|next week|next month).*?(?:at|around|about)\s+([^,\.]+)/i,
-      /(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday).*?(?:at|around|about)\s+([^,\.]+)/i
-    ];
-    
-    for (const pattern of timePatterns) {
-      const match = transcript.match(pattern);
-      if (match) {
-        info.meetingTime = match[1].trim();
-        break;
+    // If still not matched, try common first-name-only patterns like "Sara(h)"
+    if (!matched) {
+      const firstNameOnly = text.match(/\bwith\s+([A-Za-z]{2,})\b/i)?.[1] || text.match(/\bmet\s+([A-Za-z]{2,})\b/i)?.[1];
+      if (firstNameOnly) {
+        matched = findContactByName(firstNameOnly);
       }
     }
 
-    // Extract purpose
-    const purposePatterns = [
-      /(?:about|regarding|to discuss|for|concerning)\s+([^,\.]+)/i,
-      /(?:discuss|talk about|meet about)\s+([^,\.]+)/i,
-      /(?:partnership|collaboration|project|proposal|timeline|budget)/i
-    ];
-    
-    for (const pattern of purposePatterns) {
-      const match = transcript.match(pattern);
-      if (match) {
-        info.meetingPurpose = match[1] || match[0];
-        break;
+    // Company-based matching
+    if (!matched) {
+      const companyAfterIn = text.match(/in\s+([A-Z][A-Za-z0-9&\-\s]{2,})/);
+      const companyAfterFrom = text.match(/from\s+([A-Z][A-Za-z0-9&\-\s]{2,})/);
+      const companyCandidate = (companyAfterIn?.[1] || companyAfterFrom?.[1] || '').trim();
+      if (companyCandidate) {
+        matched = findContactByCompany(companyCandidate);
       }
     }
 
-    // Extract duration
-    const durationMatch = transcript.match(/(\d+)\s*(?:minute|min|hour|hr)/i);
-    if (durationMatch) {
-      info.duration = durationMatch[1];
+    // Fallback smart search using provided helper
+    if (!matched) {
+      const maybeName = candidateName || '';
+      const maybeCompany = text.match(/\b(?:at|from|with)\s+([A-Z][A-Za-z0-9&\-\s]{2,})/)?.[1] || '';
+      matched = findContact(maybeName, maybeCompany);
     }
 
-    // Extract company (basic pattern)
-    const companyMatch = transcript.match(/(?:from|at)\s+([A-Za-z\s&]+?(?:VC|fund|ventures|capital|partners|corp|inc|company|corporation)?)\s+(?:fund|who|and|,|\.)/i);
-    if (companyMatch && companyMatch[1].trim().length > 2) {
-      info.company = companyMatch[1].trim();
+    if (matched) {
+      info.name = matched.name;
+      info.email = matched.email;
+      info.phone = matched.phone;
+      info.company = matched.company;
     }
 
+    // Return whatever we could infer; the UI allows editing/confirmation
     return info;
   }
 
@@ -180,7 +228,8 @@ export class VoiceAgentService {
       status: 'scheduled',
       calendarLink: `https://calendar.google.com/event?action=TEMPLATE&text=${encodeURIComponent(extractedInfo.meetingPurpose || 'Meeting')}&dates=${scheduledTime.replace(/[-:]/g, '').split('.')[0]}Z/${new Date(new Date(scheduledTime).getTime() + (parseInt(extractedInfo.duration || '60') * 60000)).toISOString().replace(/[-:]/g, '').split('.')[0]}Z`,
       emailSent: false,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      source: 'voice-agent'
     };
 
     // Add meeting to contact's history

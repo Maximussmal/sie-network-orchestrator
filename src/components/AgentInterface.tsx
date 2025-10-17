@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from "react";
-import { X, Send, Mic, Phone, Sparkles, User, Calendar, Mail, CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { X, Send, Mic, Phone, Sparkles, User, Calendar, Mail, CheckCircle, XCircle, Loader2, Edit2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
 import { VoiceAgentService, type ExtractedInfo } from "@/services/voiceAgentService";
 import { useMeetingStore, type Contact, type Meeting } from "@/services/meetingStore";
+import { AudioRecorderService } from "@/services/audioRecorder";
 
 interface AgentInterfaceProps {
   agentType: "scheduling" | "insight";
@@ -60,9 +62,12 @@ export const AgentInterface = ({ agentType, onClose }: AgentInterfaceProps) => {
     currentStep: 'listening',
     extractedInfo: {}
   });
-  
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedInfo, setEditedInfo] = useState<ExtractedInfo>({});
+
   const config = agentConfig[agentType];
   const recognitionRef = useRef<any>(null);
+  const audioRecorderRef = useRef<AudioRecorderService | null>(null);
   const { addMeeting, addContact, contacts } = useMeetingStore();
 
   // Initialize speech recognition
@@ -173,23 +178,20 @@ export const AgentInterface = ({ agentType, onClose }: AgentInterfaceProps) => {
     }
 
     if (!isRecording) {
-      // Check if speech recognition is available
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      
-      if (!SpeechRecognition) {
+      // Check if audio recording is supported
+      if (!AudioRecorderService.isSupported()) {
         setVoiceState(prev => ({
           ...prev,
           isActive: true,
           currentStep: 'error',
-          error: 'Speech recognition is not supported in your browser. Please use Chrome, Edge, or Safari.'
+          error: 'Audio recording is not supported in your browser. Please use a modern browser.'
         }));
         return;
       }
 
-      // Request microphone permission first
-      try {
-        await navigator.mediaDevices.getUserMedia({ audio: true });
-      } catch (error) {
+      // Request microphone permission
+      const hasPermission = await AudioRecorderService.requestPermission();
+      if (!hasPermission) {
         setVoiceState(prev => ({
           ...prev,
           isActive: true,
@@ -199,7 +201,7 @@ export const AgentInterface = ({ agentType, onClose }: AgentInterfaceProps) => {
         return;
       }
 
-      // Start voice processing for scheduling agent
+      // Start voice recording and processing
       setIsRecording(true);
       setVoiceState(prev => ({
         ...prev,
@@ -208,36 +210,47 @@ export const AgentInterface = ({ agentType, onClose }: AgentInterfaceProps) => {
         extractedInfo: {},
         error: undefined
       }));
-      
+
       try {
-        if (recognitionRef.current) {
-          recognitionRef.current.start();
-        } else {
-          // Fallback: simulate voice processing with mock data
-          setTimeout(() => {
-            const mockTranscript = "Hey Sumbios! I just had a meeting with Phil from ABC VC fund who is interested in investing in our startup. We talked about the possibilities of AI in the VC space and he seems really interested. Can you book a meeting with him tomorrow at 2pm to present my pitch deck? His email is phil.anderson@abcvc.com";
-            setTranscript(mockTranscript);
-            processVoiceInput(mockTranscript);
-          }, 1000);
-        }
+        // Initialize audio recorder
+        audioRecorderRef.current = new AudioRecorderService();
+        await audioRecorderRef.current.startRecording();
+        console.log('Audio recording started');
       } catch (error) {
-        console.error('Failed to start speech recognition:', error);
+        console.error('Failed to start audio recording:', error);
         setVoiceState(prev => ({
           ...prev,
           currentStep: 'error',
-          error: 'Failed to start speech recognition. Please try again.'
+          error: 'Failed to start audio recording. Please try again.'
         }));
         setIsRecording(false);
       }
     } else {
-      // Stop recording
+      // Stop recording and process audio
       setIsRecording(false);
-      if (recognitionRef.current) {
-        try {
-          recognitionRef.current.stop();
-        } catch (error) {
-          console.error('Error stopping recognition:', error);
+
+      try {
+        if (audioRecorderRef.current) {
+          setVoiceState(prev => ({ ...prev, currentStep: 'processing' }));
+
+          // Stop recording and get audio blob
+          const audioBlob = await audioRecorderRef.current.stopRecording();
+          console.log('Audio recording stopped, blob size:', audioBlob.size);
+
+          // Transcribe audio using Azure Whisper
+          const transcript = await VoiceAgentService.processVoice(audioBlob);
+          setTranscript(transcript);
+
+          // Process the transcript
+          await processVoiceInput(transcript);
         }
+      } catch (error) {
+        console.error('Error processing audio:', error);
+        setVoiceState(prev => ({
+          ...prev,
+          currentStep: 'error',
+          error: error instanceof Error ? error.message : 'Failed to process audio. Please try again.'
+        }));
       }
     }
   };
@@ -255,24 +268,52 @@ export const AgentInterface = ({ agentType, onClose }: AgentInterfaceProps) => {
     }
   };
 
-  // Process voice input with full workflow
+  // Process voice input - extract information and wait for user approval
   const processVoiceInput = async (voiceText: string) => {
     if (agentType !== 'scheduling') return;
 
     setVoiceState(prev => ({ ...prev, isProcessing: true, currentStep: 'processing' }));
-    
+
     try {
-      // Extract information
+      // Extract information using Azure OpenAI
       const extractedInfo = await VoiceAgentService.extractMeetingInformation(voiceText);
-      
+
+      // Show extracted info and wait for user approval
       setVoiceState(prev => ({
         ...prev,
         extractedInfo,
-        currentStep: 'confirming'
+        currentStep: 'confirming',
+        isProcessing: false
       }));
 
+      // Initialize editedInfo with extracted data
+      setEditedInfo(extractedInfo);
+
+    } catch (error) {
+      const errorMessage = VoiceAgentService.handleError(error);
+      setVoiceState(prev => ({
+        ...prev,
+        currentStep: 'error',
+        error: errorMessage,
+        isProcessing: false
+      }));
+    }
+  };
+
+  // Handle user approval and schedule meeting
+  const handleApproval = async () => {
+    setVoiceState(prev => ({ ...prev, isProcessing: true, currentStep: 'scheduling' }));
+
+    try {
+      const extractedInfo = voiceState.extractedInfo;
+
+      // Validate required fields
+      if (!extractedInfo.email) {
+        throw new Error('Email is required to schedule a meeting');
+      }
+
       // Find existing contact or create new one
-      let contact = contacts.find(c => 
+      let contact = contacts.find(c =>
         extractedInfo.email && c.email.toLowerCase() === extractedInfo.email.toLowerCase()
       );
 
@@ -303,7 +344,7 @@ export const AgentInterface = ({ agentType, onClose }: AgentInterfaceProps) => {
       if (!contact) {
         throw new Error('Could not create or find contact');
       }
-      
+
       setVoiceState(prev => ({
         ...prev,
         contact
@@ -326,14 +367,14 @@ export const AgentInterface = ({ agentType, onClose }: AgentInterfaceProps) => {
 
       // Add meeting to store
       addMeeting(meeting, contact);
-      
+
       setVoiceState(prev => ({
         ...prev,
         meeting,
         currentStep: 'completed',
-        confirmationMessage: `Meeting scheduled successfully! ${contact!.meetingHistory.length === 0 ? 'Created new contact' : 'Updated existing contact'} ${contact!.name} (${contact!.email}). Meeting "${meeting.title}" scheduled for ${new Date(meeting.scheduledTime).toLocaleString()} for ${meeting.duration} minutes. Calendar invite sent to ${contact!.email}.`
+        confirmationMessage: `Meeting scheduled successfully! ${contact!.meetingHistory.length === 0 ? 'Created new contact' : 'Updated existing contact'} ${contact!.name} (${contact!.email}). Meeting "${meeting.title}" scheduled for ${new Date(meeting.scheduledTime).toLocaleString()} for ${meeting.duration} minutes. Calendar invite will be sent to ${contact!.email}.`
       }));
-      
+
     } catch (error) {
       const errorMessage = VoiceAgentService.handleError(error);
       setVoiceState(prev => ({
@@ -446,39 +487,160 @@ export const AgentInterface = ({ agentType, onClose }: AgentInterfaceProps) => {
             {agentType === 'scheduling' && voiceState.isActive && (
               <div className="space-y-4 mb-6">
                 
-                {/* Extracted Information */}
-                {Object.keys(voiceState.extractedInfo).length > 0 && (
+                {/* Extracted Information - Editable */}
+                {Object.keys(voiceState.extractedInfo).length > 0 && voiceState.currentStep === 'confirming' && (
                   <Card className="p-4">
-                    <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-                      <User className="w-4 h-4" />
-                      Extracted Information
-                    </h3>
-                    <div className="grid grid-cols-2 gap-3">
-                      {voiceState.extractedInfo.name && (
-                        <div>
-                          <span className="text-sm text-muted-foreground">Name:</span>
-                          <p className="font-medium">{voiceState.extractedInfo.name}</p>
-                        </div>
-                      )}
-                      {voiceState.extractedInfo.email && (
-                        <div>
-                          <span className="text-sm text-muted-foreground">Email:</span>
-                          <p className="font-medium">{voiceState.extractedInfo.email}</p>
-                        </div>
-                      )}
-                      {voiceState.extractedInfo.meetingTime && (
-                        <div>
-                          <span className="text-sm text-muted-foreground">Meeting Time:</span>
-                          <p className="font-medium">{voiceState.extractedInfo.meetingTime}</p>
-                        </div>
-                      )}
-                      {voiceState.extractedInfo.meetingPurpose && (
-                        <div>
-                          <span className="text-sm text-muted-foreground">Purpose:</span>
-                          <p className="font-medium">{voiceState.extractedInfo.meetingPurpose}</p>
-                        </div>
-                      )}
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-semibold text-foreground flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        Extracted Information
+                      </h3>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setIsEditing(!isEditing);
+                          if (!isEditing) {
+                            setEditedInfo({ ...voiceState.extractedInfo });
+                          }
+                        }}
+                      >
+                        <Edit2 className="w-4 h-4 mr-1" />
+                        {isEditing ? 'Cancel' : 'Edit'}
+                      </Button>
                     </div>
+
+                    {isEditing ? (
+                      <div className="space-y-3">
+                        <div>
+                          <label className="text-sm text-muted-foreground">Name:</label>
+                          <Input
+                            value={editedInfo.name || ''}
+                            onChange={(e) => setEditedInfo({ ...editedInfo, name: e.target.value })}
+                            placeholder="Contact name"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm text-muted-foreground">Email:</label>
+                          <Input
+                            type="email"
+                            value={editedInfo.email || ''}
+                            onChange={(e) => setEditedInfo({ ...editedInfo, email: e.target.value })}
+                            placeholder="email@example.com"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm text-muted-foreground">Company:</label>
+                          <Input
+                            value={editedInfo.company || ''}
+                            onChange={(e) => setEditedInfo({ ...editedInfo, company: e.target.value })}
+                            placeholder="Company name"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm text-muted-foreground">Meeting Time:</label>
+                          <Input
+                            value={editedInfo.meetingTime || ''}
+                            onChange={(e) => setEditedInfo({ ...editedInfo, meetingTime: e.target.value })}
+                            placeholder="e.g., tomorrow at 2pm"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm text-muted-foreground">Purpose:</label>
+                          <Input
+                            value={editedInfo.meetingPurpose || ''}
+                            onChange={(e) => setEditedInfo({ ...editedInfo, meetingPurpose: e.target.value })}
+                            placeholder="Meeting purpose"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm text-muted-foreground">Duration (minutes):</label>
+                          <Input
+                            type="number"
+                            value={editedInfo.duration || ''}
+                            onChange={(e) => setEditedInfo({ ...editedInfo, duration: e.target.value })}
+                            placeholder="60"
+                          />
+                        </div>
+                        <Button
+                          className="w-full"
+                          onClick={() => {
+                            setVoiceState(prev => ({
+                              ...prev,
+                              extractedInfo: editedInfo
+                            }));
+                            setIsEditing(false);
+                          }}
+                        >
+                          Save Changes
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-3">
+                        {voiceState.extractedInfo.name && (
+                          <div>
+                            <span className="text-sm text-muted-foreground">Name:</span>
+                            <p className="font-medium">{voiceState.extractedInfo.name}</p>
+                          </div>
+                        )}
+                        {voiceState.extractedInfo.email && (
+                          <div>
+                            <span className="text-sm text-muted-foreground">Email:</span>
+                            <p className="font-medium">{voiceState.extractedInfo.email}</p>
+                          </div>
+                        )}
+                        {voiceState.extractedInfo.company && (
+                          <div>
+                            <span className="text-sm text-muted-foreground">Company:</span>
+                            <p className="font-medium">{voiceState.extractedInfo.company}</p>
+                          </div>
+                        )}
+                        {voiceState.extractedInfo.meetingTime && (
+                          <div>
+                            <span className="text-sm text-muted-foreground">Meeting Time:</span>
+                            <p className="font-medium">{voiceState.extractedInfo.meetingTime}</p>
+                          </div>
+                        )}
+                        {voiceState.extractedInfo.meetingPurpose && (
+                          <div>
+                            <span className="text-sm text-muted-foreground">Purpose:</span>
+                            <p className="font-medium">{voiceState.extractedInfo.meetingPurpose}</p>
+                          </div>
+                        )}
+                        {voiceState.extractedInfo.duration && (
+                          <div>
+                            <span className="text-sm text-muted-foreground">Duration:</span>
+                            <p className="font-medium">{voiceState.extractedInfo.duration} minutes</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {!isEditing && (
+                      <div className="flex gap-2 mt-4">
+                        <Button
+                          className="flex-1"
+                          onClick={handleApproval}
+                          disabled={voiceState.isProcessing}
+                        >
+                          {voiceState.isProcessing ? 'Scheduling...' : 'Confirm & Schedule'}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setVoiceState({
+                              isActive: false,
+                              isProcessing: false,
+                              currentStep: 'listening',
+                              extractedInfo: {}
+                            });
+                            setTranscript('');
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    )}
                   </Card>
                 )}
 
@@ -572,7 +734,7 @@ export const AgentInterface = ({ agentType, onClose }: AgentInterfaceProps) => {
                         variant="outline"
                         size="sm"
                         onClick={() => {
-                          const mockTranscript = "Hey Sumbios! I just had a meeting with Phil from ABC VC fund who is interested in investing in our startup. We talked about the possibilities of AI in the VC space and he seems really interested. Can you book a meeting with him tomorrow at 2pm to present my pitch deck? His email is phil.anderson@abcvc.com";
+                          const mockTranscript = "Hey Sumbios! I just had a meeting with Phil from ABC VC fund who is interested in investing in our startup. We talked about the possibilities of AI in the VC space and he seems really interested. Can you book a meeting with him tomorrow at 2pm to present my pitch deck?";
                           setTranscript(mockTranscript);
                           setVoiceState(prev => ({
                             ...prev,
