@@ -15,7 +15,7 @@ export const textToSpeech = async (text: string): Promise<ReadableStream<Uint8Ar
 
   const audio = await client.textToSpeech.convert(voiceId, {
     text,
-    model_id: "eleven_multilingual_v2",
+    modelId: "eleven_multilingual_v2",
   });
 
   return audio;

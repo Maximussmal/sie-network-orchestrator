@@ -29,7 +29,7 @@ export const AgentInterface = ({ agentType, onClose }: AgentInterfaceProps) => {
       const read = () => {
         reader.read().then(({ done, value }) => {
           if (done) {
-            const blob = new Blob(chunks, { type: 'audio/mpeg' });
+            const blob = new Blob(chunks as BlobPart[], { type: 'audio/mpeg' });
             const url = URL.createObjectURL(blob);
             audio.src = url;
             audio.play();
