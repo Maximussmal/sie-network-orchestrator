@@ -5,6 +5,7 @@ import { NetworkInterface } from "@/components/NetworkInterface";
 import { CommunicationHub } from "@/components/CommunicationHub";
 import { AgentsHub } from "@/components/AgentsHub";
 import { AIAssistant } from "@/components/AIAssistant";
+import sumbiosIcon from "@/assets/sumbios-icon.png";
 
 const Index = () => {
   const [showLanding, setShowLanding] = useState(true);
@@ -24,9 +25,7 @@ const Index = () => {
           <h1 className="text-2xl font-bold text-foreground">Welcome Gil</h1>
         </div>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-accent shadow-[0_0_20px_rgba(127,194,161,0.6)] flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-accent-foreground" />
-          </div>
+          <img src={sumbiosIcon} alt="SIE" className="w-10 h-10 object-contain" />
           <div className="text-right">
             <p className="text-sm font-bold text-foreground">SIE</p>
           </div>
@@ -45,7 +44,7 @@ const Index = () => {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-white/10 z-40">
+      <div className="fixed bottom-4 left-4 right-4 bg-black rounded-3xl border border-white/10 z-40 shadow-2xl">
         <div className="flex items-center justify-around py-4">
           <button
             onClick={() => setActiveTab("network")}
