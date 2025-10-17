@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Users, TrendingUp, Target, ArrowUpDown, Network, Sparkles, ChevronRight, Search, Handshake } from "lucide-react";
+import { Users, TrendingUp, Target, ArrowUpDown, Network, Sparkles, ChevronRight, Search, Handshake, MessageSquare } from "lucide-react";
 import { Card } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
@@ -313,11 +313,8 @@ export const NetworkInterface = () => {
           <div className="p-4">
             <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="w-5 h-5 text-primary" />
-              <h2 className="text-lg font-semibold text-foreground">LinkedIn Signals</h2>
+              <h2 className="text-lg font-semibold text-foreground">Signals</h2>
             </div>
-            <p className="text-sm text-muted-foreground mb-4">
-              Recent activity and engagement opportunities from your network
-            </p>
           </div>
 
           {/* Signals List */}
@@ -325,79 +322,91 @@ export const NetworkInterface = () => {
             {[
               {
                 id: "sig1",
-                person: "Peter Lange",
+                name: "Peter Lange",
                 avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop",
-                action: "Posted about",
-                content: "Excited to announce our new partnership with leading energy storage providers across Europe...",
-                time: "2 hours ago",
-                engagement: "45 likes, 12 comments"
+                action: "Posted about new partnership with energy storage providers",
+                platform: "LinkedIn",
+                relevance: "This aligns with your interest in industrial energy storage and could be an opportunity to engage",
+                time: "2 hours ago"
               },
               {
                 id: "sig2",
-                person: "Stefanie Hauer",
+                name: "Stefanie Hauer",
                 avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop",
-                action: "Shared an article",
-                content: "The Future of Corporate Sustainability: 5 Key Trends for 2025",
-                time: "5 hours ago",
-                engagement: "89 likes, 23 comments"
+                action: "Shared article on corporate sustainability trends",
+                platform: "LinkedIn",
+                relevance: "As a board member, her insights on sustainability governance are relevant to your advisory work",
+                time: "5 hours ago"
               },
               {
                 id: "sig3",
-                person: "Clemens Feigl",
+                name: "Clemens Feigl",
                 avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop",
-                action: "Changed role to",
-                content: "CEO @everwave - Thrilled to lead our mission to clean our oceans!",
-                time: "1 day ago",
-                engagement: "156 likes"
+                action: "Announced new role as CEO at everwave",
+                platform: "LinkedIn",
+                relevance: "Leadership transition could open new partnership opportunities in ocean cleanup tech",
+                time: "1 day ago"
               },
               {
                 id: "sig4",
-                person: "Simon Tautz",
+                name: "Simon Tautz",
                 avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop",
-                action: "Commented on",
-                content: "Great insights on the intersection of AI and autonomous laboratory systems...",
-                time: "2 days ago",
-                engagement: "12 likes"
+                action: "Commented on AI and autonomous laboratory systems",
+                platform: "LinkedIn",
+                relevance: "His technical expertise in autonomous labs connects with your innovation network",
+                time: "2 days ago"
               }
             ].map((signal) => (
               <Card key={signal.id} className="p-4 rounded-2xl border-0 shadow-sm bg-card">
                 <div className="flex gap-3 items-start">
                   <Avatar className="w-12 h-12 flex-shrink-0">
-                    <AvatarImage src={signal.avatar} alt={signal.person} />
+                    <AvatarImage src={signal.avatar} alt={signal.name} />
                     <AvatarFallback className="bg-muted text-foreground text-sm font-semibold">
-                      {signal.person.split(" ").map(n => n[0]).join("")}
+                      {signal.name.split(" ").map(n => n[0]).join("")}
                     </AvatarFallback>
                   </Avatar>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="mb-2">
-                      <p className="text-sm">
-                        <span className="font-semibold text-foreground">{signal.person}</span>
+                  <div className="flex-1 min-w-0 space-y-2">
+                    <p className="font-medium text-sm text-foreground">{signal.name}</p>
+                    
+                    <div className="space-y-1">
+                      <div className="text-xs">
+                        <span className="font-medium text-foreground">Action:</span>
                         <span className="text-muted-foreground"> {signal.action}</span>
-                      </p>
-                      <p className="text-xs text-muted-foreground">{signal.time}</p>
+                      </div>
+                      <div className="text-xs">
+                        <span className="font-medium text-foreground">Platform:</span>
+                        <span className="text-muted-foreground"> {signal.platform}</span>
+                      </div>
+                      <div className="text-xs">
+                        <span className="font-medium text-foreground">Relevance:</span>
+                        <span className="text-muted-foreground"> {signal.relevance}</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground pt-1">{signal.time}</p>
                     </div>
 
-                    <div className="bg-muted/50 rounded-lg p-3 mb-2">
-                      <p className="text-sm text-foreground">{signal.content}</p>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <p className="text-xs text-muted-foreground">{signal.engagement}</p>
-                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full"
+                      onClick={() => {
+                        setShowAIChat(true);
+                        setAIChatMessages([
+                          { 
+                            role: 'assistant', 
+                            content: `I noticed ${signal.name}'s recent activity. Here are some suggestions:\n\n• Send a congratulatory message\n• Share a relevant resource\n• Propose a follow-up conversation\n\nWhat would you like to do?` 
+                          }
+                        ]);
+                      }}
+                    >
+                      Act
+                    </Button>
                   </div>
                 </div>
               </Card>
             ))}
           </div>
 
-          {/* AI Act Button */}
-          <div className="p-4 border-t bg-card">
-            <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 flex items-center justify-center gap-2">
-              <Sparkles className="w-4 h-4" />
-              Act
-            </Button>
-          </div>
         </>
       ) : activeSection === "nurture" ? (
         <>
@@ -863,7 +872,14 @@ export const NetworkInterface = () => {
                     
                     <div>
                       <p className="text-xs font-medium text-foreground mb-1">Wants to connect with:</p>
-                      <p className="text-xs text-foreground font-medium">{request.targetConnection}</p>
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-6 w-6">
+                          <AvatarFallback className="text-xs">
+                            {request.targetConnection.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <p className="text-xs text-foreground font-medium">{request.targetConnection}</p>
+                      </div>
                     </div>
                     
                     <div>
@@ -932,62 +948,104 @@ export const NetworkInterface = () => {
 
       {/* Meeting Orchestration Dialog */}
       <Dialog open={showMeetingOrchestration} onOpenChange={setShowMeetingOrchestration}>
-        <DialogContent className="sm:max-w-2xl bg-card rounded-2xl">
+        <DialogContent className="sm:max-w-3xl bg-card rounded-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-primary" />
-              SIE is orchestrating your meeting
+              Meeting Orchestration
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <div className="bg-primary/5 rounded-lg p-4">
-              <p className="text-sm text-muted-foreground mb-4">
-                I'm finding the best time for both you and {acceptedRequest?.requester.name} to meet...
-              </p>
-              
-              <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-green-600 flex items-center justify-center flex-shrink-0">
-                    <div className="w-2 h-2 rounded-full bg-white"></div>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">Analyzed calendars</p>
-                    <p className="text-xs text-muted-foreground">Found 3 available time slots</p>
-                  </div>
-                </div>
+            {/* AI Message */}
+            <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
+              <Avatar className="h-8 w-8">
+                <AvatarFallback className="bg-primary text-primary-foreground">AI</AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <p className="text-sm font-medium mb-2">SIE is orchestrating your meeting</p>
+                <p className="text-sm text-muted-foreground">
+                  I've coordinated calendars and prepared an agenda for your introduction with {acceptedRequest?.requester.name}.
+                </p>
+              </div>
+            </div>
+
+            {/* Proposed Times with Visual Calendar */}
+            <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
+              <Avatar className="h-8 w-8">
+                <AvatarFallback className="bg-primary text-primary-foreground">AI</AvatarFallback>
+              </Avatar>
+              <div className="flex-1 space-y-3">
+                <h4 className="text-sm font-semibold">Proposed Meeting Times:</h4>
                 
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center flex-shrink-0 animate-pulse">
-                    <div className="w-2 h-2 rounded-full bg-white"></div>
+                {/* Visual Calendar for Tuesday - Best Choice */}
+                <div className="p-3 bg-background rounded-lg border-2 border-primary">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="font-medium text-sm">Tuesday, Oct 24</div>
+                    <Badge variant="outline" className="text-xs bg-primary text-primary-foreground">Best Choice</Badge>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">Drafting agenda</p>
-                    <p className="text-xs text-muted-foreground">Based on mutual interests and goals</p>
+                  <div className="space-y-1 text-xs">
+                    <div className="p-2 bg-muted/50 rounded flex justify-between">
+                      <span className="text-muted-foreground">1:00 PM - Team Sync</span>
+                      <span className="text-muted-foreground">Before</span>
+                    </div>
+                    <div className="p-2 bg-primary/10 rounded flex justify-between font-medium border-l-2 border-primary">
+                      <span>2:00 PM - Introduction Call</span>
+                      <span>30 min</span>
+                    </div>
+                    <div className="p-2 bg-muted/50 rounded flex justify-between">
+                      <span className="text-muted-foreground">3:00 PM - Free</span>
+                      <span className="text-muted-foreground">After</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Alternative Times */}
+                <div className="space-y-2">
+                  <div className="p-2 bg-background rounded border text-sm">
+                    Wednesday, Oct 25 at 10:00 AM (30 min)
+                  </div>
+                  <div className="p-2 bg-background rounded border text-sm">
+                    Thursday, Oct 26 at 3:00 PM (30 min)
                   </div>
                 </div>
               </div>
             </div>
-            
-            <div className="bg-muted/50 rounded-lg p-4">
-              <p className="text-sm font-medium text-foreground mb-2">Proposed Meeting Times:</p>
-              <div className="space-y-2">
-                <div className="text-sm text-foreground">• Tuesday, Oct 22 at 2:00 PM (60 min)</div>
-                <div className="text-sm text-foreground">• Wednesday, Oct 23 at 10:00 AM (60 min)</div>
-                <div className="text-sm text-foreground">• Thursday, Oct 24 at 3:30 PM (60 min)</div>
+
+            {/* Draft Agenda */}
+            <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
+              <Avatar className="h-8 w-8">
+                <AvatarFallback className="bg-primary text-primary-foreground">AI</AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <h4 className="text-sm font-semibold mb-2">Draft Agenda:</h4>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• Introductions and backgrounds (5 min)</li>
+                  <li>• Discussion on {acceptedRequest?.request.toLowerCase()} (15 min)</li>
+                  <li>• Next steps and follow-up (10 min)</li>
+                </ul>
               </div>
             </div>
-            
-            <div className="bg-muted/50 rounded-lg p-4">
-              <p className="text-sm font-medium text-foreground mb-2">Draft Agenda:</p>
-              <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
-                <li>Introductions and background (10 min)</li>
-                <li>Discussion on {acceptedRequest?.request.toLowerCase()} (30 min)</li>
-                <li>Potential collaboration opportunities (15 min)</li>
-                <li>Next steps and follow-up (5 min)</li>
-              </ul>
+
+            {/* Action Buttons */}
+            <div className="space-y-2">
+              <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
+                Confirm & Send Invitation
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full" 
+                onClick={() => {
+                  setShowMeetingOrchestration(false);
+                  setShowAIChat(true);
+                  setAIChatMessages([
+                    { role: 'assistant', content: 'I\'ve prepared the meeting details. What would you like to adjust?' }
+                  ]);
+                }}
+              >
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Edit Request
+              </Button>
             </div>
-            
-            <Button className="w-full">Confirm & Send Invitation</Button>
           </div>
         </DialogContent>
       </Dialog>
