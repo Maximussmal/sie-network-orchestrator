@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Users, TrendingUp, Target, ArrowUpDown, Network, Sparkles, ChevronRight, Search, Handshake, MessageSquare, Sun } from "lucide-react";
+import { Users, TrendingUp, Target, ArrowUpDown, Network, Sparkles, ChevronRight, Search, Handshake, MessageSquare } from "lucide-react";
 import { Card } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
@@ -16,32 +16,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from "recharts";
-
-// Mock data for analytics
-const networkGrowthData = [
-  { month: "Jan", connections: 45, engaged: 32 },
-  { month: "Feb", connections: 52, engaged: 38 },
-  { month: "Mar", connections: 68, engaged: 51 },
-  { month: "Apr", connections: 78, engaged: 62 },
-  { month: "May", connections: 95, engaged: 78 },
-  { month: "Jun", connections: 112, engaged: 94 },
-];
-
-const networkHealthData = [
-  { category: "Trust", value: 92 },
-  { category: "Engagement", value: 85 },
-  { category: "Growth", value: 78 },
-  { category: "Diversity", value: 88 },
-  { category: "Reciprocity", value: 81 },
-];
-
-const interactionData = [
-  { type: "Meetings", count: 24 },
-  { type: "Messages", count: 156 },
-  { type: "Intros", count: 8 },
-  { type: "Calls", count: 32 },
-];
 
 interface Connection {
   id: string;
@@ -270,14 +244,10 @@ const mockConnectionRequests: ConnectionRequest[] = [
   }
 ];
 
-interface NetworkInterfaceProps {
-  activeSection: "nurture" | "expand" | "signals";
-  onSectionChange: (section: "nurture" | "expand" | "signals") => void;
-}
-
-export const NetworkInterface = ({ activeSection, onSectionChange }: NetworkInterfaceProps) => {
+export const NetworkInterface = () => {
   const [sortBy, setSortBy] = useState<"mutual" | "trust">("mutual");
   const [filterBy, setFilterBy] = useState<"all" | "1st" | "2nd" | "3rd+">("all");
+  const [activeSection, setActiveSection] = useState<"nurture" | "expand" | "signals">("nurture");
   const [selectedPath, setSelectedPath] = useState<SuggestedConnection | null>(null);
   const [showAISearch, setShowAISearch] = useState(false);
   const [showIntroRequests, setShowIntroRequests] = useState(false);
@@ -299,300 +269,206 @@ export const NetworkInterface = ({ activeSection, onSectionChange }: NetworkInte
   const avgTrust = Math.round(mockConnections.reduce((acc, c) => acc + c.trustScore, 0) / mockConnections.length);
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-br from-orange-50 via-amber-50 to-orange-100 dark:from-orange-950 dark:via-amber-950 dark:to-orange-900">
-      {/* Content based on active section */}
+    <div className="flex flex-col h-full bg-background">
+      {/* Section Toggle */}
+      <div className="flex gap-2 p-4 border-b bg-card">
+        <button
+          onClick={() => setActiveSection("nurture")}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+            activeSection === "nurture"
+              ? "bg-primary text-primary-foreground"
+              : "bg-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Users className="w-4 h-4" />
+          Contacts
+        </button>
+        <button
+          onClick={() => setActiveSection("expand")}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+            activeSection === "expand"
+              ? "bg-primary text-primary-foreground"
+              : "bg-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Network className="w-4 h-4" />
+          Expand
+        </button>
+        <button
+          onClick={() => setActiveSection("signals")}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+            activeSection === "signals"
+              ? "bg-primary text-primary-foreground"
+              : "bg-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <TrendingUp className="w-4 h-4" />
+          Signals
+        </button>
+      </div>
 
       {activeSection === "signals" ? (
         <>
-          {/* KPI Row */}
-          <div className="grid grid-cols-3 gap-3 p-4 bg-orange-100/50 dark:bg-orange-950/50">
-            <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
-              <div className="flex items-center gap-2 mb-1">
-                <TrendingUp className="w-4 h-4 text-accent" />
-                <span className="text-xs text-muted-foreground">Signals</span>
-              </div>
-              <div className="text-xl font-semibold text-foreground">12</div>
-            </Card>
-            <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
-              <div className="flex items-center gap-2 mb-1">
-                <Target className="w-4 h-4 text-primary" />
-                <span className="text-xs text-muted-foreground">Relevance</span>
-              </div>
-              <div className="text-xl font-semibold text-accent">94%</div>
-            </Card>
-            <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
-              <div className="flex items-center gap-2 mb-1">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-xs text-muted-foreground">Leaders</span>
-              </div>
-              <div className="text-xl font-semibold text-primary">8</div>
-            </Card>
-          </div>
-
-          {/* Search Bar */}
-          <div className="px-4 pb-3">
-            <div className="relative flex items-center">
-              <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Find your people"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setShowAIChat(true)}
-                className="w-full pl-10 pr-12 py-2.5 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
-              />
-              <div className="absolute right-3 flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10">
-                <Sparkles className="w-3 h-3 text-primary" />
-                <span className="text-xs font-medium text-primary">AI</span>
-              </div>
+          {/* Signals Section */}
+          <div className="p-4">
+            <div className="flex items-center gap-2 mb-4">
+              <TrendingUp className="w-5 h-5 text-primary" />
+              <h2 className="text-lg font-semibold text-foreground">Signals</h2>
             </div>
           </div>
 
-          {/* Newsfeed */}
-          <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-2">
-            {/* Thought Leader Suggestion */}
-            <Card className="p-3 rounded-xl border-0 shadow-sm bg-gradient-to-r from-primary/5 to-accent/5">
-              <div className="flex gap-3 items-start">
-                <Avatar className="w-10 h-10 flex-shrink-0">
-                  <AvatarImage src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop" />
-                  <AvatarFallback className="bg-muted text-xs">TL</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <p className="font-semibold text-sm text-foreground">Dr. Marcus Chen</p>
-                    <Badge className="bg-accent text-accent-foreground border-0 text-xs px-2 py-0">
-                      97% Match
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground mb-2">Energy Storage Expert • MIT</p>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge className="bg-primary/10 text-primary border-0 text-xs px-2 py-0.5">
-                      <Sparkles className="w-3 h-3 mr-1" />
-                      Thought Leader
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">Energy Storage</span>
-                  </div>
-                  <p className="text-xs text-foreground/80">Leading researcher in grid-scale battery systems. Follow for cutting-edge insights.</p>
-                </div>
-              </div>
-            </Card>
+          {/* Signals List */}
+          <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-3">
+            {[
+              {
+                id: "sig1",
+                name: "Peter Lange",
+                avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop",
+                action: "Posted about new partnership with energy storage providers",
+                platform: "LinkedIn",
+                relevance: "This aligns with your interest in industrial energy storage and could be an opportunity to engage",
+                time: "2 hours ago"
+              },
+              {
+                id: "sig2",
+                name: "Stefanie Hauer",
+                avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop",
+                action: "Shared article on corporate sustainability trends",
+                platform: "LinkedIn",
+                relevance: "As a board member, her insights on sustainability governance are relevant to your advisory work",
+                time: "5 hours ago"
+              },
+              {
+                id: "sig3",
+                name: "Clemens Feigl",
+                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop",
+                action: "Announced new role as CEO at everwave",
+                platform: "LinkedIn",
+                relevance: "Leadership transition could open new partnership opportunities in ocean cleanup tech",
+                time: "1 day ago"
+              },
+              {
+                id: "sig4",
+                name: "Simon Tautz",
+                avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop",
+                action: "Commented on AI and autonomous laboratory systems",
+                platform: "LinkedIn",
+                relevance: "His technical expertise in autonomous labs connects with your innovation network",
+                time: "2 days ago"
+              }
+            ].map((signal) => (
+              <Card key={signal.id} className="p-4 rounded-2xl border-0 shadow-sm bg-card">
+                <div className="flex gap-3 items-start">
+                  <Avatar className="w-12 h-12 flex-shrink-0">
+                    <AvatarImage src={signal.avatar} alt={signal.name} />
+                    <AvatarFallback className="bg-muted text-foreground text-sm font-semibold">
+                      {signal.name.split(" ").map(n => n[0]).join("")}
+                    </AvatarFallback>
+                  </Avatar>
 
-            {/* LinkedIn Post */}
-            <Card className="p-3 rounded-xl border-0 shadow-sm bg-card">
-              <div className="flex gap-2 items-start">
-                <Avatar className="w-8 h-8 flex-shrink-0">
-                  <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop" />
-                  <AvatarFallback className="bg-muted text-xs">PL</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <div>
-                      <p className="font-medium text-xs text-foreground">Peter Lange</p>
-                      <p className="text-xs text-muted-foreground">2h ago • LinkedIn</p>
+                  <div className="flex-1 min-w-0 space-y-2">
+                    <p className="font-medium text-sm text-foreground">{signal.name}</p>
+                    
+                    <div className="space-y-1">
+                      <div className="text-xs">
+                        <span className="font-medium text-foreground">Action:</span>
+                        <span className="text-muted-foreground"> {signal.action}</span>
+                      </div>
+                      <div className="text-xs">
+                        <span className="font-medium text-foreground">Platform:</span>
+                        <span className="text-muted-foreground"> {signal.platform}</span>
+                      </div>
+                      <div className="text-xs">
+                        <span className="font-medium text-foreground">Relevance:</span>
+                        <span className="text-muted-foreground"> {signal.relevance}</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground pt-1">{signal.time}</p>
                     </div>
-                    <Badge className="bg-accent/10 text-accent border-0 text-xs px-1.5 py-0">
-                      92
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-foreground/90 mb-2">Just secured €50M Series B for our energy storage network! Exciting times ahead for sustainable infrastructure. 🚀</p>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span>💡 Funding</span>
-                    <span>•</span>
-                    <span>Energy Storage</span>
-                  </div>
-                </div>
-              </div>
-            </Card>
 
-            {/* Twitter/X Post */}
-            <Card className="p-3 rounded-xl border-0 shadow-sm bg-card">
-              <div className="flex gap-2 items-start">
-                <Avatar className="w-8 h-8 flex-shrink-0">
-                  <AvatarImage src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop" />
-                  <AvatarFallback className="bg-muted text-xs">SH</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <div>
-                      <p className="font-medium text-xs text-foreground">Stefanie Hauer</p>
-                      <p className="text-xs text-muted-foreground">4h ago • X (Twitter)</p>
-                    </div>
-                    <Badge className="bg-primary/10 text-primary border-0 text-xs px-1.5 py-0">
-                      88
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-foreground/90 mb-2">Corporate sustainability isn't optional anymore. It's the competitive advantage. Great discussion at today's board meeting.</p>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span>♻️ Sustainability</span>
-                    <span>•</span>
-                    <span>Leadership</span>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full"
+                      onClick={() => {
+                        setShowAIChat(true);
+                        setAIChatMessages([
+                          { 
+                            role: 'assistant', 
+                            content: `I noticed ${signal.name}'s recent activity. Here are some suggestions:\n\n• Send a congratulatory message\n• Share a relevant resource\n• Propose a follow-up conversation\n\nWhat would you like to do?` 
+                          }
+                        ]);
+                      }}
+                    >
+                      Act
+                    </Button>
                   </div>
                 </div>
-              </div>
-            </Card>
-
-            {/* Thought Leader Suggestion 2 */}
-            <Card className="p-3 rounded-xl border-0 shadow-sm bg-gradient-to-r from-accent/5 to-primary/5">
-              <div className="flex gap-3 items-start">
-                <Avatar className="w-10 h-10 flex-shrink-0">
-                  <AvatarImage src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop" />
-                  <AvatarFallback className="bg-muted text-xs">TL</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <p className="font-semibold text-sm text-foreground">Dr. Anna Weber</p>
-                    <Badge className="bg-accent text-accent-foreground border-0 text-xs px-2 py-0">
-                      95% Match
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground mb-2">Director of Sustainability • Siemens</p>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge className="bg-primary/10 text-primary border-0 text-xs px-2 py-0.5">
-                      <Sparkles className="w-3 h-3 mr-1" />
-                      Thought Leader
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">Sustainability</span>
-                  </div>
-                  <p className="text-xs text-foreground/80">Pioneer in industrial sustainability. Key insights on green energy transition.</p>
-                </div>
-              </div>
-            </Card>
-
-            {/* LinkedIn Article */}
-            <Card className="p-3 rounded-xl border-0 shadow-sm bg-card">
-              <div className="flex gap-2 items-start">
-                <Avatar className="w-8 h-8 flex-shrink-0">
-                  <AvatarImage src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop" />
-                  <AvatarFallback className="bg-muted text-xs">CF</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <div>
-                      <p className="font-medium text-xs text-foreground">Clemens Feigl</p>
-                      <p className="text-xs text-muted-foreground">1d ago • LinkedIn</p>
-                    </div>
-                    <Badge className="bg-accent/10 text-accent border-0 text-xs px-1.5 py-0">
-                      90
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-foreground/90 mb-2">New whitepaper: How ocean cleanup tech can scale 10x in the next 3 years. Link in comments 👇</p>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span>🌊 Ocean Tech</span>
-                    <span>•</span>
-                    <span>Research</span>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            {/* Medium Article */}
-            <Card className="p-3 rounded-xl border-0 shadow-sm bg-card">
-              <div className="flex gap-2 items-start">
-                <Avatar className="w-8 h-8 flex-shrink-0">
-                  <AvatarImage src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop" />
-                  <AvatarFallback className="bg-muted text-xs">ST</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2 mb-1">
-                    <div>
-                      <p className="font-medium text-xs text-foreground">Simon Tautz</p>
-                      <p className="text-xs text-muted-foreground">2d ago • Medium</p>
-                    </div>
-                    <Badge className="bg-primary/10 text-primary border-0 text-xs px-1.5 py-0">
-                      85
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-foreground/90 mb-2">Building autonomous labs: The future of R&D is here. AI-driven experimentation at scale.</p>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span>🤖 AI</span>
-                    <span>•</span>
-                    <span>Automation</span>
-                  </div>
-                </div>
-              </div>
-            </Card>
+              </Card>
+            ))}
           </div>
 
         </>
       ) : activeSection === "nurture" ? (
         <>
-          {/* Top Bar with KPIs and Nurture Button */}
-          <div className="p-4 bg-background space-y-3">
-            <div className="flex items-center gap-3">
-              <Card className="flex-shrink-0 p-3 rounded-xl border-0 bg-card shadow-sm" style={{ width: '120px' }}>
-                <div className="flex items-center gap-2 mb-1">
-                  <Users className="w-4 h-4 text-primary" />
-                  <span className="text-xs text-muted-foreground">Total</span>
-                </div>
-                <div className="text-xl font-semibold text-foreground">{mockConnections.length}</div>
-              </Card>
-              
-              <Card className="flex-shrink-0 p-3 rounded-xl border-0 bg-card shadow-sm" style={{ width: '120px' }}>
-                <div className="flex items-center gap-2 mb-1">
-                  <Target className="w-4 h-4 text-primary" />
-                  <span className="text-xs text-muted-foreground">Trust</span>
-                </div>
-                <div className="text-xl font-semibold text-foreground">{avgTrust}%</div>
-              </Card>
-              
-              <div className="flex-1"></div>
-              
-              {/* Nurture Button with Notifications */}
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex-shrink-0 flex items-center gap-2 bg-green-500/10 text-green-600 border-green-500/20 hover:bg-green-500/20 relative h-[46px]"
-              >
-                <Sparkles className="w-4 h-4" />
-                Nurture
-                <Badge className="absolute -top-2 -right-2 bg-green-500 text-white border-0 h-5 min-w-5 px-1.5">
-                  3
-                </Badge>
-              </Button>
-            </div>
+          {/* KPI Dashboard */}
+          <div className="grid grid-cols-3 gap-3 p-4 bg-background">
+        <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
+          <div className="flex items-center gap-2 mb-1">
+            <Users className="w-4 h-4 text-primary" />
+            <span className="text-xs text-muted-foreground">Total</span>
+          </div>
+          <div className="text-xl font-semibold text-foreground">{mockConnections.length}</div>
+        </Card>
+        <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
+          <div className="flex items-center gap-2 mb-1">
+            <Target className="w-4 h-4 text-primary" />
+            <span className="text-xs text-muted-foreground">Trust</span>
+          </div>
+          <div className="text-xl font-semibold text-foreground">{avgTrust}%</div>
+        </Card>
+        <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
+          <div className="flex items-center gap-2 mb-1">
+            <TrendingUp className="w-4 h-4 text-accent" />
+            <span className="text-xs text-muted-foreground">Rising</span>
+          </div>
+          <div className="text-xl font-semibold text-accent">{risingCount}</div>
+        </Card>
+      </div>
 
-            {/* Search Bar - Full Width */}
-            <div className="relative">
-              <div className="relative flex items-center">
-                <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Find your people"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => setShowAIChat(true)}
-                  className="w-full pl-10 pr-12 py-2.5 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
-                />
-                <div className="absolute right-3 flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10">
-                  <Sparkles className="w-3 h-3 text-primary" />
-                  <span className="text-xs font-medium text-primary">AI</span>
-                </div>
-              </div>
-            </div>
+      {/* Filter and Sort Controls */}
+      <div className="flex items-center justify-between gap-3 px-4 py-3">
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2"
+        >
+          <Sparkles className="w-4 h-4" />
+          Nurture
+        </Button>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-card text-foreground shadow-sm hover:bg-card/80 transition-colors">
+              <ArrowUpDown className="w-3 h-3" />
+              <span>Mutual Connections</span>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48 bg-popover">
+            <DropdownMenuItem onClick={() => setSortBy("mutual")}>
+              Mutual Connections
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setSortBy("trust")}>
+              Trust Score
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
-            {/* Connections Count and Sort Controls */}
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">867</span> connections
-              </p>
-              
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-card text-foreground shadow-sm hover:bg-card/80 transition-colors">
-                    <ArrowUpDown className="w-3 h-3" />
-                    <span>Mutual Connections</span>
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 bg-popover z-50">
-                  <DropdownMenuItem onClick={() => setSortBy("mutual")}>
-                    Mutual Connections
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSortBy("trust")}>
-                    Trust Score
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+          {/* Connections Count */}
+          <div className="px-4 pb-2">
+            <p className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">{sortedConnections.length}</span> connections
+            </p>
           </div>
 
           {/* Connections List */}
@@ -648,69 +524,62 @@ export const NetworkInterface = ({ activeSection, onSectionChange }: NetworkInte
     ) : (
       <>
         {/* Expand Network Section */}
-        {/* KPI Row with Action Buttons */}
-        <div className="flex items-center gap-3 p-4 bg-background">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowIntroRequests(true)}
-            className="flex-1 relative bg-green-500/10 text-green-600 border-green-500/20 hover:bg-green-500/20"
-          >
-            Introduction
-            {mockIntroductionRequests.length > 0 && (
-              <Badge className="absolute -top-2 -right-2 bg-accent text-accent-foreground border-0 h-5 min-w-5 px-1.5">
-                {mockIntroductionRequests.length}
-              </Badge>
-            )}
-          </Button>
-          
-          <Card className="flex-1 p-3 rounded-xl border-0 bg-card shadow-sm">
-            <div className="flex items-center gap-2 mb-1">
-              <Target className="w-4 h-4 text-primary" />
-              <span className="text-xs text-muted-foreground">Avg Match</span>
-            </div>
-            <div className="text-xl font-semibold text-accent">88%</div>
-          </Card>
-          
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowConnectRequests(true)}
-            className="flex-1 relative bg-blue-500/10 text-blue-600 border-blue-500/20 hover:bg-blue-500/20"
-          >
-            Connect
-            {mockConnectionRequests.length > 0 && (
-              <Badge className="absolute -top-2 -right-2 bg-accent text-accent-foreground border-0 h-5 min-w-5 px-1.5">
-                {mockConnectionRequests.length}
-              </Badge>
-            )}
-          </Button>
-        </div>
-
-        {/* Search Bar */}
-        <div className="px-4 pb-3">
-          <div className="relative flex items-center">
-            <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Find your people"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => setShowAIChat(true)}
-              className="w-full pl-10 pr-12 py-2.5 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
-            />
-            <div className="absolute right-3 flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10">
-              <Sparkles className="w-3 h-3 text-primary" />
-              <span className="text-xs font-medium text-primary">AI</span>
+        <div className="p-4 space-y-4">
+          {/* AI Search Bar */}
+          <div className="relative">
+            <div className="relative flex items-center">
+              <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Find your people"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setShowAIChat(true)}
+                className="w-full pl-10 pr-12 py-3 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <div className="absolute right-3 flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10">
+                <Sparkles className="w-3 h-3 text-primary" />
+                <span className="text-xs font-medium text-primary">AI</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="px-4 space-y-4">
+          {/* Action Buttons */}
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowIntroRequests(true)}
+              className="flex-1 relative"
+            >
+              <Users className="w-4 h-4 mr-2" />
+              Introduction
+              {mockIntroductionRequests.length > 0 && (
+                <Badge className="absolute -top-2 -right-2 bg-accent text-accent-foreground border-0 h-5 min-w-5 px-1.5">
+                  {mockIntroductionRequests.length}
+                </Badge>
+              )}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowConnectRequests(true)}
+              className="flex-1 relative"
+            >
+              <Handshake className="w-4 h-4 mr-2" />
+              Connect
+              {mockConnectionRequests.length > 0 && (
+                <Badge className="absolute -top-2 -right-2 bg-accent text-accent-foreground border-0 h-5 min-w-5 px-1.5">
+                  {mockConnectionRequests.length}
+                </Badge>
+              )}
+            </Button>
+          </div>
+
           {/* SIE Suggestions Header */}
           <div className="flex items-center gap-2 pt-2">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-muted-foreground">Suggestions für SIE</span>
+            <span className="text-sm font-medium text-muted-foreground">Suggestions from SIE</span>
           </div>
         </div>
 
