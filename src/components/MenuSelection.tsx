@@ -41,8 +41,9 @@ export const MenuSelection = ({ onSelect }: MenuSelectionProps) => {
           <button
             key={item.id}
             onClick={() => onSelect(item.id)}
-            className="relative group flex-1 transition-all duration-300 overflow-visible"
+            className="relative group transition-all duration-300 overflow-visible"
             style={{
+              height: '30%',
               clipPath: index === 0 
                 ? "polygon(0 0, 100% 0, 100% 100%, 80% 105%, 60% 100%, 40% 105%, 20% 100%, 0 105%)"
                 : index === menuItems.length - 1
@@ -86,8 +87,9 @@ export const MenuSelection = ({ onSelect }: MenuSelectionProps) => {
         {/* Feedback/Collaborate Section - Sun with Lightbulb */}
         <button
           onClick={() => onSelect("feedback")}
-          className="relative group h-24 transition-all duration-300 overflow-visible"
+          className="relative group transition-all duration-300 overflow-visible"
           style={{
+            height: '10%',
             clipPath: "polygon(0 -5%, 20% 0, 40% -5%, 60% 0, 80% -5%, 100% 0, 100% 100%, 0 100%)"
           }}
         >

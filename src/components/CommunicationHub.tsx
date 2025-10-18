@@ -171,7 +171,7 @@ export const CommunicationHub = ({ activeSection, onSectionChange }: Communicati
               </Button>
             </div>
 
-            {/* Mini Calendar Grid */}
+            {/* Mini 2-Week Calendar Grid */}
             <div className="grid grid-cols-7 gap-1 text-center mb-2">
               {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
                 <div key={i} className="text-xs font-semibold text-blue-700 dark:text-blue-300 py-1">
@@ -180,21 +180,21 @@ export const CommunicationHub = ({ activeSection, onSectionChange }: Communicati
               ))}
             </div>
             <div className="grid grid-cols-7 gap-1">
-              {Array.from({ length: 35 }, (_, i) => {
-                const dayNum = i - 2; // Adjust for month start
-                const isToday = dayNum === new Date().getDate();
-                const hasEvent = [5, 12, 18, 23].includes(dayNum);
+              {Array.from({ length: 14 }, (_, i) => {
+                const date = new Date();
+                date.setDate(date.getDate() + i);
+                const isToday = i === 0;
+                const hasEvent = [5, 8, 12].includes(i);
                 return (
                   <button
                     key={i}
                     className={`
                       aspect-square rounded-lg text-xs font-medium transition-all
-                      ${dayNum < 1 || dayNum > 30 ? 'text-blue-300/30 dark:text-blue-700/30' : 'text-blue-900 dark:text-blue-100'}
-                      ${isToday ? 'bg-blue-600 text-white' : hasEvent ? 'bg-blue-100 dark:bg-blue-900/30' : 'hover:bg-blue-50 dark:hover:bg-blue-900/20'}
+                      ${isToday ? 'bg-blue-600 text-white' : hasEvent ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-900 dark:text-blue-100' : 'text-blue-900 dark:text-blue-100 hover:bg-blue-50 dark:hover:bg-blue-900/20'}
                     `}
                   >
-                    {dayNum > 0 && dayNum <= 30 ? dayNum : ''}
-                    {hasEvent && dayNum > 0 && dayNum <= 30 && (
+                    {date.getDate()}
+                    {hasEvent && (
                       <div className="w-1 h-1 rounded-full bg-blue-600 dark:bg-blue-400 mx-auto mt-0.5" />
                     )}
                   </button>
