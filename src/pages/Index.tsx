@@ -5,13 +5,14 @@ import { MenuSelection } from "@/components/MenuSelection";
 import { NetworkInterface } from "@/components/NetworkInterface";
 import { CommunicationHub } from "@/components/CommunicationHub";
 import { AgentsHub } from "@/components/AgentsHub";
+import { FeedbackHub } from "@/components/FeedbackHub";
 import { AIAssistant } from "@/components/AIAssistant";
 import sumbiosIcon from "@/assets/sumbios-icon.png";
 
 const Index = () => {
   const [showLanding, setShowLanding] = useState(true);
   const [showMenu, setShowMenu] = useState(true);
-  const [activeSection, setActiveSection] = useState<"network" | "communication" | "agents" | null>(null);
+  const [activeSection, setActiveSection] = useState<"network" | "communication" | "agents" | "feedback" | null>(null);
   
   // Sub-tabs for each section
   const [networkSubTab, setNetworkSubTab] = useState<"nurture" | "expand" | "signals">("nurture");
@@ -44,6 +45,8 @@ const Index = () => {
           <NetworkInterface activeSection={networkSubTab} onSectionChange={setNetworkSubTab} />
         ) : activeSection === "communication" ? (
           <CommunicationHub activeSection={communicationSubTab} onSectionChange={setCommunicationSubTab} />
+        ) : activeSection === "feedback" ? (
+          <FeedbackHub />
         ) : (
           <AgentsHub activeTab={agentsSubTab} onTabChange={setAgentsSubTab} />
         )}

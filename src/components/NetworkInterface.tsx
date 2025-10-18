@@ -300,27 +300,6 @@ export const NetworkInterface = ({ activeSection, onSectionChange }: NetworkInte
 
   return (
     <div className="flex flex-col h-full bg-gradient-to-br from-amber-50 via-stone-50 to-amber-100 dark:from-stone-900 dark:via-stone-800 dark:to-amber-950">
-      {/* Top Bar */}
-      <div className="bg-gradient-to-r from-amber-100 to-stone-100 dark:from-stone-800 dark:to-stone-900 border-b border-amber-200/50 dark:border-stone-700/50 px-4 py-2 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300">
-          <div className="w-8 h-8 rounded-full bg-amber-200 dark:bg-amber-900/50 flex items-center justify-center">
-            <Sun className="w-4 h-4" />
-          </div>
-          <span className="text-sm font-medium">Your Network Hub</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="text-xs hover:bg-amber-200/50 dark:hover:bg-stone-700">
-            Feedback
-          </Button>
-          <Button variant="ghost" size="sm" className="text-xs hover:bg-amber-200/50 dark:hover:bg-stone-700">
-            Contact
-          </Button>
-          <Button variant="ghost" size="sm" className="text-xs hover:bg-amber-200/50 dark:hover:bg-stone-700">
-            Collaborate
-          </Button>
-        </div>
-      </div>
-      
       {/* Content based on active section */}
 
       {activeSection === "signals" ? (

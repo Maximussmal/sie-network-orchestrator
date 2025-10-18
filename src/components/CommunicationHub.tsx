@@ -150,73 +150,92 @@ export const CommunicationHub = ({ activeSection, onSectionChange }: Communicati
 
   return (
     <div className="flex flex-col h-full bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-100 dark:from-blue-950 dark:via-cyan-950 dark:to-blue-900">
-      {/* Top Bar */}
-      <div className="bg-gradient-to-r from-blue-100 to-cyan-100 dark:from-blue-900 dark:to-cyan-900 border-b border-blue-200/50 dark:border-blue-700/50 px-4 py-2 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-blue-700 dark:text-blue-300">
-          <div className="w-8 h-8 rounded-full bg-blue-200 dark:bg-blue-900/50 flex items-center justify-center">
-            <MessageCircle className="w-4 h-4" />
-          </div>
-          <span className="text-sm font-medium">Communication Center</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="text-xs hover:bg-blue-200/50 dark:hover:bg-blue-800">
-            Feedback
-          </Button>
-          <Button variant="ghost" size="sm" className="text-xs hover:bg-blue-200/50 dark:hover:bg-blue-800">
-            Contact
-          </Button>
-          <Button variant="ghost" size="sm" className="text-xs hover:bg-blue-200/50 dark:hover:bg-blue-800">
-            Collaborate
-          </Button>
-        </div>
-      </div>
-      
       {/* Content based on active section */}
 
       {activeSection === "calendar" ? (
         <>
-          {/* Calendar Section */}
-          <div className="p-4">
-            <div className="flex items-center gap-2 mb-4">
-              <CalendarIcon className="w-5 h-5 text-primary" />
-              <h2 className="text-lg font-semibold text-foreground">Upcoming Events</h2>
+          {/* Calendar Header with Mini Calendar */}
+          <div className="p-4 border-b border-blue-200/50 dark:border-blue-800/50 bg-white/50 dark:bg-slate-900/50">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-2xl font-semibold text-blue-900 dark:text-blue-100">
+                  {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                </h2>
+                <p className="text-sm text-blue-700 dark:text-blue-300">
+                  {new Date().toLocaleDateString('en-US', { weekday: 'long', day: 'numeric' })}
+                </p>
+              </div>
+              <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+                <CalendarIcon className="w-4 h-4 mr-2" />
+                New Event
+              </Button>
             </div>
-            <p className="text-sm text-muted-foreground mb-4">
-              Your schedule for the next 7 days
-            </p>
+
+            {/* Mini Calendar Grid */}
+            <div className="grid grid-cols-7 gap-1 text-center mb-2">
+              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+                <div key={i} className="text-xs font-semibold text-blue-700 dark:text-blue-300 py-1">
+                  {day}
+                </div>
+              ))}
+            </div>
+            <div className="grid grid-cols-7 gap-1">
+              {Array.from({ length: 35 }, (_, i) => {
+                const dayNum = i - 2; // Adjust for month start
+                const isToday = dayNum === new Date().getDate();
+                const hasEvent = [5, 12, 18, 23].includes(dayNum);
+                return (
+                  <button
+                    key={i}
+                    className={`
+                      aspect-square rounded-lg text-xs font-medium transition-all
+                      ${dayNum < 1 || dayNum > 30 ? 'text-blue-300/30 dark:text-blue-700/30' : 'text-blue-900 dark:text-blue-100'}
+                      ${isToday ? 'bg-blue-600 text-white' : hasEvent ? 'bg-blue-100 dark:bg-blue-900/30' : 'hover:bg-blue-50 dark:hover:bg-blue-900/20'}
+                    `}
+                  >
+                    {dayNum > 0 && dayNum <= 30 ? dayNum : ''}
+                    {hasEvent && dayNum > 0 && dayNum <= 30 && (
+                      <div className="w-1 h-1 rounded-full bg-blue-600 dark:bg-blue-400 mx-auto mt-0.5" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Voice Agent Meetings Section */}
           {voiceAgentMeetings.length > 0 && (
-            <div className="px-4 mb-4">
+            <div className="px-4 pt-4">
               <div className="flex items-center gap-2 mb-3">
-                <Mic className="w-4 h-4 text-blue-500" />
-                <h3 className="text-sm font-semibold text-foreground">Voice Agent Scheduled</h3>
-                <Badge className="bg-blue-100 text-blue-800 text-xs">{voiceAgentMeetings.length}</Badge>
+                <div className="w-6 h-6 rounded-md bg-blue-500/10 flex items-center justify-center">
+                  <Mic className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                </div>
+                <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-100">Voice Scheduled</h3>
+                <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 text-xs">{voiceAgentMeetings.length}</Badge>
               </div>
               <div className="space-y-2">
                 {voiceAgentMeetings.slice(0, 3).map((meeting) => {
                   const contact = contacts.find(c => c.id === meeting.contactId);
                   return (
-                    <Card key={meeting.id} className="p-3 rounded-xl border-0 shadow-sm bg-blue-50 border-l-4 border-l-blue-500">
+                    <Card key={meeting.id} className="p-3 rounded-xl bg-white dark:bg-slate-800 border border-blue-200 dark:border-blue-800 shadow-sm hover:shadow-md transition-shadow">
                       <div className="flex items-start gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
-                          <Mic className="w-4 h-4 text-blue-600" />
-                        </div>
+                        <div className="w-1 h-full bg-blue-500 rounded-full" />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between gap-2 mb-1">
-                            <h4 className="font-semibold text-sm text-foreground">{meeting.title}</h4>
-                            <span className="text-xs text-muted-foreground flex-shrink-0">
-                              {new Date(meeting.scheduledTime).toLocaleDateString()}
+                            <h4 className="font-semibold text-sm text-blue-900 dark:text-blue-100">{meeting.title}</h4>
+                            <span className="text-xs text-blue-700 dark:text-blue-300 font-medium flex-shrink-0">
+                              {new Date(meeting.scheduledTime).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
                             </span>
                           </div>
-                          <p className="text-xs text-muted-foreground mb-1">
-                            with {contact?.name} ({contact?.email})
+                          <p className="text-xs text-blue-700/70 dark:text-blue-300/70 mb-1">
+                            {contact?.name} • {contact?.email}
                           </p>
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-blue-600 font-medium">Voice Scheduled</span>
-                            <span className="text-xs text-muted-foreground">•</span>
-                            <span className="text-xs text-muted-foreground">{meeting.duration} min</span>
+                            <Badge className="bg-blue-500/10 text-blue-700 dark:text-blue-300 border-0 text-xs px-2 py-0">
+                              <Mic className="w-3 h-3 mr-1" />
+                              Voice
+                            </Badge>
+                            <span className="text-xs text-blue-600/60 dark:text-blue-400/60">{meeting.duration} min</span>
                           </div>
                         </div>
                       </div>
@@ -227,45 +246,50 @@ export const CommunicationHub = ({ activeSection, onSectionChange }: Communicati
             </div>
           )}
 
-          {/* Calendar Events List */}
-          <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-4">
+          {/* Calendar Events List - Google Style */}
+          <div className="flex-1 overflow-y-auto px-4 pt-6 pb-4 space-y-6">
             {/* Today */}
             <div>
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">Today</h3>
+              <h3 className="text-xs font-bold text-blue-900 dark:text-blue-100 uppercase tracking-wide mb-3 flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-blue-600" />
+                Today
+              </h3>
               <div className="space-y-2">
-                <Card className="p-4 rounded-2xl border-0 shadow-sm bg-card border-l-4 border-l-primary">
+                <Card className="p-4 rounded-xl bg-white dark:bg-slate-800 border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex items-start gap-3">
-                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <Video className="w-5 h-5 text-primary" />
+                    <div className="text-center flex-shrink-0">
+                      <div className="text-blue-600 dark:text-blue-400 font-bold text-sm">2:00</div>
+                      <div className="text-blue-600/60 dark:text-blue-400/60 text-xs">PM</div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2 mb-1">
-                        <h4 className="font-semibold text-sm text-foreground">Strategy Review Call</h4>
-                        <span className="text-xs text-muted-foreground flex-shrink-0">2:00 PM</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground mb-2">with Peter Lange, Clemens Feigl</p>
-                      <div className="flex items-center gap-1.5 text-xs text-primary">
-                        <Video className="w-3 h-3" />
-                        <span>Zoom Meeting</span>
+                      <h4 className="font-semibold text-sm text-blue-900 dark:text-blue-100 mb-1">Strategy Review Call</h4>
+                      <p className="text-xs text-blue-700/70 dark:text-blue-300/70 mb-2">Peter Lange, Clemens Feigl</p>
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-0 text-xs px-2 py-0">
+                          <Video className="w-3 h-3 mr-1" />
+                          Zoom
+                        </Badge>
+                        <span className="text-xs text-blue-600/60 dark:text-blue-400/60">45 min</span>
                       </div>
                     </div>
                   </div>
                 </Card>
                 
-                <Card className="p-4 rounded-2xl border-0 shadow-sm bg-card border-l-4 border-l-accent">
+                <Card className="p-4 rounded-xl bg-white dark:bg-slate-800 border-l-4 border-l-cyan-500 shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex items-start gap-3">
-                    <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                      <CalendarIcon className="w-5 h-5 text-accent" />
+                    <div className="text-center flex-shrink-0">
+                      <div className="text-cyan-600 dark:text-cyan-400 font-bold text-sm">4:30</div>
+                      <div className="text-cyan-600/60 dark:text-cyan-400/60 text-xs">PM</div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2 mb-1">
-                        <h4 className="font-semibold text-sm text-foreground">Team Stand-up</h4>
-                        <span className="text-xs text-muted-foreground flex-shrink-0">4:30 PM</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground mb-2">Daily sync with development team</p>
-                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <Clock className="w-3 h-3" />
-                        <span>30 minutes</span>
+                      <h4 className="font-semibold text-sm text-blue-900 dark:text-blue-100 mb-1">Team Stand-up</h4>
+                      <p className="text-xs text-blue-700/70 dark:text-blue-300/70 mb-2">Daily sync with development team</p>
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 border-0 text-xs px-2 py-0">
+                          <CalendarIcon className="w-3 h-3 mr-1" />
+                          Meeting
+                        </Badge>
+                        <span className="text-xs text-cyan-600/60 dark:text-cyan-400/60">30 min</span>
                       </div>
                     </div>
                   </div>
