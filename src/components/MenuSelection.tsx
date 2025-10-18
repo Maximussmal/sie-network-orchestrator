@@ -6,12 +6,11 @@ import communicateBg from "@/assets/menu-communicate.jpg";
 import orchestrateBg from "@/assets/menu-orchestrate.jpg";
 
 interface MenuSelectionProps {
-  onSelect: (section: "dashboard" | "network" | "communication" | "agents") => void;
+  onSelect: (section: "network" | "communication" | "agents") => void;
 }
 
 export const MenuSelection = ({ onSelect }: MenuSelectionProps) => {
   const menuItems = [
-    { id: "dashboard" as const, title: "Dashboard", icon: LayoutDashboard, bg: dashboardBg },
     { id: "network" as const, title: "Network", icon: Users, bg: networkBg },
     { id: "communication" as const, title: "Communicate", icon: MessageCircle, bg: communicateBg },
     { id: "agents" as const, title: "Orchestrate", icon: Bot, bg: orchestrateBg },
