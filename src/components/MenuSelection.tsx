@@ -37,18 +37,39 @@ export const MenuSelection = ({ onSelect }: MenuSelectionProps) => {
 
       {/* Menu List - Vertical Stack */}
       <div className="flex flex-col h-full w-full relative z-10">
-        {menuItems.map((item) => (
+        {menuItems.map((item, index) => (
           <button
             key={item.id}
             onClick={() => onSelect(item.id)}
             className="relative group flex-1 border-b border-border/50 hover:border-accent/50 transition-all duration-300 overflow-hidden"
           >
-            {/* Background Image - Full opacity */}
-            <img 
-              src={item.bg} 
-              alt={item.title}
-              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-            />
+            {/* Background Image - Full opacity with gradient mask for merging */}
+            <div className="absolute inset-0 w-full h-full">
+              <img 
+                src={item.bg} 
+                alt={item.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
+              />
+              {/* Gradient masks for merging bottom-left to top-right */}
+              {index < menuItems.length - 1 && (
+                <div 
+                  className="absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-black/20"
+                  style={{
+                    maskImage: "linear-gradient(to top right, transparent 0%, black 50%)",
+                    WebkitMaskImage: "linear-gradient(to top right, transparent 0%, black 50%)",
+                  }}
+                />
+              )}
+              {index > 0 && (
+                <div 
+                  className="absolute inset-0 bg-gradient-to-bl from-transparent via-transparent to-black/20"
+                  style={{
+                    maskImage: "linear-gradient(to bottom left, transparent 0%, black 50%)",
+                    WebkitMaskImage: "linear-gradient(to bottom left, transparent 0%, black 50%)",
+                  }}
+                />
+              )}
+            </div>
             
             {/* Content - Only Icon */}
             <div className="relative h-full flex items-center justify-center p-8">
