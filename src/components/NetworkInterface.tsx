@@ -303,6 +303,25 @@ export const NetworkInterface = ({ activeSection, onSectionChange }: NetworkInte
             </Card>
           </div>
 
+          {/* Search Bar */}
+          <div className="px-4 pb-3">
+            <div className="relative flex items-center">
+              <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Find your people"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setShowAIChat(true)}
+                className="w-full pl-10 pr-12 py-2.5 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+              />
+              <div className="absolute right-3 flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10">
+                <Sparkles className="w-3 h-3 text-primary" />
+                <span className="text-xs font-medium text-primary">AI</span>
+              </div>
+            </div>
+          </div>
+
           {/* Newsfeed */}
           <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-2">
             {/* Thought Leader Suggestion */}
@@ -607,26 +626,51 @@ export const NetworkInterface = ({ activeSection, onSectionChange }: NetworkInte
     ) : (
       <>
         {/* Expand Network Section */}
-        <div className="p-4 space-y-4">
-          {/* AI Search Bar */}
-          <div className="relative">
-            <div className="relative flex items-center">
-              <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Find your people"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setShowAIChat(true)}
-                className="w-full pl-10 pr-12 py-3 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <div className="absolute right-3 flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10">
-                <Sparkles className="w-3 h-3 text-primary" />
-                <span className="text-xs font-medium text-primary">AI</span>
-              </div>
+        {/* KPI Row */}
+        <div className="grid grid-cols-3 gap-3 p-4 bg-background">
+          <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
+            <div className="flex items-center gap-2 mb-1">
+              <Users className="w-4 h-4 text-primary" />
+              <span className="text-xs text-muted-foreground">Suggestions</span>
+            </div>
+            <div className="text-xl font-semibold text-foreground">{mockSuggestedConnections.length}</div>
+          </Card>
+          <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
+            <div className="flex items-center gap-2 mb-1">
+              <Target className="w-4 h-4 text-primary" />
+              <span className="text-xs text-muted-foreground">Avg Match</span>
+            </div>
+            <div className="text-xl font-semibold text-accent">88%</div>
+          </Card>
+          <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
+            <div className="flex items-center gap-2 mb-1">
+              <Network className="w-4 h-4 text-accent" />
+              <span className="text-xs text-muted-foreground">Requests</span>
+            </div>
+            <div className="text-xl font-semibold text-primary">{mockIntroductionRequests.length + mockConnectionRequests.length}</div>
+          </Card>
+        </div>
+
+        {/* Search Bar */}
+        <div className="px-4 pb-3">
+          <div className="relative flex items-center">
+            <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Find your people"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setShowAIChat(true)}
+              className="w-full pl-10 pr-12 py-2.5 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+            />
+            <div className="absolute right-3 flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10">
+              <Sparkles className="w-3 h-3 text-primary" />
+              <span className="text-xs font-medium text-primary">AI</span>
             </div>
           </div>
+        </div>
 
+        <div className="px-4 space-y-4">
           {/* Action Buttons */}
           <div className="flex gap-2">
             <Button
