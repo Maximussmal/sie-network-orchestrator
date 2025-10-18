@@ -101,42 +101,40 @@ export const AgentsHub = ({ activeTab, onTabChange }: { activeTab: "scheduling" 
             <h2 className="text-xl font-semibold text-foreground">Your Agents</h2>
             
             <div 
-              className="p-5 rounded-xl bg-card border border-border cursor-pointer hover:shadow-md transition-shadow border-2 border-blue-200"
+              className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 cursor-pointer hover:shadow-md transition-shadow"
               onClick={() => setActiveAgent("scheduling")}
             >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                  <Calendar className="w-6 h-6 text-primary-foreground" />
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                  <Calendar className="w-5 h-5 text-primary-foreground" />
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-semibold text-foreground">Scheduling Agent</h3>
-                    <span className="px-2 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
-                      VOICE ENABLED
+                  <div className="flex items-center gap-2">
+                    <div className="font-semibold text-foreground">Scheduling Agent</div>
+                    <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
+                      VOICE
                     </span>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    Voice-powered meeting scheduler with CRM integration. Process voice input, extract meeting details, and automatically schedule meetings.
-                  </p>
+                  <div className="text-xs text-muted-foreground">Voice-powered scheduling</div>
                 </div>
               </div>
+              <div className="text-xs text-accent">8 meetings scheduled</div>
             </div>
 
             <div 
-              className="p-5 rounded-xl bg-card border border-border cursor-pointer hover:shadow-md transition-shadow"
+              className="p-4 rounded-xl bg-gradient-to-br from-accent/10 to-primary/10 cursor-pointer hover:shadow-md transition-shadow"
               onClick={() => setActiveAgent("insight")}
             >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center">
-                  <Lightbulb className="w-6 h-6 text-primary-foreground" />
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center">
+                  <Lightbulb className="w-5 h-5 text-primary-foreground" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-foreground mb-1">Insight Agent</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Capture and organize knowledge and insights from conversations and interactions
-                  </p>
+                  <div className="font-semibold text-foreground">Insight Agent</div>
+                  <div className="text-xs text-muted-foreground">Knowledge capture</div>
                 </div>
               </div>
+              <div className="text-xs text-primary">23 insights captured</div>
             </div>
           </div>
         </div>

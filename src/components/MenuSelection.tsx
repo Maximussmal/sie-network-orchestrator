@@ -34,35 +34,37 @@ export const MenuSelection = ({ onSelect }: MenuSelectionProps) => {
         ))}
       </div>
 
-      {/* Menu List - Vertical Stack with Wavy Transitions */}
+      {/* Menu List - Seamless Symbiotic Vertical Stack */}
       <div className="flex flex-col h-full w-full relative z-10">
         {menuItems.map((item, index) => (
           <button
             key={item.id}
             onClick={() => onSelect(item.id)}
-            className="relative group flex-1 transition-all duration-300 overflow-hidden"
+            className="relative group flex-1 transition-all duration-300 overflow-visible"
             style={{
               clipPath: index === 0 
-                ? "polygon(0 0, 100% 0, 100% 95%, 80% 100%, 60% 95%, 40% 100%, 20% 95%, 0 100%)"
+                ? "polygon(0 0, 100% 0, 100% 100%, 80% 105%, 60% 100%, 40% 105%, 20% 100%, 0 105%)"
                 : index === menuItems.length - 1
-                ? "polygon(0 5%, 20% 0, 40% 5%, 60% 0, 80% 5%, 100% 0, 100% 100%, 0 100%)"
-                : "polygon(0 5%, 20% 0, 40% 5%, 60% 0, 80% 5%, 100% 0, 100% 95%, 80% 100%, 60% 95%, 40% 100%, 20% 95%, 0 100%)"
+                ? "polygon(0 -5%, 20% 0, 40% -5%, 60% 0, 80% -5%, 100% 0, 100% 100%, 0 100%)"
+                : "polygon(0 -5%, 20% 0, 40% -5%, 60% 0, 80% -5%, 100% 0, 100% 100%, 80% 105%, 60% 100%, 40% 105%, 20% 100%, 0 105%)"
             }}
           >
-            {/* Background Image with wavy blend */}
+            {/* Background Image with seamless blend */}
             <div className="absolute inset-0 w-full h-full">
               <img 
                 src={item.bg} 
                 alt={item.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
+                style={{
+                  filter: "brightness(0.95)"
+                }}
               />
-              {/* Wavy overlay blend */}
+              {/* Seamless gradient overlay for symbiotic merging */}
               <div 
                 className="absolute inset-0"
                 style={{
-                  background: index % 2 === 0
-                    ? "linear-gradient(135deg, transparent 0%, rgba(127,194,161,0.1) 50%, transparent 100%)"
-                    : "linear-gradient(225deg, transparent 0%, rgba(255,202,132,0.1) 50%, transparent 100%)"
+                  background: "linear-gradient(180deg, rgba(127,194,161,0.05) 0%, transparent 40%, transparent 60%, rgba(255,202,132,0.05) 100%)",
+                  mixBlendMode: "soft-light"
                 }}
               />
             </div>
