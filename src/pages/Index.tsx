@@ -146,6 +146,26 @@ const Index = () => {
               </div>
             )}
             
+            {activeSection === "feedback" && (
+              <div className="flex items-center gap-2 bg-white/5 rounded-2xl px-3 py-1">
+                <button
+                  className="px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 text-orange-300 hover:text-orange-100 hover:bg-white/10"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                </button>
+                <button
+                  className="px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 text-orange-300 hover:text-orange-100 hover:bg-white/10"
+                >
+                  <Mail className="w-4 h-4" />
+                </button>
+                <button
+                  className="px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 text-orange-300 hover:text-orange-100 hover:bg-white/10"
+                >
+                  <Users className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+            
             {/* Glowing SIE icon */}
             <button onClick={() => setIsAIOpen(true)} className="relative group">
               {/* Multi-layer glow effect */}
