@@ -45,7 +45,7 @@ const Index = () => {
         ) : activeSection === "communication" ? (
           <CommunicationHub activeSection={communicationSubTab} onSectionChange={setCommunicationSubTab} />
         ) : (
-          <AgentsHub />
+          <AgentsHub activeTab={agentsSubTab} onTabChange={setAgentsSubTab} />
         )}
       </div>
 

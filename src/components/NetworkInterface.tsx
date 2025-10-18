@@ -348,93 +348,168 @@ export const NetworkInterface = ({ activeSection, onSectionChange }: NetworkInte
             </div>
           </div>
 
-          {/* Analytics Charts */}
-          <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-4">
-            {/* Network Growth Chart */}
-            <Card className="p-4 border-0 shadow-sm">
-              <h3 className="text-sm font-semibold text-foreground mb-3">Network Growth</h3>
-              <ResponsiveContainer width="100%" height={200}>
-                <LineChart data={networkGrowthData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" tick={{ fontSize: 11 }} />
-                  <YAxis stroke="hsl(var(--muted-foreground))" tick={{ fontSize: 11 }} />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: "hsl(var(--card))", 
-                      border: "1px solid hsl(var(--border))",
-                      borderRadius: "8px",
-                      fontSize: "12px"
-                    }} 
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="connections" 
-                    stroke="hsl(var(--primary))" 
-                    strokeWidth={2}
-                    dot={{ fill: "hsl(var(--primary))", r: 3 }}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="engaged" 
-                    stroke="hsl(var(--accent))" 
-                    strokeWidth={2}
-                    dot={{ fill: "hsl(var(--accent))", r: 3 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+          {/* Newsfeed */}
+          <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-2">
+            {/* Thought Leader Suggestion */}
+            <Card className="p-3 rounded-xl border-0 shadow-sm bg-gradient-to-r from-primary/5 to-accent/5">
+              <div className="flex gap-3 items-start">
+                <Avatar className="w-10 h-10 flex-shrink-0">
+                  <AvatarImage src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop" />
+                  <AvatarFallback className="bg-muted text-xs">TL</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <p className="font-semibold text-sm text-foreground">Dr. Marcus Chen</p>
+                    <Badge className="bg-accent text-accent-foreground border-0 text-xs px-2 py-0">
+                      97% Match
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-2">Energy Storage Expert • MIT</p>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge className="bg-primary/10 text-primary border-0 text-xs px-2 py-0.5">
+                      <Sparkles className="w-3 h-3 mr-1" />
+                      Thought Leader
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">Energy Storage</span>
+                  </div>
+                  <p className="text-xs text-foreground/80">Leading researcher in grid-scale battery systems. Follow for cutting-edge insights.</p>
+                </div>
+              </div>
             </Card>
 
-            {/* Network Health Radar */}
-            <Card className="p-4 border-0 shadow-sm">
-              <h3 className="text-sm font-semibold text-foreground mb-3">Network Health</h3>
-              <ResponsiveContainer width="100%" height={200}>
-                <RadarChart data={networkHealthData}>
-                  <PolarGrid stroke="hsl(var(--border))" />
-                  <PolarAngleAxis 
-                    dataKey="category" 
-                    stroke="hsl(var(--muted-foreground))"
-                    tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }}
-                  />
-                  <PolarRadiusAxis 
-                    angle={90} 
-                    domain={[0, 100]} 
-                    stroke="hsl(var(--muted-foreground))"
-                    tick={{ fontSize: 10 }}
-                  />
-                  <Radar 
-                    dataKey="value" 
-                    stroke="hsl(var(--primary))" 
-                    fill="hsl(var(--primary))" 
-                    fillOpacity={0.3}
-                    strokeWidth={2}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
+            {/* LinkedIn Post */}
+            <Card className="p-3 rounded-xl border-0 shadow-sm bg-card">
+              <div className="flex gap-2 items-start">
+                <Avatar className="w-8 h-8 flex-shrink-0">
+                  <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop" />
+                  <AvatarFallback className="bg-muted text-xs">PL</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <div>
+                      <p className="font-medium text-xs text-foreground">Peter Lange</p>
+                      <p className="text-xs text-muted-foreground">2h ago • LinkedIn</p>
+                    </div>
+                    <Badge className="bg-accent/10 text-accent border-0 text-xs px-1.5 py-0">
+                      92
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-foreground/90 mb-2">Just secured €50M Series B for our energy storage network! Exciting times ahead for sustainable infrastructure. 🚀</p>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span>💡 Funding</span>
+                    <span>•</span>
+                    <span>Energy Storage</span>
+                  </div>
+                </div>
+              </div>
             </Card>
 
-            {/* Interaction Types Bar Chart */}
-            <Card className="p-4 border-0 shadow-sm">
-              <h3 className="text-sm font-semibold text-foreground mb-3">Interactions by Type</h3>
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={interactionData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="type" stroke="hsl(var(--muted-foreground))" tick={{ fontSize: 11 }} />
-                  <YAxis stroke="hsl(var(--muted-foreground))" tick={{ fontSize: 11 }} />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: "hsl(var(--card))", 
-                      border: "1px solid hsl(var(--border))",
-                      borderRadius: "8px",
-                      fontSize: "12px"
-                    }} 
-                  />
-                  <Bar 
-                    dataKey="count" 
-                    fill="hsl(var(--accent))" 
-                    radius={[6, 6, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
+            {/* Twitter/X Post */}
+            <Card className="p-3 rounded-xl border-0 shadow-sm bg-card">
+              <div className="flex gap-2 items-start">
+                <Avatar className="w-8 h-8 flex-shrink-0">
+                  <AvatarImage src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop" />
+                  <AvatarFallback className="bg-muted text-xs">SH</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <div>
+                      <p className="font-medium text-xs text-foreground">Stefanie Hauer</p>
+                      <p className="text-xs text-muted-foreground">4h ago • X (Twitter)</p>
+                    </div>
+                    <Badge className="bg-primary/10 text-primary border-0 text-xs px-1.5 py-0">
+                      88
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-foreground/90 mb-2">Corporate sustainability isn't optional anymore. It's the competitive advantage. Great discussion at today's board meeting.</p>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span>♻️ Sustainability</span>
+                    <span>•</span>
+                    <span>Leadership</span>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Thought Leader Suggestion 2 */}
+            <Card className="p-3 rounded-xl border-0 shadow-sm bg-gradient-to-r from-accent/5 to-primary/5">
+              <div className="flex gap-3 items-start">
+                <Avatar className="w-10 h-10 flex-shrink-0">
+                  <AvatarImage src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop" />
+                  <AvatarFallback className="bg-muted text-xs">TL</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <p className="font-semibold text-sm text-foreground">Dr. Anna Weber</p>
+                    <Badge className="bg-accent text-accent-foreground border-0 text-xs px-2 py-0">
+                      95% Match
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-2">Director of Sustainability • Siemens</p>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge className="bg-primary/10 text-primary border-0 text-xs px-2 py-0.5">
+                      <Sparkles className="w-3 h-3 mr-1" />
+                      Thought Leader
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">Sustainability</span>
+                  </div>
+                  <p className="text-xs text-foreground/80">Pioneer in industrial sustainability. Key insights on green energy transition.</p>
+                </div>
+              </div>
+            </Card>
+
+            {/* LinkedIn Article */}
+            <Card className="p-3 rounded-xl border-0 shadow-sm bg-card">
+              <div className="flex gap-2 items-start">
+                <Avatar className="w-8 h-8 flex-shrink-0">
+                  <AvatarImage src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop" />
+                  <AvatarFallback className="bg-muted text-xs">CF</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <div>
+                      <p className="font-medium text-xs text-foreground">Clemens Feigl</p>
+                      <p className="text-xs text-muted-foreground">1d ago • LinkedIn</p>
+                    </div>
+                    <Badge className="bg-accent/10 text-accent border-0 text-xs px-1.5 py-0">
+                      90
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-foreground/90 mb-2">New whitepaper: How ocean cleanup tech can scale 10x in the next 3 years. Link in comments 👇</p>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span>🌊 Ocean Tech</span>
+                    <span>•</span>
+                    <span>Research</span>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Medium Article */}
+            <Card className="p-3 rounded-xl border-0 shadow-sm bg-card">
+              <div className="flex gap-2 items-start">
+                <Avatar className="w-8 h-8 flex-shrink-0">
+                  <AvatarImage src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop" />
+                  <AvatarFallback className="bg-muted text-xs">ST</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <div>
+                      <p className="font-medium text-xs text-foreground">Simon Tautz</p>
+                      <p className="text-xs text-muted-foreground">2d ago • Medium</p>
+                    </div>
+                    <Badge className="bg-primary/10 text-primary border-0 text-xs px-1.5 py-0">
+                      85
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-foreground/90 mb-2">Building autonomous labs: The future of R&D is here. AI-driven experimentation at scale.</p>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span>🤖 AI</span>
+                    <span>•</span>
+                    <span>Automation</span>
+                  </div>
+                </div>
+              </div>
             </Card>
           </div>
 
