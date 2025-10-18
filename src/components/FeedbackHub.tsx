@@ -23,21 +23,6 @@ export const FeedbackHub = () => {
         </div>
       </div>
 
-      {/* Black Navigation Bar with Icons */}
-      <div className="bg-slate-900 dark:bg-black border-b border-slate-800 px-6 py-3">
-        <div className="flex items-center justify-center gap-8">
-          <button className="p-2 text-orange-300 hover:text-orange-100 hover:bg-slate-800 rounded-lg transition-colors">
-            <MessageSquare className="w-5 h-5" />
-          </button>
-          <button className="p-2 text-orange-300 hover:text-orange-100 hover:bg-slate-800 rounded-lg transition-colors">
-            <Mail className="w-5 h-5" />
-          </button>
-          <button className="p-2 text-orange-300 hover:text-orange-100 hover:bg-slate-800 rounded-lg transition-colors">
-            <Users className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
-
       {/* Content */}
       <div className="p-6 max-w-5xl mx-auto space-y-6">
         {/* Action Cards */}
@@ -202,6 +187,21 @@ export const FeedbackHub = () => {
               </li>
             </ul>
           </div>
+        </div>
+      </div>
+
+      {/* Black Navigation Bar with Icons - Fixed at Bottom */}
+      <div className="fixed bottom-0 left-0 right-0 bg-slate-900 dark:bg-black border-t border-slate-800 px-6 py-3 z-50">
+        <div className="flex items-center justify-center gap-8">
+          <button className="p-2 text-orange-300 hover:text-orange-100 hover:bg-slate-800 rounded-lg transition-colors">
+            <MessageSquare className="w-5 h-5" />
+          </button>
+          <button className="p-2 text-orange-300 hover:text-orange-100 hover:bg-slate-800 rounded-lg transition-colors">
+            <Mail className="w-5 h-5" />
+          </button>
+          <button className="p-2 text-orange-300 hover:text-orange-100 hover:bg-slate-800 rounded-lg transition-colors">
+            <Users className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </div>
