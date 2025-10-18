@@ -490,31 +490,49 @@ export const NetworkInterface = ({ activeSection, onSectionChange }: NetworkInte
         </>
       ) : activeSection === "nurture" ? (
         <>
-          {/* Top Bar with KPIs and Nurture Button */}
-          <div className="p-4 bg-background">
-            <div className="flex items-center justify-between gap-3 mb-3">
-              <div className="flex gap-3 flex-1">
-                <Card className="flex-1 p-3 rounded-xl border-0 bg-card shadow-sm">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Users className="w-4 h-4 text-primary" />
-                    <span className="text-xs text-muted-foreground">Total</span>
+          {/* Top Bar with KPIs, Search, and Nurture Button */}
+          <div className="p-4 bg-background space-y-3">
+            <div className="flex items-center gap-3">
+              <Card className="flex-shrink-0 p-3 rounded-xl border-0 bg-card shadow-sm" style={{ width: '120px' }}>
+                <div className="flex items-center gap-2 mb-1">
+                  <Users className="w-4 h-4 text-primary" />
+                  <span className="text-xs text-muted-foreground">Total</span>
+                </div>
+                <div className="text-xl font-semibold text-foreground">{mockConnections.length}</div>
+              </Card>
+              
+              <Card className="flex-shrink-0 p-3 rounded-xl border-0 bg-card shadow-sm" style={{ width: '120px' }}>
+                <div className="flex items-center gap-2 mb-1">
+                  <Target className="w-4 h-4 text-primary" />
+                  <span className="text-xs text-muted-foreground">Trust</span>
+                </div>
+                <div className="text-xl font-semibold text-foreground">{avgTrust}%</div>
+              </Card>
+              
+              {/* Search Bar */}
+              <div className="flex-1 relative">
+                <div className="relative flex items-center">
+                  <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder="Find your people"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onFocus={() => setShowAIChat(true)}
+                    className="w-full pl-10 pr-12 py-2.5 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                  />
+                  <div className="absolute right-3 flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10">
+                    <Sparkles className="w-3 h-3 text-primary" />
+                    <span className="text-xs font-medium text-primary">AI</span>
                   </div>
-                  <div className="text-xl font-semibold text-foreground">{mockConnections.length}</div>
-                </Card>
-                <Card className="flex-1 p-3 rounded-xl border-0 bg-card shadow-sm">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Target className="w-4 h-4 text-primary" />
-                    <span className="text-xs text-muted-foreground">Trust</span>
-                  </div>
-                  <div className="text-xl font-semibold text-foreground">{avgTrust}%</div>
-                </Card>
+                </div>
               </div>
               
               {/* Nurture Button with Notifications */}
               <Button
                 variant="outline"
                 size="sm"
-                className="flex items-center gap-2 bg-green-500/10 text-green-600 border-green-500/20 hover:bg-green-500/20 relative"
+                className="flex-shrink-0 flex items-center gap-2 bg-green-500/10 text-green-600 border-green-500/20 hover:bg-green-500/20 relative h-[46px]"
               >
                 <Sparkles className="w-4 h-4" />
                 Nurture
@@ -523,55 +541,30 @@ export const NetworkInterface = ({ activeSection, onSectionChange }: NetworkInte
                 </Badge>
               </Button>
             </div>
-          </div>
 
-      {/* Filter and Sort Controls */}
-      <div className="px-4 py-3 space-y-3">
-        {/* AI Search Bar */}
-        <div className="relative">
-          <div className="relative flex items-center">
-            <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Find your people"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => setShowAIChat(true)}
-              className="w-full pl-10 pr-12 py-2.5 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary text-sm"
-            />
-            <div className="absolute right-3 flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10">
-              <Sparkles className="w-3 h-3 text-primary" />
-              <span className="text-xs font-medium text-primary">AI</span>
+            {/* Connections Count and Sort Controls */}
+            <div className="flex items-center justify-between px-2">
+              <p className="text-sm text-muted-foreground">
+                <span className="font-semibold text-foreground">867</span> connections
+              </p>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-card text-foreground shadow-sm hover:bg-card/80 transition-colors">
+                    <ArrowUpDown className="w-3 h-3" />
+                    <span>Mutual Connections</span>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 bg-popover">
+                  <DropdownMenuItem onClick={() => setSortBy("mutual")}>
+                    Mutual Connections
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSortBy("trust")}>
+                    Trust Score
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
-          </div>
-        </div>
-
-        {/* Filter and Sort Row */}
-        <div className="flex items-center justify-end gap-3">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-card text-foreground shadow-sm hover:bg-card/80 transition-colors">
-                <ArrowUpDown className="w-3 h-3" />
-                <span>Mutual Connections</span>
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48 bg-popover">
-              <DropdownMenuItem onClick={() => setSortBy("mutual")}>
-                Mutual Connections
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSortBy("trust")}>
-                Trust Score
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-
-          {/* Connections Count */}
-          <div className="px-4 pb-2">
-            <p className="text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">{sortedConnections.length}</span> connections
-            </p>
           </div>
 
           {/* Connections List */}
