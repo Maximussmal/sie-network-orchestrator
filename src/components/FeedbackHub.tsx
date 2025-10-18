@@ -40,39 +40,6 @@ export const FeedbackHub = () => {
 
       {/* Content */}
       <div className="p-6 max-w-5xl mx-auto space-y-6">
-        {/* Action Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="p-6 bg-white/80 dark:bg-slate-800/80 backdrop-blur border-yellow-200 dark:border-yellow-800 hover:shadow-lg transition-shadow">
-            <div className="flex flex-col items-center text-center space-y-3">
-              <div className="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
-                <MessageSquare className="w-6 h-6 text-orange-600 dark:text-orange-400" />
-              </div>
-              <h3 className="text-lg font-semibold text-orange-900 dark:text-orange-100">Share Feedback</h3>
-              <p className="text-sm text-orange-700 dark:text-orange-300">Help us improve your experience</p>
-            </div>
-          </Card>
-
-          <Card className="p-6 bg-white/80 dark:bg-slate-800/80 backdrop-blur border-yellow-200 dark:border-yellow-800 hover:shadow-lg transition-shadow">
-            <div className="flex flex-col items-center text-center space-y-3">
-              <div className="w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center">
-                <Mail className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
-              </div>
-              <h3 className="text-lg font-semibold text-orange-900 dark:text-orange-100">Contact Support</h3>
-              <p className="text-sm text-orange-700 dark:text-orange-300">Get help when you need it</p>
-            </div>
-          </Card>
-
-          <Card className="p-6 bg-white/80 dark:bg-slate-800/80 backdrop-blur border-yellow-200 dark:border-yellow-800 hover:shadow-lg transition-shadow">
-            <div className="flex flex-col items-center text-center space-y-3">
-              <div className="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
-                <Users className="w-6 h-6 text-orange-600 dark:text-orange-400" />
-              </div>
-              <h3 className="text-lg font-semibold text-orange-900 dark:text-orange-100">Collaborate</h3>
-              <p className="text-sm text-orange-700 dark:text-orange-300">Partner with our team</p>
-            </div>
-          </Card>
-        </div>
-
         {/* Feedback Form */}
         <Card className="p-8 bg-white/90 dark:bg-slate-800/90 backdrop-blur border-yellow-200 dark:border-yellow-800">
           <h2 className="text-2xl font-bold text-orange-900 dark:text-orange-100 mb-6">Send us a message</h2>
