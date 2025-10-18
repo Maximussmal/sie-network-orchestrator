@@ -626,29 +626,43 @@ export const NetworkInterface = ({ activeSection, onSectionChange }: NetworkInte
     ) : (
       <>
         {/* Expand Network Section */}
-        {/* KPI Row */}
-        <div className="grid grid-cols-3 gap-3 p-4 bg-background">
-          <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
-            <div className="flex items-center gap-2 mb-1">
-              <Users className="w-4 h-4 text-primary" />
-              <span className="text-xs text-muted-foreground">Suggestions</span>
-            </div>
-            <div className="text-xl font-semibold text-foreground">{mockSuggestedConnections.length}</div>
-          </Card>
-          <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
+        {/* KPI Row with Action Buttons */}
+        <div className="flex items-center gap-3 p-4 bg-background">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowIntroRequests(true)}
+            className="flex-1 relative bg-green-500/10 text-green-600 border-green-500/20 hover:bg-green-500/20"
+          >
+            Introduction
+            {mockIntroductionRequests.length > 0 && (
+              <Badge className="absolute -top-2 -right-2 bg-accent text-accent-foreground border-0 h-5 min-w-5 px-1.5">
+                {mockIntroductionRequests.length}
+              </Badge>
+            )}
+          </Button>
+          
+          <Card className="flex-1 p-3 rounded-xl border-0 bg-card shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <Target className="w-4 h-4 text-primary" />
               <span className="text-xs text-muted-foreground">Avg Match</span>
             </div>
             <div className="text-xl font-semibold text-accent">88%</div>
           </Card>
-          <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
-            <div className="flex items-center gap-2 mb-1">
-              <Network className="w-4 h-4 text-accent" />
-              <span className="text-xs text-muted-foreground">Requests</span>
-            </div>
-            <div className="text-xl font-semibold text-primary">{mockIntroductionRequests.length + mockConnectionRequests.length}</div>
-          </Card>
+          
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowConnectRequests(true)}
+            className="flex-1 relative bg-blue-500/10 text-blue-600 border-blue-500/20 hover:bg-blue-500/20"
+          >
+            Connect
+            {mockConnectionRequests.length > 0 && (
+              <Badge className="absolute -top-2 -right-2 bg-accent text-accent-foreground border-0 h-5 min-w-5 px-1.5">
+                {mockConnectionRequests.length}
+              </Badge>
+            )}
+          </Button>
         </div>
 
         {/* Search Bar */}
@@ -671,38 +685,6 @@ export const NetworkInterface = ({ activeSection, onSectionChange }: NetworkInte
         </div>
 
         <div className="px-4 space-y-4">
-          {/* Action Buttons */}
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowIntroRequests(true)}
-              className="flex-1 relative"
-            >
-              <Users className="w-4 h-4 mr-2" />
-              Introduction
-              {mockIntroductionRequests.length > 0 && (
-                <Badge className="absolute -top-2 -right-2 bg-accent text-accent-foreground border-0 h-5 min-w-5 px-1.5">
-                  {mockIntroductionRequests.length}
-                </Badge>
-              )}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowConnectRequests(true)}
-              className="flex-1 relative"
-            >
-              <Handshake className="w-4 h-4 mr-2" />
-              Connect
-              {mockConnectionRequests.length > 0 && (
-                <Badge className="absolute -top-2 -right-2 bg-accent text-accent-foreground border-0 h-5 min-w-5 px-1.5">
-                  {mockConnectionRequests.length}
-                </Badge>
-              )}
-            </Button>
-          </div>
-
           {/* SIE Suggestions Header */}
           <div className="flex items-center gap-2 pt-2">
             <Sparkles className="w-4 h-4 text-primary" />
