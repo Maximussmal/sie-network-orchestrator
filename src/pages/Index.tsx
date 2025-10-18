@@ -53,7 +53,7 @@ const Index = () => {
       </div>
 
       {/* Bottom navigation bar */}
-      <div className="fixed bottom-4 left-4 right-4 rounded-3xl z-40">
+      <div className="fixed bottom-4 left-4 right-4 bg-black rounded-3xl border border-white/10 z-40 shadow-2xl">
         <div className="flex items-center justify-between px-6 py-2">
           {/* Back arrow */}
           <button
