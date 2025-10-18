@@ -490,30 +490,40 @@ export const NetworkInterface = ({ activeSection, onSectionChange }: NetworkInte
         </>
       ) : activeSection === "nurture" ? (
         <>
-          {/* KPI Dashboard */}
-          <div className="grid grid-cols-3 gap-3 p-4 bg-background">
-        <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
-          <div className="flex items-center gap-2 mb-1">
-            <Users className="w-4 h-4 text-primary" />
-            <span className="text-xs text-muted-foreground">Total</span>
+          {/* Top Bar with KPIs and Nurture Button */}
+          <div className="p-4 bg-background">
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <div className="flex gap-3 flex-1">
+                <Card className="flex-1 p-3 rounded-xl border-0 bg-card shadow-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Users className="w-4 h-4 text-primary" />
+                    <span className="text-xs text-muted-foreground">Total</span>
+                  </div>
+                  <div className="text-xl font-semibold text-foreground">{mockConnections.length}</div>
+                </Card>
+                <Card className="flex-1 p-3 rounded-xl border-0 bg-card shadow-sm">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Target className="w-4 h-4 text-primary" />
+                    <span className="text-xs text-muted-foreground">Trust</span>
+                  </div>
+                  <div className="text-xl font-semibold text-foreground">{avgTrust}%</div>
+                </Card>
+              </div>
+              
+              {/* Nurture Button with Notifications */}
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2 bg-green-500/10 text-green-600 border-green-500/20 hover:bg-green-500/20 relative"
+              >
+                <Sparkles className="w-4 h-4" />
+                Nurture
+                <Badge className="absolute -top-2 -right-2 bg-green-500 text-white border-0 h-5 min-w-5 px-1.5">
+                  3
+                </Badge>
+              </Button>
+            </div>
           </div>
-          <div className="text-xl font-semibold text-foreground">{mockConnections.length}</div>
-        </Card>
-        <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
-          <div className="flex items-center gap-2 mb-1">
-            <Target className="w-4 h-4 text-primary" />
-            <span className="text-xs text-muted-foreground">Trust</span>
-          </div>
-          <div className="text-xl font-semibold text-foreground">{avgTrust}%</div>
-        </Card>
-        <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
-          <div className="flex items-center gap-2 mb-1">
-            <TrendingUp className="w-4 h-4 text-accent" />
-            <span className="text-xs text-muted-foreground">Rising</span>
-          </div>
-          <div className="text-xl font-semibold text-accent">{risingCount}</div>
-        </Card>
-      </div>
 
       {/* Filter and Sort Controls */}
       <div className="px-4 py-3 space-y-3">
@@ -537,16 +547,7 @@ export const NetworkInterface = ({ activeSection, onSectionChange }: NetworkInte
         </div>
 
         {/* Filter and Sort Row */}
-        <div className="flex items-center justify-between gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-2"
-          >
-            <Sparkles className="w-4 h-4" />
-            Nurture
-          </Button>
-          
+        <div className="flex items-center justify-end gap-3">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-card text-foreground shadow-sm hover:bg-card/80 transition-colors">

@@ -35,45 +35,45 @@ export const MenuSelection = ({ onSelect }: MenuSelectionProps) => {
         ))}
       </div>
 
-      {/* Menu List - Vertical Stack */}
+      {/* Menu List - Vertical Stack with Wavy Transitions */}
       <div className="flex flex-col h-full w-full relative z-10">
         {menuItems.map((item, index) => (
           <button
             key={item.id}
             onClick={() => onSelect(item.id)}
-            className="relative group flex-1 border-b border-border/50 hover:border-accent/50 transition-all duration-300 overflow-hidden"
+            className="relative group flex-1 transition-all duration-300 overflow-hidden"
+            style={{
+              clipPath: index === 0 
+                ? "polygon(0 0, 100% 0, 100% 95%, 80% 100%, 60% 95%, 40% 100%, 20% 95%, 0 100%)"
+                : index === menuItems.length - 1
+                ? "polygon(0 5%, 20% 0, 40% 5%, 60% 0, 80% 5%, 100% 0, 100% 100%, 0 100%)"
+                : "polygon(0 5%, 20% 0, 40% 5%, 60% 0, 80% 5%, 100% 0, 100% 95%, 80% 100%, 60% 95%, 40% 100%, 20% 95%, 0 100%)"
+            }}
           >
-            {/* Background Image - Full opacity with gradient mask for merging */}
+            {/* Background Image with wavy blend */}
             <div className="absolute inset-0 w-full h-full">
               <img 
                 src={item.bg} 
                 alt={item.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
               />
-              {/* Gradient masks for merging bottom-left to top-right */}
-              {index < menuItems.length - 1 && (
-                <div 
-                  className="absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-black/20"
-                  style={{
-                    maskImage: "linear-gradient(to top right, transparent 0%, black 50%)",
-                    WebkitMaskImage: "linear-gradient(to top right, transparent 0%, black 50%)",
-                  }}
-                />
-              )}
-              {index > 0 && (
-                <div 
-                  className="absolute inset-0 bg-gradient-to-bl from-transparent via-transparent to-black/20"
-                  style={{
-                    maskImage: "linear-gradient(to bottom left, transparent 0%, black 50%)",
-                    WebkitMaskImage: "linear-gradient(to bottom left, transparent 0%, black 50%)",
-                  }}
-                />
-              )}
+              {/* Wavy overlay blend */}
+              <div 
+                className="absolute inset-0"
+                style={{
+                  background: index % 2 === 0
+                    ? "linear-gradient(135deg, transparent 0%, rgba(127,194,161,0.1) 50%, transparent 100%)"
+                    : "linear-gradient(225deg, transparent 0%, rgba(255,202,132,0.1) 50%, transparent 100%)"
+                }}
+              />
             </div>
             
-            {/* Content - Only Icon */}
+            {/* Content - Icon with enhanced glow */}
             <div className="relative h-full flex items-center justify-center p-8">
-              <item.icon className="w-16 h-16 text-white drop-shadow-2xl group-hover:scale-110 transition-all duration-300" />
+              <div className="relative">
+                <div className="absolute inset-0 blur-xl bg-accent/30 group-hover:bg-accent/50 transition-all duration-300" />
+                <item.icon className="relative w-16 h-16 text-white drop-shadow-2xl group-hover:scale-110 transition-all duration-300" />
+              </div>
             </div>
 
             {/* Hover border glow */}
