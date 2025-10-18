@@ -4,6 +4,7 @@ import dashboardBg from "@/assets/menu-dashboard.jpg";
 import networkBg from "@/assets/menu-network.jpg";
 import communicateBg from "@/assets/menu-communicate.jpg";
 import orchestrateBg from "@/assets/menu-orchestrate.jpg";
+import sunBg from "@/assets/menu-feedback-sun.jpg";
 
 interface MenuSelectionProps {
   onSelect: (section: "network" | "communication" | "agents" | "feedback") => void;
@@ -90,24 +91,26 @@ export const MenuSelection = ({ onSelect }: MenuSelectionProps) => {
             clipPath: "polygon(0 -5%, 20% 0, 40% -5%, 60% 0, 80% -5%, 100% 0, 100% 100%, 0 100%)"
           }}
         >
-          {/* Sun gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-yellow-200 via-orange-300 to-yellow-400 group-hover:scale-105 transition-all duration-500">
-            {/* Radial sun rays */}
-            <div className="absolute inset-0" style={{
-              background: "radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 60%)"
-            }} />
+          {/* Sun image background */}
+          <div className="absolute inset-0 w-full h-full">
+            <img 
+              src={sunBg} 
+              alt="Connect"
+              className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
+            />
+            <div className="absolute inset-0 bg-black/10" />
           </div>
           
           {/* Lightbulb in center */}
           <div className="relative h-full flex items-center justify-center">
             <div className="relative">
-              <div className="absolute inset-0 blur-xl bg-yellow-400/50 group-hover:bg-yellow-300/70 transition-all duration-300 animate-pulse" />
-              <Lightbulb className="relative w-12 h-12 text-orange-600 drop-shadow-2xl group-hover:scale-110 transition-all duration-300" fill="currentColor" />
+              <div className="absolute inset-0 blur-xl bg-white/50 group-hover:bg-white/70 transition-all duration-300 animate-pulse" />
+              <Lightbulb className="relative w-12 h-12 text-white drop-shadow-2xl group-hover:scale-110 transition-all duration-300" fill="currentColor" />
             </div>
           </div>
 
           {/* Hover border glow */}
-          <div className="absolute inset-0 border-2 border-transparent group-hover:border-yellow-400/70 transition-all duration-300" />
+          <div className="absolute inset-0 border-2 border-transparent group-hover:border-white/50 transition-all duration-300" />
         </button>
       </div>
 

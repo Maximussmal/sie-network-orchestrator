@@ -40,23 +40,37 @@ export const AgentsHub = ({ activeTab, onTabChange }: { activeTab: "scheduling" 
   return (
     <div className="h-full overflow-y-auto bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Top Bar */}
-      <div className="bg-gradient-to-r from-slate-800 to-slate-900 border-b border-slate-700/50 px-4 py-2 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-slate-300">
-          <div className="w-8 h-8 rounded-full bg-slate-700/50 flex items-center justify-center">
-            <Lightbulb className="w-4 h-4 text-yellow-400" />
+      <div className="bg-gradient-to-r from-slate-800 to-slate-900 border-b border-slate-700/50 px-6 py-4">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg">
+              <Lightbulb className="w-5 h-5 text-white" fill="currentColor" />
+            </div>
+            <span className="text-lg font-semibold text-slate-100">AI Orchestration</span>
           </div>
-          <span className="text-sm font-medium">AI Orchestration</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="text-xs text-slate-300 hover:bg-slate-700/50">
-            Feedback
-          </Button>
-          <Button variant="ghost" size="sm" className="text-xs text-slate-300 hover:bg-slate-700/50">
-            Contact
-          </Button>
-          <Button variant="ghost" size="sm" className="text-xs text-slate-300 hover:bg-slate-700/50">
-            Collaborate
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-sm font-medium text-slate-200 hover:text-white hover:bg-slate-700/70 transition-all px-4 py-2"
+            >
+              Feedback
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-sm font-medium text-slate-200 hover:text-white hover:bg-slate-700/70 transition-all px-4 py-2"
+            >
+              Contact
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-sm font-medium text-slate-200 hover:text-white hover:bg-slate-700/70 transition-all px-4 py-2"
+            >
+              Collaborate
+            </Button>
+          </div>
         </div>
       </div>
       
