@@ -46,7 +46,7 @@ export const AgentsHub = ({ activeTab, onTabChange }: { activeTab: "scheduling" 
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg">
               <Lightbulb className="w-5 h-5 text-white" fill="currentColor" />
             </div>
-            <span className="text-lg font-semibold text-slate-100">AI Orchestration</span>
+            <span className="text-lg font-semibold text-slate-100">Orchestration</span>
           </div>
           <div className="flex items-center gap-3">
             <Button 
@@ -79,8 +79,7 @@ export const AgentsHub = ({ activeTab, onTabChange }: { activeTab: "scheduling" 
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-slate-100 mb-2">Orchestrate</h1>
-              <p className="text-slate-400">Manage your AI agents</p>
+              <h1 className="text-3xl font-bold text-slate-100 mb-2">Manage your AI agents</h1>
             </div>
             <Button className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-slate-100">
               <Plus className="w-4 h-4" />
