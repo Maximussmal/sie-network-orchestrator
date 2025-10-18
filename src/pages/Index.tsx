@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Users, MessageCircle, Bot, Sparkles, ArrowLeft, Mail, CalendarIcon, Network, TrendingUp, Calendar, Lightbulb } from "lucide-react";
+import { Users, MessageCircle, Bot, Sparkles, ArrowLeft, Mail, CalendarIcon, Network, TrendingUp, Calendar, Lightbulb, Heart, UserPlus, MessageSquare, CalendarCheck } from "lucide-react";
 import { LandingAnimation } from "@/components/LandingAnimation";
 import { MenuSelection } from "@/components/MenuSelection";
 import { NetworkInterface } from "@/components/NetworkInterface";
@@ -82,23 +82,23 @@ const Index = () => {
                 <>
                   <button
                     onClick={() => setNetworkSubTab("nurture")}
-                    className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                       networkSubTab === "nurture" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                     }`}
                   >
-                    <Users className="w-4 h-4" />
+                    <Heart className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => setNetworkSubTab("expand")}
-                    className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                       networkSubTab === "expand" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                     }`}
                   >
-                    <Network className="w-4 h-4" />
+                    <UserPlus className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => setNetworkSubTab("signals")}
-                    className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                       networkSubTab === "signals" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                     }`}
                   >
@@ -111,7 +111,7 @@ const Index = () => {
                 <>
                   <button
                     onClick={() => setCommunicationSubTab("email")}
-                    className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                       communicationSubTab === "email" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                     }`}
                   >
@@ -119,19 +119,19 @@ const Index = () => {
                   </button>
                   <button
                     onClick={() => setCommunicationSubTab("messages")}
-                    className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                       communicationSubTab === "messages" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                     }`}
                   >
-                    <MessageCircle className="w-4 h-4" />
+                    <MessageSquare className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => setCommunicationSubTab("calendar")}
-                    className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                       communicationSubTab === "calendar" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                     }`}
                   >
-                    <CalendarIcon className="w-4 h-4" />
+                    <CalendarCheck className="w-4 h-4" />
                   </button>
                 </>
               )}
@@ -140,7 +140,7 @@ const Index = () => {
                 <>
                   <button
                     onClick={() => setAgentsSubTab("scheduling")}
-                    className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                       agentsSubTab === "scheduling" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                     }`}
                   >
@@ -148,7 +148,7 @@ const Index = () => {
                   </button>
                   <button
                     onClick={() => setAgentsSubTab("insight")}
-                    className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                       agentsSubTab === "insight" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                     }`}
                   >
@@ -157,28 +157,28 @@ const Index = () => {
                 </>
               )}
               
-              {/* Main tab buttons */}
-              <div className="w-px h-6 bg-white/10 mx-1" />
+              {/* Main tab buttons - separated by divider */}
+              <div className="w-px h-6 bg-white/20 mx-2" />
               <button
                 onClick={() => setActiveTab("network")}
-                className={`px-3 py-1 transition-all ${
-                  activeTab === "network" ? "text-white" : "text-white/60"
+                className={`px-3 py-1.5 rounded-lg transition-all ${
+                  activeTab === "network" ? "bg-accent/30 text-white" : "text-white/60 hover:bg-white/10"
                 }`}
               >
                 <Users className={`w-5 h-5 ${activeTab === "network" ? "scale-110" : ""}`} />
               </button>
               <button
                 onClick={() => setActiveTab("communication")}
-                className={`px-3 py-1 transition-all ${
-                  activeTab === "communication" ? "text-white" : "text-white/60"
+                className={`px-3 py-1.5 rounded-lg transition-all ${
+                  activeTab === "communication" ? "bg-accent/30 text-white" : "text-white/60 hover:bg-white/10"
                 }`}
               >
                 <MessageCircle className={`w-5 h-5 ${activeTab === "communication" ? "scale-110" : ""}`} />
               </button>
               <button
                 onClick={() => setActiveTab("agents")}
-                className={`px-3 py-1 transition-all ${
-                  activeTab === "agents" ? "text-white" : "text-white/60"
+                className={`px-3 py-1.5 rounded-lg transition-all ${
+                  activeTab === "agents" ? "bg-accent/30 text-white" : "text-white/60 hover:bg-white/10"
                 }`}
               >
                 <Bot className={`w-5 h-5 ${activeTab === "agents" ? "scale-110" : ""}`} />
@@ -228,23 +228,23 @@ const Index = () => {
               <div className="flex items-center gap-2 bg-white/5 rounded-2xl px-3 py-1">
                 <button
                   onClick={() => setNetworkSubTab("nurture")}
-                  className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                     networkSubTab === "nurture" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                   }`}
                 >
-                  <Users className="w-4 h-4" />
+                  <Heart className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setNetworkSubTab("expand")}
-                  className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                     networkSubTab === "expand" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                   }`}
                 >
-                  <Network className="w-4 h-4" />
+                  <UserPlus className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setNetworkSubTab("signals")}
-                  className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                     networkSubTab === "signals" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                   }`}
                 >
@@ -257,7 +257,7 @@ const Index = () => {
               <div className="flex items-center gap-2 bg-white/5 rounded-2xl px-3 py-1">
                 <button
                   onClick={() => setCommunicationSubTab("email")}
-                  className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                     communicationSubTab === "email" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                   }`}
                 >
@@ -265,19 +265,19 @@ const Index = () => {
                 </button>
                 <button
                   onClick={() => setCommunicationSubTab("messages")}
-                  className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                     communicationSubTab === "messages" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                   }`}
                 >
-                  <MessageCircle className="w-4 h-4" />
+                  <MessageSquare className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setCommunicationSubTab("calendar")}
-                  className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                     communicationSubTab === "calendar" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                   }`}
                 >
-                  <CalendarIcon className="w-4 h-4" />
+                  <CalendarCheck className="w-4 h-4" />
                 </button>
               </div>
             )}
@@ -286,7 +286,7 @@ const Index = () => {
               <div className="flex items-center gap-2 bg-white/5 rounded-2xl px-3 py-1">
                 <button
                   onClick={() => setAgentsSubTab("scheduling")}
-                  className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                     agentsSubTab === "scheduling" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                   }`}
                 >
@@ -294,7 +294,7 @@ const Index = () => {
                 </button>
                 <button
                   onClick={() => setAgentsSubTab("insight")}
-                  className={`px-3 py-1 rounded-lg text-xs transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 ${
                     agentsSubTab === "insight" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
                   }`}
                 >
