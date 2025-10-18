@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Users, MessageCircle, Bot, Sparkles } from "lucide-react";
+import { Users, MessageCircle, Bot, Sparkles, ArrowLeft } from "lucide-react";
 import { LandingAnimation } from "@/components/LandingAnimation";
 import { MenuSelection } from "@/components/MenuSelection";
 import { NetworkInterface } from "@/components/NetworkInterface";
@@ -56,7 +56,7 @@ const Index = () => {
       )}
 
       {/* Content */}
-      <div className={`flex-1 overflow-hidden ${isDashboard ? 'pb-32' : ''}`}>
+      <div className={`flex-1 overflow-hidden ${isDashboard ? 'pb-32' : 'pb-24'}`}>
         {isDashboard ? (
           // Dashboard view - show current tab
           activeTab === "network" ? (
@@ -119,21 +119,36 @@ const Index = () => {
         </div>
       )}
 
-      {/* Glowing SIE icon bottom right - show on non-dashboard sections */}
+      {/* Bottom navigation bar for non-dashboard sections */}
       {!isDashboard && (
-        <div className="fixed bottom-8 right-8 z-50">
-          <button onClick={() => setIsAIOpen(true)} className="relative group">
-            {/* Glow effect */}
-            <div className="absolute inset-0 animate-pulse">
-              <div className="w-16 h-16 rounded-full bg-accent/30 blur-xl" />
-            </div>
-            {/* Icon */}
-            <img 
-              src={sumbiosIcon} 
-              alt="SIE" 
-              className="relative w-16 h-16 object-contain animate-[pulse_3s_ease-in-out_infinite] group-hover:scale-110 transition-transform" 
-            />
-          </button>
+        <div className="fixed bottom-4 left-4 right-4 bg-black rounded-3xl border border-white/10 z-40 shadow-2xl">
+          <div className="flex items-center justify-between px-6 py-4">
+            {/* Back arrow */}
+            <button
+              onClick={() => {
+                setShowMenu(true);
+                setActiveSection(null);
+              }}
+              className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span className="text-sm font-medium">Back</span>
+            </button>
+            
+            {/* Glowing SIE icon */}
+            <button onClick={() => setIsAIOpen(true)} className="relative group">
+              {/* Glow effect */}
+              <div className="absolute inset-0 animate-pulse">
+                <div className="w-12 h-12 rounded-full bg-accent/30 blur-xl" />
+              </div>
+              {/* Icon */}
+              <img 
+                src={sumbiosIcon} 
+                alt="SIE" 
+                className="relative w-12 h-12 object-contain animate-[pulse_3s_ease-in-out_infinite] group-hover:scale-110 transition-transform" 
+              />
+            </button>
+          </div>
         </div>
       )}
 
