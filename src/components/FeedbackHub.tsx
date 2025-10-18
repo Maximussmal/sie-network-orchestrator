@@ -7,24 +7,6 @@ import { Input } from "./ui/input";
 export const FeedbackHub = () => {
   return (
     <div className="h-full overflow-y-auto bg-gradient-to-br from-yellow-50 via-orange-50 to-yellow-100 dark:from-yellow-950 dark:via-orange-950 dark:to-yellow-900">
-      {/* Navigation Bar with Icons */}
-      <div className="bg-orange-100 dark:bg-orange-900/50 border-b border-orange-200 dark:border-orange-800 px-6 py-3">
-        <div className="flex items-center justify-center gap-8">
-          <button className="flex items-center gap-2 text-orange-700 dark:text-orange-300 hover:text-orange-900 dark:hover:text-orange-100 transition-colors">
-            <MessageSquare className="w-5 h-5" />
-            <span className="text-sm font-medium">Feedback</span>
-          </button>
-          <button className="flex items-center gap-2 text-orange-700 dark:text-orange-300 hover:text-orange-900 dark:hover:text-orange-100 transition-colors">
-            <Mail className="w-5 h-5" />
-            <span className="text-sm font-medium">Support</span>
-          </button>
-          <button className="flex items-center gap-2 text-orange-700 dark:text-orange-300 hover:text-orange-900 dark:hover:text-orange-100 transition-colors">
-            <Users className="w-5 h-5" />
-            <span className="text-sm font-medium">Collaborate</span>
-          </button>
-        </div>
-      </div>
-      
       {/* Header with Sun/Lightbulb Theme */}
       <div className="relative bg-gradient-to-r from-yellow-200 via-orange-300 to-yellow-200 dark:from-yellow-800 dark:via-orange-800 dark:to-yellow-800 border-b border-yellow-300/50 dark:border-yellow-700/50 px-6 py-12 overflow-hidden">
         {/* Sun rays background */}
@@ -38,6 +20,21 @@ export const FeedbackHub = () => {
           </div>
           <h1 className="text-4xl font-bold text-orange-800 dark:text-yellow-100 mb-2">Connect With Us</h1>
           <p className="text-orange-700 dark:text-yellow-200">We'd love to hear from you</p>
+        </div>
+      </div>
+
+      {/* Black Navigation Bar with Icons */}
+      <div className="bg-slate-900 dark:bg-black border-b border-slate-800 px-6 py-3">
+        <div className="flex items-center justify-center gap-8">
+          <button className="p-2 text-orange-300 hover:text-orange-100 hover:bg-slate-800 rounded-lg transition-colors">
+            <MessageSquare className="w-5 h-5" />
+          </button>
+          <button className="p-2 text-orange-300 hover:text-orange-100 hover:bg-slate-800 rounded-lg transition-colors">
+            <Mail className="w-5 h-5" />
+          </button>
+          <button className="p-2 text-orange-300 hover:text-orange-100 hover:bg-slate-800 rounded-lg transition-colors">
+            <Users className="w-5 h-5" />
+          </button>
         </div>
       </div>
 
