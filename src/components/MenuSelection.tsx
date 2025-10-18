@@ -35,28 +35,28 @@ export const MenuSelection = ({ onSelect }: MenuSelectionProps) => {
         ))}
       </div>
 
-      {/* Menu Grid */}
-      <div className="grid grid-cols-2 grid-rows-2 h-full w-full gap-0 relative z-10">
+      {/* Menu List - Vertical Stack */}
+      <div className="flex flex-col h-full w-full relative z-10">
         {menuItems.map((item) => (
           <button
             key={item.id}
             onClick={() => onSelect(item.id)}
-            className="relative group border border-border/50 hover:border-accent/50 transition-all duration-300 overflow-hidden"
+            className="relative group flex-1 border-b border-border/50 hover:border-accent/50 transition-all duration-300 overflow-hidden"
           >
             {/* Background Image */}
             <img 
               src={item.bg} 
               alt={item.title}
-              className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-500"
+              className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-70 group-hover:scale-105 transition-all duration-500"
             />
             
             {/* Dark overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-black/60 group-hover:from-black/40 group-hover:via-black/30 group-hover:to-black/40 transition-all duration-300" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/60 to-black/70 group-hover:from-black/50 group-hover:via-black/40 group-hover:to-black/50 transition-all duration-300" />
             
             {/* Content */}
-            <div className="relative h-full flex flex-col items-center justify-center gap-4 p-8">
-              <item.icon className="w-16 h-16 text-white/90 group-hover:text-white group-hover:scale-110 transition-all duration-300 drop-shadow-lg" />
-              <h2 className="text-3xl font-bold text-white/90 group-hover:text-white transition-colors duration-300 drop-shadow-lg">
+            <div className="relative h-full flex items-center justify-center gap-6 p-8">
+              <item.icon className="w-12 h-12 text-white/90 group-hover:text-white group-hover:scale-110 transition-all duration-300 drop-shadow-lg" />
+              <h2 className="text-4xl font-bold text-white/90 group-hover:text-white transition-colors duration-300 drop-shadow-lg">
                 {item.title}
               </h2>
             </div>
@@ -70,15 +70,21 @@ export const MenuSelection = ({ onSelect }: MenuSelectionProps) => {
       {/* Glowing SIE icon bottom right */}
       <div className="fixed bottom-8 right-8 z-50">
         <div className="relative">
-          {/* Glow effect */}
+          {/* Multi-layer glow effect */}
           <div className="absolute inset-0 animate-pulse">
-            <div className="w-16 h-16 rounded-full bg-accent/30 blur-xl" />
+            <div className="w-20 h-20 rounded-full bg-accent/50 blur-2xl" />
+          </div>
+          <div className="absolute inset-0 animate-pulse" style={{ animationDelay: '0.5s' }}>
+            <div className="w-20 h-20 rounded-full bg-accent/40 blur-xl" />
+          </div>
+          <div className="absolute inset-0 animate-pulse" style={{ animationDelay: '1s' }}>
+            <div className="w-20 h-20 rounded-full bg-white/30 blur-lg" />
           </div>
           {/* Icon */}
           <img 
             src={sumbiosIcon} 
             alt="SIE" 
-            className="relative w-16 h-16 object-contain animate-[pulse_3s_ease-in-out_infinite]" 
+            className="relative w-16 h-16 object-contain animate-[pulse_2s_ease-in-out_infinite] drop-shadow-[0_0_15px_rgba(127,194,161,0.8)]" 
           />
         </div>
       </div>
