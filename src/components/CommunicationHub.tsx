@@ -149,7 +149,7 @@ export const CommunicationHub = ({ activeSection, onSectionChange }: Communicati
   }
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-100 dark:from-blue-950 dark:via-cyan-950 dark:to-blue-900">
+    <div className="flex flex-col h-full bg-gradient-to-br from-blue-100 via-cyan-100 to-blue-200 dark:from-blue-950 dark:via-cyan-950 dark:to-blue-900">
       {/* Content based on active section */}
 
       {activeSection === "calendar" ? (

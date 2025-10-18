@@ -299,13 +299,13 @@ export const NetworkInterface = ({ activeSection, onSectionChange }: NetworkInte
   const avgTrust = Math.round(mockConnections.reduce((acc, c) => acc + c.trustScore, 0) / mockConnections.length);
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-br from-amber-50 via-stone-50 to-amber-100 dark:from-stone-900 dark:via-stone-800 dark:to-amber-950">
+    <div className="flex flex-col h-full bg-gradient-to-br from-orange-50 via-amber-50 to-orange-100 dark:from-orange-950 dark:via-amber-950 dark:to-orange-900">
       {/* Content based on active section */}
 
       {activeSection === "signals" ? (
         <>
           {/* KPI Row */}
-          <div className="grid grid-cols-3 gap-3 p-4 bg-background">
+          <div className="grid grid-cols-3 gap-3 p-4 bg-orange-100/50 dark:bg-orange-950/50">
             <Card className="p-3 rounded-xl border-0 bg-card shadow-sm">
               <div className="flex items-center gap-2 mb-1">
                 <TrendingUp className="w-4 h-4 text-accent" />
