@@ -579,7 +579,7 @@ export const NetworkInterface = () => {
           {/* SIE Suggestions Header */}
           <div className="flex items-center gap-2 pt-2">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-muted-foreground">Suggestions from SIE</span>
+            <span className="text-sm font-medium text-muted-foreground">Suggestions für SIE</span>
           </div>
         </div>
 
