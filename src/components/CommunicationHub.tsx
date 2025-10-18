@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Mail, MailOpen, Clock, CheckCheck, Sparkles, MessageCircle, Calendar as CalendarIcon, Video, MapPin, Mic } from "lucide-react";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { ConversationThread } from "./ConversationThread";
 import { useMeetingStore } from "@/services/meetingStore";
@@ -148,7 +149,28 @@ export const CommunicationHub = ({ activeSection, onSectionChange }: Communicati
   }
 
   return (
-    <div className="flex flex-col h-full bg-background">
+    <div className="flex flex-col h-full bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-100 dark:from-blue-950 dark:via-cyan-950 dark:to-blue-900">
+      {/* Top Bar */}
+      <div className="bg-gradient-to-r from-blue-100 to-cyan-100 dark:from-blue-900 dark:to-cyan-900 border-b border-blue-200/50 dark:border-blue-700/50 px-4 py-2 flex items-center justify-between">
+        <div className="flex items-center gap-2 text-blue-700 dark:text-blue-300">
+          <div className="w-8 h-8 rounded-full bg-blue-200 dark:bg-blue-900/50 flex items-center justify-center">
+            <MessageCircle className="w-4 h-4" />
+          </div>
+          <span className="text-sm font-medium">Communication Center</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" className="text-xs hover:bg-blue-200/50 dark:hover:bg-blue-800">
+            Feedback
+          </Button>
+          <Button variant="ghost" size="sm" className="text-xs hover:bg-blue-200/50 dark:hover:bg-blue-800">
+            Contact
+          </Button>
+          <Button variant="ghost" size="sm" className="text-xs hover:bg-blue-200/50 dark:hover:bg-blue-800">
+            Collaborate
+          </Button>
+        </div>
+      </div>
+      
       {/* Content based on active section */}
 
       {activeSection === "calendar" ? (

@@ -38,16 +38,37 @@ export const AgentsHub = ({ activeTab, onTabChange }: { activeTab: "scheduling" 
   }
   
   return (
-    <div className="h-full overflow-y-auto bg-background">
+    <div className="h-full overflow-y-auto bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      {/* Top Bar */}
+      <div className="bg-gradient-to-r from-slate-800 to-slate-900 border-b border-slate-700/50 px-4 py-2 flex items-center justify-between">
+        <div className="flex items-center gap-2 text-slate-300">
+          <div className="w-8 h-8 rounded-full bg-slate-700/50 flex items-center justify-center">
+            <Lightbulb className="w-4 h-4 text-yellow-400" />
+          </div>
+          <span className="text-sm font-medium">AI Orchestration</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" className="text-xs text-slate-300 hover:bg-slate-700/50">
+            Feedback
+          </Button>
+          <Button variant="ghost" size="sm" className="text-xs text-slate-300 hover:bg-slate-700/50">
+            Contact
+          </Button>
+          <Button variant="ghost" size="sm" className="text-xs text-slate-300 hover:bg-slate-700/50">
+            Collaborate
+          </Button>
+        </div>
+      </div>
+      
       {activeTab === "scheduling" ? (
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2">Orchestrate</h1>
-              <p className="text-muted-foreground">Manage your AI agents</p>
+              <h1 className="text-3xl font-bold text-slate-100 mb-2">Orchestrate</h1>
+              <p className="text-slate-400">Manage your AI agents</p>
             </div>
-            <Button className="flex items-center gap-2">
+            <Button className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-slate-100">
               <Plus className="w-4 h-4" />
               Create Agent
             </Button>
@@ -55,53 +76,53 @@ export const AgentsHub = ({ activeTab, onTabChange }: { activeTab: "scheduling" 
 
           {/* KPI Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card className="p-5 bg-gradient-to-br from-primary/10 to-accent/10 border-0 shadow-sm">
+            <Card className="p-5 bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 shadow-sm">
               <div className="flex items-center justify-between mb-3">
-                <Users className="w-8 h-8 text-primary" />
+                <Users className="w-8 h-8 text-slate-300" />
                 <TrendingUp className="w-5 h-5 text-accent" />
               </div>
-              <div className="text-3xl font-bold text-foreground mb-1">2</div>
-              <div className="text-sm text-muted-foreground">Active Agents</div>
+              <div className="text-3xl font-bold text-slate-100 mb-1">2</div>
+              <div className="text-sm text-slate-400">Active Agents</div>
               <div className="text-xs text-accent mt-2">Running smoothly</div>
             </Card>
 
-            <Card className="p-5 bg-gradient-to-br from-accent/10 to-primary/10 border-0 shadow-sm">
+            <Card className="p-5 bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 shadow-sm">
               <div className="flex items-center justify-between mb-3">
                 <Activity className="w-8 h-8 text-accent" />
-                <TrendingUp className="w-5 h-5 text-primary" />
+                <TrendingUp className="w-5 h-5 text-slate-300" />
               </div>
-              <div className="text-3xl font-bold text-foreground mb-1">31</div>
-              <div className="text-sm text-muted-foreground">Tasks Completed</div>
-              <div className="text-xs text-primary mt-2">This week</div>
+              <div className="text-3xl font-bold text-slate-100 mb-1">31</div>
+              <div className="text-sm text-slate-400">Tasks Completed</div>
+              <div className="text-xs text-slate-300 mt-2">This week</div>
             </Card>
 
-            <Card className="p-5 bg-gradient-to-br from-primary/10 to-accent/10 border-0 shadow-sm">
+            <Card className="p-5 bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 shadow-sm">
               <div className="flex items-center justify-between mb-3">
-                <Network className="w-8 h-8 text-primary" />
+                <Network className="w-8 h-8 text-slate-300" />
                 <TrendingUp className="w-5 h-5 text-accent" />
               </div>
-              <div className="text-3xl font-bold text-foreground mb-1">8</div>
-              <div className="text-sm text-muted-foreground">Meetings Scheduled</div>
+              <div className="text-3xl font-bold text-slate-100 mb-1">8</div>
+              <div className="text-sm text-slate-400">Meetings Scheduled</div>
               <div className="text-xs text-accent mt-2">This month</div>
             </Card>
 
-            <Card className="p-5 bg-gradient-to-br from-accent/10 to-primary/10 border-0 shadow-sm">
+            <Card className="p-5 bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 shadow-sm">
               <div className="flex items-center justify-between mb-3">
                 <Target className="w-8 h-8 text-accent" />
-                <TrendingUp className="w-5 h-5 text-primary" />
+                <TrendingUp className="w-5 h-5 text-slate-300" />
               </div>
-              <div className="text-3xl font-bold text-foreground mb-1">23</div>
-              <div className="text-sm text-muted-foreground">Insights Captured</div>
-              <div className="text-xs text-primary mt-2">This week</div>
+              <div className="text-3xl font-bold text-slate-100 mb-1">23</div>
+              <div className="text-sm text-slate-400">Insights Captured</div>
+              <div className="text-xs text-slate-300 mt-2">This week</div>
             </Card>
           </div>
 
           {/* Agents Section */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">Your Agents</h2>
+            <h2 className="text-xl font-semibold text-slate-100">Your Agents</h2>
             
             <div 
-              className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 cursor-pointer hover:shadow-md transition-shadow"
+              className="p-4 rounded-xl bg-gradient-to-br from-slate-700/50 to-slate-800/50 border border-slate-600 cursor-pointer hover:shadow-lg transition-shadow"
               onClick={() => setActiveAgent("scheduling")}
             >
               <div className="flex items-center gap-3 mb-2">
@@ -110,19 +131,19 @@ export const AgentsHub = ({ activeTab, onTabChange }: { activeTab: "scheduling" 
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <div className="font-semibold text-foreground">Scheduling Agent</div>
-                    <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
+                    <div className="font-semibold text-slate-100">Scheduling Agent</div>
+                    <span className="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-medium">
                       VOICE
                     </span>
                   </div>
-                  <div className="text-xs text-muted-foreground">Voice-powered scheduling</div>
+                  <div className="text-xs text-slate-400">Voice-powered scheduling</div>
                 </div>
               </div>
               <div className="text-xs text-accent">8 meetings scheduled</div>
             </div>
 
             <div 
-              className="p-4 rounded-xl bg-gradient-to-br from-accent/10 to-primary/10 cursor-pointer hover:shadow-md transition-shadow"
+              className="p-4 rounded-xl bg-gradient-to-br from-slate-700/50 to-slate-800/50 border border-slate-600 cursor-pointer hover:shadow-lg transition-shadow"
               onClick={() => setActiveAgent("insight")}
             >
               <div className="flex items-center gap-3 mb-2">
@@ -130,27 +151,27 @@ export const AgentsHub = ({ activeTab, onTabChange }: { activeTab: "scheduling" 
                   <Lightbulb className="w-5 h-5 text-primary-foreground" />
                 </div>
                 <div className="flex-1">
-                  <div className="font-semibold text-foreground">Insight Agent</div>
-                  <div className="text-xs text-muted-foreground">Knowledge capture</div>
+                  <div className="font-semibold text-slate-100">Insight Agent</div>
+                  <div className="text-xs text-slate-400">Knowledge capture</div>
                 </div>
               </div>
-              <div className="text-xs text-primary">23 insights captured</div>
+              <div className="text-xs text-slate-300">23 insights captured</div>
             </div>
           </div>
         </div>
       ) : (
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
           {/* Header */}
           <div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">Network Analytics</h1>
-            <p className="text-muted-foreground">Your network intelligence overview</p>
+            <h1 className="text-3xl font-bold text-slate-100 mb-2">Network Analytics</h1>
+            <p className="text-slate-400">Your network intelligence overview</p>
           </div>
 
           {/* Charts Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Network Growth Chart */}
-            <Card className="p-6 border-0 shadow-sm">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Network Growth</h3>
+            <Card className="p-6 bg-slate-800/50 border-slate-700 shadow-sm">
+              <h3 className="text-lg font-semibold text-slate-100 mb-4">Network Growth</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={networkGrowthData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -182,8 +203,8 @@ export const AgentsHub = ({ activeTab, onTabChange }: { activeTab: "scheduling" 
             </Card>
 
             {/* Network Health Radar */}
-            <Card className="p-6 border-0 shadow-sm">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Network Health</h3>
+            <Card className="p-6 bg-slate-800/50 border-slate-700 shadow-sm">
+              <h3 className="text-lg font-semibold text-slate-100 mb-4">Network Health</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <RadarChart data={networkHealthData}>
                   <PolarGrid stroke="hsl(var(--border))" />
@@ -209,8 +230,8 @@ export const AgentsHub = ({ activeTab, onTabChange }: { activeTab: "scheduling" 
             </Card>
 
             {/* Interaction Types */}
-            <Card className="p-6 border-0 shadow-sm">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Interactions by Type</h3>
+            <Card className="p-6 bg-slate-800/50 border-slate-700 shadow-sm">
+              <h3 className="text-lg font-semibold text-slate-100 mb-4">Interactions by Type</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={interactionData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -233,11 +254,11 @@ export const AgentsHub = ({ activeTab, onTabChange }: { activeTab: "scheduling" 
             </Card>
 
             {/* Agents Overview */}
-            <Card className="p-6 border-0 shadow-sm">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Active Agents</h3>
+            <Card className="p-6 bg-slate-800/50 border-slate-700 shadow-sm">
+              <h3 className="text-lg font-semibold text-slate-100 mb-4">Active Agents</h3>
               <div className="space-y-3">
                 <div 
-                  className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 cursor-pointer hover:shadow-md transition-shadow"
+                  className="p-4 rounded-xl bg-gradient-to-br from-slate-700/50 to-slate-800/50 border border-slate-600 cursor-pointer hover:shadow-lg transition-shadow"
                   onClick={() => setActiveAgent("scheduling")}
                 >
                   <div className="flex items-center gap-3 mb-2">
@@ -245,15 +266,15 @@ export const AgentsHub = ({ activeTab, onTabChange }: { activeTab: "scheduling" 
                       <Calendar className="w-5 h-5 text-primary-foreground" />
                     </div>
                     <div className="flex-1">
-                      <div className="font-semibold text-foreground">Scheduling Agent</div>
-                      <div className="text-xs text-muted-foreground">Voice-powered scheduling</div>
+                      <div className="font-semibold text-slate-100">Scheduling Agent</div>
+                      <div className="text-xs text-slate-400">Voice-powered scheduling</div>
                     </div>
                   </div>
                   <div className="text-xs text-accent">8 meetings scheduled</div>
                 </div>
 
                 <div 
-                  className="p-4 rounded-xl bg-gradient-to-br from-accent/10 to-primary/10 cursor-pointer hover:shadow-md transition-shadow"
+                  className="p-4 rounded-xl bg-gradient-to-br from-slate-700/50 to-slate-800/50 border border-slate-600 cursor-pointer hover:shadow-lg transition-shadow"
                   onClick={() => setActiveAgent("insight")}
                 >
                   <div className="flex items-center gap-3 mb-2">
@@ -261,11 +282,11 @@ export const AgentsHub = ({ activeTab, onTabChange }: { activeTab: "scheduling" 
                       <Lightbulb className="w-5 h-5 text-primary-foreground" />
                     </div>
                     <div className="flex-1">
-                      <div className="font-semibold text-foreground">Insight Agent</div>
-                      <div className="text-xs text-muted-foreground">Knowledge capture</div>
+                      <div className="font-semibold text-slate-100">Insight Agent</div>
+                      <div className="text-xs text-slate-400">Knowledge capture</div>
                     </div>
                   </div>
-                  <div className="text-xs text-primary">23 insights captured</div>
+                  <div className="text-xs text-slate-300">23 insights captured</div>
                 </div>
               </div>
             </Card>
