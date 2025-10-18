@@ -244,10 +244,14 @@ const mockConnectionRequests: ConnectionRequest[] = [
   }
 ];
 
-export const NetworkInterface = () => {
+interface NetworkInterfaceProps {
+  activeSection: "nurture" | "expand" | "signals";
+  onSectionChange: (section: "nurture" | "expand" | "signals") => void;
+}
+
+export const NetworkInterface = ({ activeSection, onSectionChange }: NetworkInterfaceProps) => {
   const [sortBy, setSortBy] = useState<"mutual" | "trust">("mutual");
   const [filterBy, setFilterBy] = useState<"all" | "1st" | "2nd" | "3rd+">("all");
-  const [activeSection, setActiveSection] = useState<"nurture" | "expand" | "signals">("nurture");
   const [selectedPath, setSelectedPath] = useState<SuggestedConnection | null>(null);
   const [showAISearch, setShowAISearch] = useState(false);
   const [showIntroRequests, setShowIntroRequests] = useState(false);
@@ -270,42 +274,7 @@ export const NetworkInterface = () => {
 
   return (
     <div className="flex flex-col h-full bg-background">
-      {/* Section Toggle */}
-      <div className="flex gap-2 p-4 border-b bg-card">
-        <button
-          onClick={() => setActiveSection("nurture")}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
-            activeSection === "nurture"
-              ? "bg-primary text-primary-foreground"
-              : "bg-transparent text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Users className="w-4 h-4" />
-          Contacts
-        </button>
-        <button
-          onClick={() => setActiveSection("expand")}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
-            activeSection === "expand"
-              ? "bg-primary text-primary-foreground"
-              : "bg-transparent text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Network className="w-4 h-4" />
-          Expand
-        </button>
-        <button
-          onClick={() => setActiveSection("signals")}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
-            activeSection === "signals"
-              ? "bg-primary text-primary-foreground"
-              : "bg-transparent text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <TrendingUp className="w-4 h-4" />
-          Signals
-        </button>
-      </div>
+      {/* Content based on active section */}
 
       {activeSection === "signals" ? (
         <>

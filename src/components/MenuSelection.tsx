@@ -43,22 +43,16 @@ export const MenuSelection = ({ onSelect }: MenuSelectionProps) => {
             onClick={() => onSelect(item.id)}
             className="relative group flex-1 border-b border-border/50 hover:border-accent/50 transition-all duration-300 overflow-hidden"
           >
-            {/* Background Image */}
+            {/* Background Image - Full opacity */}
             <img 
               src={item.bg} 
               alt={item.title}
-              className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-70 group-hover:scale-105 transition-all duration-500"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
             />
             
-            {/* Dark overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/60 to-black/70 group-hover:from-black/50 group-hover:via-black/40 group-hover:to-black/50 transition-all duration-300" />
-            
-            {/* Content */}
-            <div className="relative h-full flex items-center justify-center gap-6 p-8">
-              <item.icon className="w-12 h-12 text-white/90 group-hover:text-white group-hover:scale-110 transition-all duration-300 drop-shadow-lg" />
-              <h2 className="text-4xl font-bold text-white/90 group-hover:text-white transition-colors duration-300 drop-shadow-lg">
-                {item.title}
-              </h2>
+            {/* Content - Only Icon */}
+            <div className="relative h-full flex items-center justify-center p-8">
+              <item.icon className="w-16 h-16 text-white drop-shadow-2xl group-hover:scale-110 transition-all duration-300" />
             </div>
 
             {/* Hover border glow */}

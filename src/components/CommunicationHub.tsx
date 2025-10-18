@@ -115,8 +115,12 @@ const getPlatformBadge = (platform: "linkedin" | "whatsapp" | "sumbios") => {
   }
 };
 
-export const CommunicationHub = () => {
-  const [activeSection, setActiveSection] = useState<"email" | "messages" | "calendar">("email");
+interface CommunicationHubProps {
+  activeSection: "email" | "messages" | "calendar";
+  onSectionChange: (section: "email" | "messages" | "calendar") => void;
+}
+
+export const CommunicationHub = ({ activeSection, onSectionChange }: CommunicationHubProps) => {
   const [selectedContact, setSelectedContact] = useState<{
     name: string;
     avatar: string;
@@ -145,42 +149,7 @@ export const CommunicationHub = () => {
 
   return (
     <div className="flex flex-col h-full bg-background">
-      {/* Section Toggle */}
-      <div className="flex gap-1 p-2 border-b bg-card/50 backdrop-blur-sm">
-        <button
-          onClick={() => setActiveSection("email")}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-all ${
-            activeSection === "email"
-              ? "bg-accent/20 text-accent border-b-2 border-accent"
-              : "bg-transparent text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Mail className="w-4 h-4" />
-          Email
-        </button>
-        <button
-          onClick={() => setActiveSection("messages")}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-all ${
-            activeSection === "messages"
-              ? "bg-accent/20 text-accent border-b-2 border-accent"
-              : "bg-transparent text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <MessageCircle className="w-4 h-4" />
-          Messages
-        </button>
-        <button
-          onClick={() => setActiveSection("calendar")}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-medium transition-all ${
-            activeSection === "calendar"
-              ? "bg-accent/20 text-accent border-b-2 border-accent"
-              : "bg-transparent text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <CalendarIcon className="w-4 h-4" />
-          Calendar
-        </button>
-      </div>
+      {/* Content based on active section */}
 
       {activeSection === "calendar" ? (
         <>
